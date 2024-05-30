@@ -1,5 +1,6 @@
 import openai
 import PySimpleGUI as sg
+import sounddeice
 
 from data_file_io import dataFile
 
