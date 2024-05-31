@@ -1,31 +1,62 @@
-import sounddevice as sd
-from scipy.io.wavfile import write
+import speech_recognition as sr
 from openai import OpenAI
 
-# import wavio as wv
+class soundProcessing:
+    # Class for all audio recording as part of Judy
+    def __init__(self):
+        self.freq = 44100
+        self.duration = None
+        self.filename = None
+        self.trigger_word = 'judy'
+        self.triggered = False
+        self.r = sr.Recognizer()
+        self.m = sr.Microphone()
 
-# Sampling frequency
-freq = 44100
+    def __str__(self):
+        if self.filename is None:
+            return f"NoFile-{self.freq}-{self.duration}"
+        else:
+            return f"{self.filename}-{self.freq}-{self.duration}"
 
-# Recording duration
-duration = 5
+    def callback(self, recognizer, audio):
+        try:
+            if self.trigger_word in recognizer.recognize_sphinx(audio):
+                print("Trigger!")
+                self.trigger = True
+            else:
+                print(recognizer.recognize_sphinx(audio))
+        except sr.UnknownValueError:
+            print("Sphinx could not understand audio")
+        except sr.RequestError as e:
+            print("Could not request results from Sphinx; {0}".format(e))
 
-# Start recorder with the given values of
-# duration and sample frequency
-recording = sd.rec(int(duration * freq),
-                   samplerate=freq, channels=1)
+    def listen_sphinx(self):
+        with self.m as source:
+            audio = self.r.listen(source)
 
-# Record audio for the given number of seconds
-sd.wait()
+        try:
+            if self.trigger_word in self.r.recognize_sphinx(audio):
+                print("Trigger!")
+                self.triggered = True
+            else:
+                print(self.r.recognize_sphinx(audio))
+        except sr.UnknownValueError:
+            print("Sphinx could not understand audio")
+        except sr.RequestError as e:
+            print("Could not request results from Sphinx; {0}".format(e))
 
-write("../Desktop/test_recording.wav", freq, recording)
+    def listen_whisper(self):
+        client = OpenAI()
 
-client = OpenAI()
+        audio_file = open("/path/to/file/audio.mp3", "rb")
+        transcription = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file
+        )
+        print(transcription.text)
 
-audio_file= open("../Desktop/test_recording.wav", "rb")
-transcription = client.audio.transcriptions.create(
-  model="whisper-1",
-  file=audio_file
-)
-print(transcription.text)
+    def wait_for_trigger(self):
+        while self.triggered is False:
+            self.listen_sphinx()
+
 
