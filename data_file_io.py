@@ -1,3 +1,4 @@
+import logging
 class dataFileIO:
 
     def __init__(self, filename, filetype):
@@ -25,7 +26,7 @@ class dataFileIO:
             self.data[str(line_array[0].strip())] = str(line_array[1].strip())
         self.file.close()
 
-        print('Loaded: ', self.filename)
+        logging.infor('Loaded the prompt file: ', self.filename)
 
     def read_bg_file(self):
         #function that opens formatted file that gives background on the person

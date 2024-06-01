@@ -14,21 +14,21 @@ class judyGUI:
             'x_size': 900,
             'y_size': 400,
             'title': 'Judy v0.01',
-            'default_msg': 'Welcome to Judy. Please ask your question above.',
+            'initial_msg': '',           # To be completed in create_init_message
             'chat_fn': 'chat_history.dat'
         }
-        # TODO: Adjsut dimenstions to pull screen size and do a percentage
-        self.chat_history = chatHistory()
-
-        self.load_history()      # Get the previous conversations that have occured
+        # TODO: Adjust dimensions to pull screen size and do a percentage
+        self.chat_history = chatHistory()           # Creates the chat history and loads from the history file
+        self.create_init_message()
 
         # Enact options for the window
         sg.theme(self.params['theme'])
         # sg.set_options(font=('Arial', 14))
 
+
         # Set the variables for the input and output
         self.input = sg.Input(key='input', expand_x=True, expand_y=True)
-        self.output = sg.Multiline(self.params['default_msg'], key='output', size=(700, 15))
+        self.output = sg.Multiline(self.params['initial_msg'], key='output', size=(700, 15))
 
         self.layout = [[sg.Push(), self.input, sg.Push()],
                   [sg.Push(), self.output, sg.Push()],
@@ -66,22 +66,14 @@ class judyGUI:
         '''
         new_exchange = '\nQuestion: ' + query + '\n\n' + 'Response: ' + response + '\n' + '-' * 20 + '\n'
         self.window['output'].update(self.window['output'].get() + new_exchange)        # Appends the new echange onto what is already there
-    def load_history(self):
-        # Function to pull the saved chat history from a data file
 
-        try:
-            with open(self.params['chat_fn'], 'wb') as file:
-                self.chat_history = pickle.load(file)
+    def create_init_message(self):
+        # Default welcome
+        intro_string = 'Welcome to Judy. Please ask your question above.\n' + '-'*20 + '\n'
 
-        except:
-            print('Unable to load file: ', self.params['chat_fn'])
-
-    def save_history(self):
-        # Function to pull the saved chat history from a data file
-
-        try:
-            with open(self.params['chat_fn'], 'wb') as file:
-                pickle.dump(self.chat_history, file)
-
-        except:
-            print('Unable to save to  file: ', self.params['chat_fn'])
+        if len(self.chat_history.history) == 0:
+            self.params['initial_msg'] = intro_string
+        else:
+            for item in self.chat_history.history:
+                new_exchange = '\nQuestion: ' + item.query + '\n\n' + 'Response: ' + item.response + '\n' + '-' * 20 + '\n'
+                self.params['initial_msg'] += new_exchange
