@@ -2,8 +2,9 @@ import openai           # Needed to support the call for OpenAI API
 import logging           # always good to log info
 
 from judyparams import OPENAI_QUERY
+from promptcreate import promptCreate
 
-def openai_api_call(query):
+def openai_api_call(query, history):
     '''
     Calls the OpenAI API using the system prompt and returns the answer
     :param query:
@@ -15,18 +16,35 @@ def openai_api_call(query):
 
     logging.info('Contacting OpenAI with query: ', query)
 
+    # Pull all of the user info to be added into the query
+    user_info = promptCreate()
+    user_info.gen_prompt()
+
+    # Get the last five questions and answers
+    last_five = history[-5:]
+    messages = build_messages(last_five, query, user_info.user_prompt)
+
     client = openai.OpenAI()
 
     completion = client.chat.completions.create(
         model=OPENAI_QUERY['model'],
         temperature=OPENAI_QUERY['temp'],
-        messages=[
-            {"role": "system", "content": OPENAI_QUERY['sys_content']},
-            {"role": "user", "content": query}
-        ]
+        messages=messages
     )
 
     return completion.choices[0].message.content
+
+def build_messages(last_five, query, user_prompt):
+    messages = []
+
+    messages.append({"role": "system", "content": OPENAI_QUERY['sys_content']})
+    messages.append({"role": "user", "content": user_prompt})
+    for item in last_five:
+        messages.append({"role": "user", "content": item.query})
+        messages.append({"role": "assistant", "content": item.response})
+    messages.append({"role": "user", "content": query})
+
+    return messages
 
 def openai_api_keywords(query):
     '''

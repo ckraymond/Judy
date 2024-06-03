@@ -52,7 +52,7 @@ class judyGUI:
 
     def submit_question(self):
         query = self.ask_question()
-        response = openai_api_call(query)                   # Reaches out to the API and submits the question
+        response = openai_api_call(query, self.chat_history.history)                   # Reaches out to the API and submits the question
         self.chat_history.append(query, response)           # Updates the chat history and saves (eventually)
         self.chat_history.assign_ids()                      # Sets the conversation IDs
 

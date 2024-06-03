@@ -44,33 +44,38 @@ people = [
 places = [
     {
         'name': 'Missoula',
-        'reason': 'Users home'
+        'reason': 'My home'
     },
     {
         'name': 'Ossining',
-        'reason': 'Where user used to live'
+        'reason': 'Where I used to live'
     },
     {
         'name': 'The barn',
-        'reason': 'User used to ride horses there for a long time'
+        'reason': 'I used to ride horses there for a long time'
     }
 ]
 
 
-dates = [
-    {
-        'date': datetime.date(2001,9,11),
-        'name': '911',
-        'reason': 'National tragedy',
-        'description': ''
-    }
-]
+# dates = [
+#     {
+#         'date': datetime.date(2001,9,11),
+#         'name': '9/11',
+#         'reason': 'Its a national tragedy',
+#         'description': ''
+#     }
+# ]
 
 events = [
     {
         'date': datetime.date(2001, 6, 5),
         'name': 'Colins graduation',
-        'description': 'When users brother Colin graduated from West Point. User was there and had a great time.'
+        'description': 'When users brother Colin graduated from West Point. I was there and had a great time.'
+    },
+    {
+        'date': datetime.date(2024, 12, 15),
+        'name': 'I moved to Missoula',
+        'description': 'This is when I moved from my home in Ossining to Missoula with Jackys help. It was a tough transition but I am happier now.'
     }
 ]
 
@@ -82,9 +87,24 @@ interests = [
     'yankees baseball'
 ]
 
-asks = [
+# asks = [
+#     {
+#         'ask': 'I want to make sure that my cats are okay.'
+#     }
+# ]
+
+faqs = [
     {
-        'ask': 'I want to make sure that my cats are okay.'
+        'question': 'Where are my cats?',
+        'answer': 'They live with you in your apartment at the springs.'
+    }
+]
+
+pets = [
+    {
+        'name': 'Ginger',
+        'type': 'cat',
+        'phys_desc': 'organe and stripey'
     }
 ]
 
@@ -102,13 +122,16 @@ test_user_info = {
      'events': events,
 
      # Important dates she should remember outside of her birthday or others' birthdays
-     'dates': dates,
+     # 'dates': dates,
 
      # Things the user has asked the system or talked about
-     'asks': asks,
+     # 'asks': asks,
 
      # What are the users interests
-     'interests': interests
+     'interests': interests,
+
+    # What are the commonly asked questions the user has
+    'faqs': faqs
  }
 
 # print(test_user_info)
