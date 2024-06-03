@@ -4,6 +4,9 @@
 - [Markdown Syntax](https://www.markdownguide.org/basic-syntax/)
 - [MongoDB in Pythong](https://www.mongodb.com/resources/languages/python)
 - [Retrieval Augmented Generation Article](https://scalexi.medium.com/implementing-a-retrieval-augmented-generation-rag-system-with-openais-api-using-langchain-ab39b60b4d9f)
+- [How to uoload to Google Cloud](https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3)
+- [Using embeddings to help search](https://cookbook.openai.com/examples/question_answering_using_embeddings)
+- [Ideas for the app builder](https://zapier.com/blog/best-no-code-app-builder/#bubble)
 ---
 ## Thoughts / Ideas
 - Need to figure out way to store the session history and then use it for future responses.

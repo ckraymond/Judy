@@ -4,11 +4,6 @@ from openai import OpenAI
 class soundProcessing:
     # Class for all audio recording as part of Judy
     def __init__(self):
-        self.freq = 44100
-        self.duration = None
-        self.filename = None
-        self.trigger_word = 'judy'
-        self.triggered = False
         self.r = sr.Recognizer()
         self.m = sr.Microphone()
 
@@ -45,18 +40,31 @@ class soundProcessing:
         except sr.RequestError as e:
             print("Could not request results from Sphinx; {0}".format(e))
 
-    def listen_whisper(self):
+    def transcribe_whisper(self):
         client = OpenAI()
 
-        audio_file = open("/path/to/file/audio.mp3", "rb")
+        audio_file = open("./temp/inputaudio.wav", "rb")
         transcription = client.audio.transcriptions.create(
             model="whisper-1",
             file=audio_file
         )
-        print(transcription.text)
+
+        return(transcription.text)
 
     def wait_for_trigger(self):
         while self.triggered is False:
             self.listen_sphinx()
+
+    def get_query(self):
+        with self.m as source:
+            self.r.adjust_for_ambient_noise(source)
+            audio = self.r.listen(source)
+
+        with open("./temp/inputaudio.wav", "wb") as f:
+            f.write(audio.get_wav_data())
+
+        transcription = self.transcribe_whisper()
+        return transcription
+
 
 
