@@ -1,8 +1,8 @@
 import openai           # Needed to support the call for OpenAI API
 import logging           # always good to log info
 
-from judyparams import OPENAI_QUERY
-from promptcreate import promptCreate
+from init.judyparams import OPENAI_QUERY
+from api.promptcreate import promptCreate
 
 def openai_api_call(query, history):
     '''

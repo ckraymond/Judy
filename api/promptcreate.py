@@ -1,7 +1,7 @@
 import logging
 import datetime
 
-from testdata.user_test_data import test_user_info
+from data.user_test_data import test_user_info
 
 class promptCreate:
 

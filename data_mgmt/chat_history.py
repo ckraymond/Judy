@@ -2,7 +2,8 @@ import datetime
 import pickle
 import logging
 
-from api_integration import openai_api_keywords
+from api.openaiapi import openai_api_keywords
+from api.bubbleapi import bubbleAPI
 
 logger = logging.getLogger(__name__)
 class chatHistory:
@@ -28,6 +29,10 @@ class chatHistory:
         self.history[-1].generate_keywords()
         self.save()
 
+        # Saves the new exchange into Bubble
+        bubble_save = bubbleAPI()
+        bubble_save.post_exch_rcds(new_exchange)
+
         # TODO: Need to automagically save the chat history
 
     def save(self):
@@ -44,25 +49,23 @@ class chatHistory:
             logger.info('Loaded chat history from: ' + self.fn)
         except:
             self.history = []               # Clears out the history and we start afresh!
-            logging.error('Unable to load file.')
+            logging.error('Unable to load file: ' + self.fn)
 
     def assign_ids(self):
         for item_num in range(len(self.history)):
             if self.history[item_num].conv_id is None:
                 if item_num == 0:
                     self.set_conv_id(self.history[item_num])
-                    print('Setting a new conversation_id.')
+                    logging.info('Setting a new conversation_id.')
                 else:
                     diff_time = self.history[item_num].datetime - self.history[item_num-1].datetime
 
                     if diff_time.total_seconds() < 60*60*2:      # Threshold is two min
                         self.history[item_num].conv_id = self.history[item_num-1].conv_id
-                        print('Conversations are close together')
+                        logging.info('Conversations are close together')
                     else:
                         self.set_conv_id(self.history[item_num])
-                        print('Setting a new conversation_id.')
-
-        print(self)
+                        logging.info('Setting a new conversation_id.')
 
     def set_conv_id(self, chat_exchange):
         new_id = chat_exchange.datetime.strftime('%d%m%Y%H%M%S')
@@ -84,7 +87,8 @@ class chatExchange:
         self.keywords = keywords
         self.summary = ''
         self.vector = [],
-        self.conv_id = None
+        self.conv_id = None,
+        self.bubble_id = None
 
     def __str__(self):
         return f'{self.datetime} | {self.conv_id} | {self.query[0:20]} | {self.response[0:20]}'
@@ -93,5 +97,11 @@ class chatExchange:
         #TODO: Need to extract keywords from the text using an API call to OpenAI
 
         self.keywords = openai_api_keywords(self.query + self.response)
-        print(self.keywords)
+        logging.info(self.keywords)
+
+    def updateBubble(self):
+        bubble = bubbleAPI()
+
+        self.bubble_id = bubble.post_exch_rcds(self)
+
 

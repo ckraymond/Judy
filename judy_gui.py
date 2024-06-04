@@ -2,12 +2,11 @@ import PySimpleGUI as sg                    # Base function for the simple GUI
 import pygame
 from gtts import gTTS
 
-from chat_history import chatHistory       # Class that stores the chat exchance
-from api_integration import openai_api_call     # Class that handles querying the OpenAI API
-from judyparams import *
+from data_mgmt.chat_history import chatHistory       # Class that stores the chat exchance
+from api.openaiapi import openai_api_call     # Class that handles querying the OpenAI API
 from soundprocessing import soundProcessing
 
-import time
+
 class judyGUI:
     # Class to support the GUI for judy.
 
