@@ -22,7 +22,11 @@ OPENAI_QUERY = {
 GUI Paramters dictate what the GUI looks like.
 '''
 GUI_PARAMS = {
-    'width': .8,
-    'height': .8
+    'theme': 'LightBlue2',  # List can be found through sg.theme_previewer() or .list() functions
+    'x_size': 900,
+    'y_size': 400,
+    'title': 'Judy v0.01',
+    'chat_fn': 'chat_history.dat',
+    'chat_history': ''
 }
 

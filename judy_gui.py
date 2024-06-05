@@ -5,37 +5,30 @@ from gtts import gTTS
 from data_mgmt.chat_history import chatHistory       # Class that stores the chat exchance
 from api.openaiapi import openai_api_call     # Class that handles querying the OpenAI API
 from soundprocessing import soundProcessing
+from init.judyparams import GUI_PARAMS
 
 
 class judyGUI:
     # Class to support the GUI for judy.
 
     def __init__(self):
-        self.params = {
-            'theme': 'LightBlue2', # List can be found through sg.theme_previewer() or .list() functions
-            'x_size': 900,
-            'y_size': 400,
-            'title': 'Judy v0.01',
-            'chat_fn': 'chat_history.dat',
-            'chat_history': ''
-        }
         # TODO: Adjust dimensions to pull screen size and do a percentage
         self.chat_history = chatHistory()           # Creates the chat history and loads from the history file
         self.create_history_string()
 
         # Enact options for the window
-        sg.theme(self.params['theme'])
+        sg.theme(GUI_PARAMS['theme'])
 
         # Set the variables for the input and output
         # self.input = sg.Input(key='input', expand_x=True, expand_y=True)
-        self.output = sg.Multiline(self.params['chat_history'], key='output', size=(700, 15), expand_x=True, expand_y=True)
+        self.output = sg.Multiline(GUI_PARAMS['chat_history'], key='output', size=(700, 15), expand_x=True, expand_y=True)
 
         self.layout = [[sg.Push(), self.output, sg.Push()],
                   [sg.Push(), sg.Button('Ask Question', bind_return_key=True), sg.Button('Quit'), sg.Push()]]
 
-        self.window = sg.Window(self.params['title'],
+        self.window = sg.Window(GUI_PARAMS['title'],
                                 self.layout,
-                                size=(self.params['x_size'], self.params['y_size']),
+                                size=(GUI_PARAMS['x_size'], GUI_PARAMS['y_size']),
                                 resizable=True)
 
     def window_read(self):
@@ -72,12 +65,12 @@ class judyGUI:
 
     def create_history_string(self):
         # Default welcome
-        self.params['chat_history'] = ''
+        GUI_PARAMS['chat_history'] = ''
         item = len(self.chat_history.history)-1
 
         while item >= 0:
             new_exchange = '\nQuestion: ' + self.chat_history.history[item].query + '\n\n' + 'Response: ' + self.chat_history.history[item].response + '\n' + '-' * 20 + '\n'
-            self.params['chat_history'] += new_exchange
+            GUI_PARAMS['chat_history'] += new_exchange
             item -= 1
 
     def read_response(self, response):
