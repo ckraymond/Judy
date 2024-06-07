@@ -14,6 +14,7 @@ class bubbleAPI:
         :param type:
         :return:
         '''
+        logging.info('Getting ', type, 'records from Bubble.')
         call_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.api_token)}
 
@@ -21,6 +22,7 @@ class bubbleAPI:
         return response.json()
 
     def post_record(self, type, body):
+        logging.info('Posting ', type, 'record to Bubble.')
         post_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.api_token)}
 
@@ -30,6 +32,7 @@ class bubbleAPI:
         return response_json
 
     def update_exch_rcds(self, exchange):
+        logging.info('Updating exchange (ID: ', exchange.id, ') to Bubble.')
         call_url = self.wf_url + '/' + 'put_exchange'
         head = {'Authorization': 'token {}'.format(self.api_token)}
         body = {
@@ -38,7 +41,7 @@ class bubbleAPI:
             'response': exchange.response,
             'summary': exchange.summary,
             'id': exchange.id,
-            'conv_id': exchange.conv_id
+            'conversation': exchange.conv_id
         }
 
         response = requests.post(call_url, headers=head, json=body)
@@ -47,20 +50,22 @@ class bubbleAPI:
         if response_json['status'] == 'success':
             return True
         else:
-            logging.error('Unable to update id in Bubble: ' + body['id'])
+            logging.error('Unable to update exchange id in Bubble: ' + body['id'])
             return False
     #TODO: Need to add in error handling for when something doesn't work
 
     def update_conv_rcds(self, conv):
+        logging.info('Updating conversation (ID: ', conv.id, ') to Bubble.')
         call_url = self.wf_url + '/' + 'put_conversation'
         head = {'Authorization': 'token {}'.format(self.api_token)}
         body = {
             'date': str(conv.date),
             'summary': conv.summary,
             'sentiment': conv.sentiment,
-            'keywords': conv.keywords,
+            'keywords': ','.join(conv.keywords),
             'id': conv.id
         }
+        print(body)
 
         response = requests.post(call_url, headers=head, json=body)
         response_json = response.json()

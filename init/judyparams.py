@@ -23,10 +23,12 @@ GUI Paramters dictate what the GUI looks like.
 '''
 GUI_PARAMS = {
     'theme': 'LightBlue2',  # List can be found through sg.theme_previewer() or .list() functions
-    'x_size': 900,
-    'y_size': 400,
+    'x_size': 150,
+    'y_size': 160,
     'title': 'Judy v0.01',
     'chat_fn': 'chat_history.dat',
     'chat_history': ''
 }
+
+LOG_NAME = '~/Judy/log.txt'
 

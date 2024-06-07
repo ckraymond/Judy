@@ -1,63 +1,47 @@
+'''
+Module contains chatHistory, chatExchange, and chatConversation. These classes are designed to hold all informaiton
+associated with previous queries and responses on Judy.
+'''
+
 import datetime
 import logging
-import json
 
 from api.openaiapi import openai_api_summary, openai_conv_info
 from api.bubbleapi import bubbleAPI
 
-logger = logging.getLogger(__name__)
 class chatHistory:
 
     def __init__(self):
+        #TODO: Remove this and replace with a log
+        print('Loading the chat history')
+
+        # Create empty lists for the exchanges and conversations
         self.exchanges = []
         self.conversations = []
 
+        # Load all of the conversations first since we will need to check the exchanges against them
         self.load_all_conversations()
+
+        # Then load all of the exchanges
         self.load_all_exchanges()
 
-        # As a final check we clean the data which makes sure all items are there and saves
+        # Clean the exchange data and make sure they have summaries
         self.clean_exchanges()
+
+        # Next we check the mappings of conversations and exchanges
         self.check_mappings()
-        # self.clean_conversations()
+
+        # Cleans the conversations by checking for missing items
+        self.clean_conversations()
+
+        # Finally, we resave all of the information that has been tagged to be adjusted
+        self.save_history()
 
     def __str__(self):
         return_value = ''
         for item in self.conversations:
             return_value = return_value + '\n' + str(item)
         return return_value
-
-    def load_all_exchanges(self):
-        '''
-        Loads all of the exchanges from Bubble and then ingests them into the self.exchanges list.
-        :return:
-        '''
-        logger.info('Pulling list of exchanges from Bubble API.')
-
-        # Open the Bubble API and get all the exchanges stored
-        loadAPI = bubbleAPI()
-        api_response = loadAPI.get_records('chatexchange')          # Returns dict
-
-        # Go through the JSON to ensure there is a value for each item. Will use append_line as empty entry.
-        for exchange in api_response['response']['results']:
-            append_line = {
-                'query': None,
-                'response': None,
-                'date': None,
-                'summary': None,
-                'conv_id': None,
-                '_id': None
-            }
-
-            for item in append_line.keys():
-                if item in exchange:
-                    append_line[item] = exchange[item]
-
-            if append_line['query'] is not None and append_line['response'] is not None and append_line['date'] is not None:
-                if append_line['query'] != '' and append_line['response'] != '' and append_line['date'] != '':
-                    new_exchange = chatExchange(append_line['date'], append_line['query'], append_line['response'],
-                                                append_line['summary'], append_line['_id'], append_line['conv_id'] )
-                    self.exchanges.append(new_exchange)
-                    logging.info('Added line to exchanges:', append_line)
 
     def load_all_conversations(self):
         '''
@@ -66,8 +50,8 @@ class chatHistory:
         :return:
         '''
 
-        self.conversations = []  # Reset the history to be empty just in case
-        logger.info('Pulling list of conversations from Bubble API.')
+        # Reset the history to be empty (just in case we use outside of __init__)
+        self.conversations = []
 
         # Open the Bubble API and get all the exchanges stored
         loadAPI = bubbleAPI()
@@ -93,31 +77,71 @@ class chatHistory:
 
             self.conversations.append(new_conversation)
 
+        print('Total conversations loaded: ', len(self.conversations))
+
+    def load_all_exchanges(self):
+        '''
+        Loads all of the exchanges from Bubble and then ingests them into the self.exchanges list.
+        :return:
+        '''
+        logging.info('Pulling list of exchanges from Bubble API.')
+
+        # Open the Bubble API and get all the exchanges stored
+        loadAPI = bubbleAPI()
+        api_response = loadAPI.get_records('chatexchange')          # Returns dict
+
+        # Go through the JSON to ensure there is a value for each item. Will use append_line as empty entry.
+        for exchange in api_response['response']['results']:
+            append_line = {
+                'query': None,
+                'response': None,
+                'date': None,
+                'summary': None,
+                'conversation': None,           # Has to be different due to naming conventions between Bubble and local
+                '_id': None
+            }
+
+            for item in append_line.keys():
+                if item in exchange:
+                    append_line[item] = exchange[item]
+
+            if append_line['query'] is not None and append_line['response'] is not None and append_line['date'] is not None:
+                if append_line['query'] != '' and append_line['response'] != '' and append_line['date'] != '':
+                    new_exchange = chatExchange(append_line['date'], append_line['query'], append_line['response'],
+                                                append_line['summary'], append_line['_id'], append_line['conversation'] )
+                    self.exchanges.append(new_exchange)
+                    logging.info('Added line to exchanges:', append_line)
+
+        print('Total exchanges loaded: ', len(self.exchanges))
 
     def clean_exchanges(self):
+        '''
+        With conversations and exchanges loaded we now clean all of the exchanges to make sure they have applicable
+        information.
+        :return:
+        '''
         # Remove lines when there is no query, response, or date
+        print('Cleaning the exchange data.')
         logging.info('Cleaning the data.')
 
         # Review the exchanges and add summaries
         for item in self.exchanges:
-            if item.summary is None or item.summary == '':
-                response = openai_api_summary(item.query, item.response)
-                item.summary = response['summary']
+            item.check_summary()
 
-                logging.info('Adding summary to: ', item.id)
-
-                # Update in Bubble
-                api_call = bubbleAPI()
-                api_call.update_exch_rcds(item)
-                logging.info('Updated exchange id: ', item.id)
+        print('Total exchanges after cleaning: ', len(self.exchanges))
 
     def check_mappings(self):
-        # First ensure that every
+        '''
+        Function to iterate through the exchanges and ensure that each exchange has an associated conversations ID.
+        :return:
+        '''
 
-        logging.info('Checking alignement of conversations and exchanges')
+        print('In the check_mappings function')
 
         # Sort the exchanges by date/time
         self.exchanges.sort(key = lambda x : x.date)
+
+        print('Sorting through these exchanges: ', len(self.exchanges))
 
         # Iterate through the exchanges and see if they have an associated conversation
         for num in range(len(self.exchanges)):
@@ -132,36 +156,55 @@ class chatHistory:
                 else:       # Create a new conversation, populate with date and then assign the new ID to the exchange
                     self.create_initial_conv(self.exchanges[num])
 
-        # Now check the conversations to see if we need to add anything.
-        for convs in self.conversations:
-            if convs.summary is None or convs.keywords is None or convs.sentiment is None:
-                exch_list = self.get_exchanges(convs.id)
+        print('Total exchanges after checking mapping: ', len(self.exchanges))
+        print('Total conversations after checking mapping: ', len(self.conversations))
+
+    def clean_conversations(self):
+        '''
+        Go through the conversations and check to make sure that they have all necessary fields. If not, generate them
+        and flag to be saved.
+        :return:
+        '''
+        print('Cleaning conversations.')
+
+        for conv in self.conversations:
+            print(conv)
+            if conv.summary in ['', None] or conv.keywords in ['', None] or conv.sentiment in ['', None]:
+                print('Conversation to be updated (summary, keywords, sentiment): ', conv.id)
+                exch_list = self.get_exchanges(conv.id)
 
                 conv_info = openai_conv_info(exch_list)
 
-                convs.summary = conv_info['summary']
-                convs.keywords = conv_info['keywords']
-                convs.sentiment = conv_info['sentiment']
+                conv.summary = conv_info['summary']
+                conv.keywords = [x.strip() for x in conv_info['keywords'].split(',')]
+                conv.sentiment = conv_info['sentiment']
 
-                convs._ns = True
+                conv._ns = True
 
-        # Finally go through and save the adjusted Conversations and the adjusted exchanges
-        bubble_connect = bubbleAPI()
+        print('Checked conversations and identified those to be updated.')
+
+
+    def save_history(self):
+        '''
+        Iterates through the conversations and exchanges and saves any that have been marked to be updated.
+        Cannot create new ones.
+        :return:
+        '''
+        for exch in self.exchanges:
+            if exch._ns is True:
+                exch.update_exch()
+                exch._ns = False
 
         for conv in self.conversations:
             if conv._ns is True:
-                bubble_connect.update_conv_rcds(conv)
+                conv.post_conv()
                 conv._ns = False
 
-        for exch in self.exchanges:
-            if exch._ns is True:
-                bubble_connect.update_exch_rcds(exch)
-                exch._ns = False
+        print('History saved onto Bubble.')
 
 # TODO: Need to create function to check conversations against exchanges and make sure there are not ones that
     #  have no associated exchanges
 # TODO: Need to create function to remove empty exchanges from Bubble through API
-
 
     def get_exchanges(self, conv_id):
         exch_list = []
@@ -172,7 +215,6 @@ class chatHistory:
 
         return exch_list
 
-
     def create_initial_conv(self, exchange):
         '''
         Given an exchange, this creates a new conversation, sends the ID to the exchange and sets its own ID.
@@ -181,10 +223,25 @@ class chatHistory:
         :return:
         '''
         new_conversation = chatConversation(date=exchange.date)
-        new_conversation.id = new_conversation.post_conversation()
+        new_conversation.id = new_conversation.post_conv()
+        print('Creating initial conversation and mapping conv: ', exchange.conv_id, 'to: ', exchange.id)
         exchange.conv_id = new_conversation.id
         self.conversations.append(new_conversation)
         exchange._ns = True
+
+    def add_exchange(self, exch):
+        '''
+        Take in a chatExchange object, adds it to the exchanges list and then uploads to Bubble.
+        :param exch:
+        :return:
+        '''
+        self.exchanges.append(exch)
+
+        # TODO: Need to check against conversations to see if there is one it should be added to and gt the conv_id.
+
+        exch.id = exch.post_exch()
+        exch._ns = False
+
 
 class chatExchange:
     def __init__(self,
@@ -207,9 +264,45 @@ class chatExchange:
                 self.date = datetime.datetime.strptime(date,
                                                        '%Y-%m-%dT%H:%M:%S.%fZ')  # The date of the first exchange in the conversation
         else:
-            self.date = None
+            self.date = datetime.datetime.now()
     def __str__(self):
-        return f'{self.id} | {self.date} | {self.summary[0:20]} | {self.query[0:20]} | {self.response[0:20]} | {self.conv_id}'
+        return f'{self.id} | {self.date} | {str(self.summary)[:20]} | {str(self.query)[0:20]} | {str(self.response)[0:20]} | {self.conv_id}'
+
+    def check_summary(self):
+        if self.summary == '' or self.summary is None:
+            response = openai_api_summary(self.query, self.response)
+            self.summary = response['summary']
+
+            print('Adding summary to exchange: ', self.id)
+            logging.info('Adding summary to exchange: ', self.id)
+
+            # Set tag for the exchange to be saved again in the future
+            self._ns = True
+
+    def post_exch(self):
+        # Generates a new exchange in Bubble
+
+        if self.id is None or self.id == '':
+            # Create new record if there is not already one.
+            apiConnection = bubbleAPI()
+            body = {
+                'query': self.query,
+                'response': self.response,
+                'summary': self.summary,
+                'conversation': self.conv_id,
+                'date': str(self.date)
+            }
+            response = apiConnection.post_record('chatexchange', body)
+
+            try:
+                return response['id']
+            except:
+                logging.error(response)
+        else:
+            # Update existing one if there is already an ID there.
+            apiConnection = bubbleAPI()
+            response = apiConnection.update_exch_rcds(self)
+            return response['id']
 
 class chatConversation:
     '''
@@ -227,7 +320,7 @@ class chatConversation:
         self.sentiment = sentiment                                       # The sentiment of the conversation
         self.summary = summary                                           # A simple summary of the conversation
         self.keywords = keywords                                         # The keywords associated with this conversation
-        self._ns = False                                # Does the conversation need to be save to Bubble
+        self._ns = False                                                 # Does the conversation need to be save to Bubble
         if date is not None:
             if type(date) is datetime.datetime:
                 self.date = date
@@ -240,15 +333,38 @@ class chatConversation:
     def __str__(self):
         return f'{self.id} | {self.date} | {self.summary} | Sent: {self.sentiment} | Kwds: {len(self.keywords)}'
 
-    def post_conversation(self):
-        # Generates a new conversation in Bubble
+    def post_conv(self):
+        '''
+        Updates a converation in Bubble. If there is an ID it will update the conversation but if none then it posts
+        a new one.
+        :return:
+        '''
 
         apiConnection = bubbleAPI()
-        body = {
-            'sentiment': self.sentiment,
-            'summary': self.summary,
-            'keywords': self.keywords,
-            'date': str(self.date)
-        }
-        response = apiConnection.post_record('conversation', body)
-        return response['id']
+
+        if self.id is None or self.id == '':
+            # Create a new record and populate with the conversation information
+            body = {
+                'sentiment': self.sentiment,
+                'summary': str(self.summary),
+                'keywords': ",".join(self.keywords),
+                'date': str(self.date)
+            }
+
+            response = apiConnection.post_record('conversation', body)
+            try:
+                return response['id']
+            except:
+                logging.error('Unable to recognize response: ', response)
+                print('Unable to recognize response: ', response)
+                return None
+
+        else:
+            # Update the record since we already have an ID
+            response = apiConnection.update_conv_rcds(self)
+            try:
+                return response['id']
+            except:
+                logging.error('Unable to recognize response: ', response)
+                print('Unable to recognize response: ', response)
+                return None
