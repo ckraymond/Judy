@@ -28,7 +28,6 @@ class judyGUI:
                                 resizable=True)
 
         logging.info('Judy GUI Initialized.')
-        print('Judy GUI Initialized')
 
     def window_read(self):
         '''
@@ -40,17 +39,32 @@ class judyGUI:
             self.event, self.values = self.window.read()
 
             if self.event in ('Quit', None, sg.WIN_CLOSED):
+                self.close_out()
                 break
             elif self.event == 'Ask Question':
                 self.submit_question()
 
     def submit_question(self):
+        # Create new exchange object and populate with the ask_question function
         new_exchange = chatExchange()
         new_exchange.query = self.ask_question()
-        new_exchange.response = openai_api_call(new_exchange.query, self.chat_history.exchanges)          # Reaches out to the API and submits the question
+
+        # Get response via OpenAI
+        new_exchange.response = openai_api_call(new_exchange.query, self.chat_history.exchanges)
+
+        # Add the exchange onto the list of exchanges
         self.chat_history.exchanges.append(new_exchange)
-        new_exchange.post_exch()                                                    # Saves the exchange onto Bubble
+        self.chat_history.check_for_conv(new_exchange)                              # Determine what conversaiton the exch should be part of
+
+        # Check through the history to see if any conversations have completed and if so add a summary
+        self.chat_history.rev_conversations()
+
+        # save any changes to Bubble before proceeding
+        self.chat_history.save_history()
+
+        # Finally read the response to the user
         self.read_response(new_exchange.response)
+        #TODO: Find a way to halt other operations until the response is complete
 
     def ask_question(self):
         self.ask_layout = [[sg.Push()],[sg.Image('Judy.jpeg'),[sg.Push()]]]
@@ -63,15 +77,32 @@ class judyGUI:
         return query
 
     def read_response(self, response):
-        language = 'en'
+        '''
+        Simple function to read the users response.
+        :param response:
+        :return:
+        '''
         myobj = gTTS(text = response, lang = 'en', slow=False)
         myobj.save('./temp/response.mp3')
 
-        # Initialize the mixer module
-        pygame.mixer.init()
+        pygame.mixer.init()                                         # Initialize the mixer module
+        pygame.mixer.music.load('./temp/response.mp3')              # Load the mp3 file
+        pygame.mixer.music.play()                                   # Play the loaded mp3 file
 
-        # Load the mp3 file
-        pygame.mixer.music.load('./temp/response.mp3')
+    def close_out(self):
+        '''
+        This function is run when the app is closed out. It checks the data and then runs a save
+        :return:
+        '''
 
-        # Play the loaded mp3 file
-        pygame.mixer.music.play()
+        # Clean the exchange data and make sure they have summaries
+        self.chat_history.clean_exchanges()
+
+        # Next we check the mappings of conversations and exchanges
+        self.chat_history.check_mappings()
+
+        # Cleans the conversations by checking for missing items
+        self.chat_history.clean_conversations()
+
+        # Finally, we resave all of the information that has been tagged to be adjusted
+        self.chat_history.save_history()

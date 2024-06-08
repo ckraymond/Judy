@@ -22,14 +22,18 @@ class bubbleAPI:
         return response.json()
 
     def post_record(self, type, body):
+        '''
+        Posts a record of type to Bubble
+        :param type:
+        :param body:
+        :return:
+        '''
         logging.info('Posting ', type, 'record to Bubble.')
         post_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.api_token)}
 
         response = requests.post(post_url, headers=head, json=body)
-        response_json = response.json()
-
-        return response_json
+        return response.json()
 
     def update_exch_rcds(self, exchange):
         logging.info('Updating exchange (ID: ', exchange.id, ') to Bubble.')
@@ -41,16 +45,16 @@ class bubbleAPI:
             'response': exchange.response,
             'summary': exchange.summary,
             'id': exchange.id,
-            'conversation': exchange.conv_id
+            'conv_id': exchange.conv_id
         }
 
         response = requests.post(call_url, headers=head, json=body)
-        response_json = response.json()
 
-        if response_json['status'] == 'success':
-            return True
+        if response.json()['status'] == 'success':
+            return response.json()
         else:
             logging.error('Unable to update exchange id in Bubble: ' + body['id'])
+            logging.error(response.json())
             return False
     #TODO: Need to add in error handling for when something doesn't work
 
@@ -65,15 +69,37 @@ class bubbleAPI:
             'keywords': ','.join(conv.keywords),
             'id': conv.id
         }
-        print(body)
 
         response = requests.post(call_url, headers=head, json=body)
-        response_json = response.json()
-        print(response_json)
 
-        if response_json['status'] == 'success':
-            return True
+        if response.json()['status'] == 'success':
+            return response.json()
         else:
             logging.error('Unable to update id in Bubble: ' + body['id'])
+            logging.error(response.json())
+            return False
+
+    def remove_conv(self, id):
+        '''
+        Takes a conversation ID, connects to the bubble API and then removes it from Bubble.
+        :return:
+        '''
+
+        logging.info('Removing conversation (ID: ', id, ') from Bubble.')
+        call_url = self.wf_url + '/' + 'del_conversation'
+        head = {'Authorization': 'token {}'.format(self.api_token)}
+        body = {
+            'id': id
+        }
+
+        response = requests.post(call_url, headers=head, json=body)
+
+        print(response)
+
+        if response.json()['status'] == 'success':
+            return response.json()
+        else:
+            logging.error('Unable to update id in Bubble: ' + body['id'])
+            logging.error(response.json())
             return False
 

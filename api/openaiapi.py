@@ -5,6 +5,23 @@ import json
 from init.judyparams import OPENAI_QUERY
 from api.promptcreate import promptCreate
 
+class openAI_GPT:
+    '''
+    Wrapper class for all Open AI API calls to ChatGPT
+    '''
+
+    def __init__(self, model, temp):
+        self.model = 'gpt-3.5-turbo'
+        self.temp = 0
+        self.message = []
+
+    def __str__(self):
+        return f'{self.model} | {self.temp} | {','.join(self.message)[:100]}'
+
+    #TODO: Give ability to short answer to specific number of words.
+
+
+
 def openai_api_call(query, history):
     '''
     Calls the OpenAI API using the system prompt and returns the answer
@@ -91,7 +108,7 @@ def openai_conv_info(exch_list):
                 In sentiment, assign a number between 1 and 5 for how I seem to be feeling. 1 would be extremely depressed 
                 and 5 would be extremely happy.
                 
-                The keywords field should be a comma-delimited list of any places, people, or events that are referenced
+                In keywords, provide a comma-delimited list of any places, people, or events that are referenced
                 in our conversation. There should be at least one keyword and no more than 10."""})
 
     client = openai.OpenAI()
@@ -102,4 +119,5 @@ def openai_conv_info(exch_list):
         messages=messages
     )
 
+    print(completion.choices[0].message.content)
     return json.loads(completion.choices[0].message.content)

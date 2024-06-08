@@ -15,7 +15,7 @@ OPENAI_QUERY = {
     'temp': 0,
     'sys_content': 'You are a personal assistant for someone who has dimentia.' +
                    'Youre job is to help remind them of things while at the same time to reassure them.' +
-                   'You should not tell them anything you do not know to be true.'
+                   'You should not tell them anything you do not know to be true. Make sure that your responses are no more than two sentences in length.'
 }
 
 '''

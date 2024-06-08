@@ -37,6 +37,10 @@ class chatHistory:
         # Finally, we resave all of the information that has been tagged to be adjusted
         self.save_history()
 
+        # Identify conversations that need to be deleted and delete them
+        self.remove_orph_convos()
+        # TODO: Create the conversation delete function
+
     def __str__(self):
         return_value = ''
         for item in self.conversations:
@@ -77,7 +81,7 @@ class chatHistory:
 
             self.conversations.append(new_conversation)
 
-        print('Total conversations loaded: ', len(self.conversations))
+        logging.info('Total conversations loaded: ', len(self.conversations))
 
     def load_all_exchanges(self):
         '''
@@ -121,8 +125,7 @@ class chatHistory:
         :return:
         '''
         # Remove lines when there is no query, response, or date
-        print('Cleaning the exchange data.')
-        logging.info('Cleaning the data.')
+        logging.info('chatHistory.clean_exchanges > Cleaning the exchange data.')
 
         # Review the exchanges and add summaries
         for item in self.exchanges:
@@ -136,18 +139,23 @@ class chatHistory:
         :return:
         '''
 
-        print('In the check_mappings function')
+        logging.info('chatHistory.check_mappings > In the check_mappings function')
 
         # Sort the exchanges by date/time
         self.exchanges.sort(key = lambda x : x.date)
 
-        print('Sorting through these exchanges: ', len(self.exchanges))
+        # print('Sorting through exchanges...')
+        # for exch in self.exchanges:
+        #     print(exch.date)
+
+        logging.info('Sorting through these exchanges: ', len(self.exchanges))
 
         # Iterate through the exchanges and see if they have an associated conversation
         for num in range(len(self.exchanges)):
-            if self.exchanges[num].conv_id is None:
+            if (self.exchanges[num].conv_id is None or self.exchanges[num].conv_id == '' or
+                    self.exchanges[num].conv_id not in self.get_conv_ids()):
                 if num > 0:
-                    difftime = self.exchanges[num].date - self.exchanges[num-1].date
+                    difftime = abs(self.exchanges[num].date - self.exchanges[num-1].date)
                     if difftime.total_seconds() > 120:
                         self.create_initial_conv(self.exchanges[num])
                     else:
@@ -165,23 +173,14 @@ class chatHistory:
         and flag to be saved.
         :return:
         '''
-        print('Cleaning conversations.')
 
         for conv in self.conversations:
-            print(conv)
-            if conv.summary in ['', None] or conv.keywords in ['', None] or conv.sentiment in ['', None]:
-                print('Conversation to be updated (summary, keywords, sentiment): ', conv.id)
+            if conv.summary in ['', None] or conv.keywords in ['', None, []] or conv.sentiment in ['', None]:
+                logging.info('Conversation to be updated for (summary, keywords, sentiment): ', conv.id)
                 exch_list = self.get_exchanges(conv.id)
 
-                conv_info = openai_conv_info(exch_list)
-
-                conv.summary = conv_info['summary']
-                conv.keywords = [x.strip() for x in conv_info['keywords'].split(',')]
-                conv.sentiment = conv_info['sentiment']
-
-                conv._ns = True
-
-        print('Checked conversations and identified those to be updated.')
+                conv.clean_conv(exch_list)
+        logging.info('Checked conversations and identified those to be updated.')
 
 
     def save_history(self):
@@ -192,7 +191,7 @@ class chatHistory:
         '''
         for exch in self.exchanges:
             if exch._ns is True:
-                exch.update_exch()
+                exch.post_exch()
                 exch._ns = False
 
         for conv in self.conversations:
@@ -224,7 +223,10 @@ class chatHistory:
         '''
         new_conversation = chatConversation(date=exchange.date)
         new_conversation.id = new_conversation.post_conv()
-        print('Creating initial conversation and mapping conv: ', exchange.conv_id, 'to: ', exchange.id)
+        new_conversation._ns = True
+
+        logging.info('Creating initial conversation and mapping conv: ', exchange.conv_id, 'to: ', exchange.id)
+
         exchange.conv_id = new_conversation.id
         self.conversations.append(new_conversation)
         exchange._ns = True
@@ -242,6 +244,82 @@ class chatHistory:
         exch.id = exch.post_exch()
         exch._ns = False
 
+    def check_for_conv(self, exch):
+        '''
+        Checks the exchange provided to see if it belongs with a specific conversation.
+        :param exch:
+        :return:
+        '''
+        for exist_exch in self.exchanges:
+            difftime = abs(exch.date - exist_exch.date)
+            if difftime.total_seconds() < 120:
+                self.create_initial_conv(exch)
+                return
+
+        self.create_initial_conv(exch)
+        return
+
+    def rev_conversations(self):
+        '''
+        Review the conversations to determine if any of them are completed and can be closed out.
+        :return:
+        '''
+
+        max_conv = {'index': 0,'value': datetime.datetime.min}
+
+        # Skip this if there are no conversations
+        if len(self.conversations) == 0: return                             # Skip this if there are no conversations
+
+        # Now find the most recent conversation
+        for index in range(len(self.conversations)):
+            if self.conversations[index].date > max_conv['value']:
+                max_conv['index'] = index
+                max_conv['value'] = self.conversations[index].date
+
+        max_exch = {'index': 0, 'value': datetime.datetime.min}                              # Track the most recent conversation
+        exch_list = []
+
+        # Now find the most recent exchange in that conversation if it doesn't have a summary
+        if self.conversations[max_conv['index']].summary in [None, '']:
+            for index in range(len(self.exchanges)):
+                if self.exchanges[index].conv_id == self.conversations[max_conv['index']].id:
+                    exch_list.append(self.exchanges[index])
+                if self.exchanges[index].date > max_exch['value']:
+                    max_exch['index'] = index
+                    max_exch['value'] = self.exchanges[index].date
+
+        difftime = abs(datetime.datetime.now() - self.exchanges[max_exch['index']].date)
+        if difftime.total_seconds() > 120:
+            logging.info('Cleaning conversation: ', self.id)
+            self.clean_conv(exch_list)
+
+    def get_conv_ids(self):
+        '''
+        Simple helper function to get all of the conversation IDs
+        :return:
+        '''
+        conv_ids = []
+        for conv in self.conversations:
+            conv_ids.append(conv.id)
+
+        return conv_ids
+
+    def remove_orph_convos(self):
+        '''
+        Go through the conversations on Bubble and remove any that are not being called by excahnged.
+        :return:
+        '''
+        logging.info('chatHistory.remove_orph_convos > Checking for orphaned conversaitons.')
+        convo_list = self.get_conv_ids()
+
+        for exch in self.exchanges:
+            if exch.conv_id in convo_list:
+                convo_list.remove(exch.conv_id)
+
+        api_connection = bubbleAPI()
+        for conv_id in convo_list:
+            api_connection.remove_conv(conv_id)
+            logging.info('chatHistory.remove_orph_convos > Removed conversation ID: ', conv_id)
 
 class chatExchange:
     def __init__(self,
@@ -273,8 +351,7 @@ class chatExchange:
             response = openai_api_summary(self.query, self.response)
             self.summary = response['summary']
 
-            print('Adding summary to exchange: ', self.id)
-            logging.info('Adding summary to exchange: ', self.id)
+            logging.info('chatHistory.check_summary > Adding summary to exchange: ', self.id)
 
             # Set tag for the exchange to be saved again in the future
             self._ns = True
@@ -295,14 +372,15 @@ class chatExchange:
             response = apiConnection.post_record('chatexchange', body)
 
             try:
+                logging.info('chatExchange.post_exch > New exchange posted to Bubble, ID: ', response['id'])
                 return response['id']
             except:
-                logging.error(response)
+                logging.error('chatExchange.post_exch > Unable to post new exchange: ', response)
         else:
             # Update existing one if there is already an ID there.
             apiConnection = bubbleAPI()
             response = apiConnection.update_exch_rcds(self)
-            return response['id']
+            return response['response']['exchange']['_id']
 
 class chatConversation:
     '''
@@ -352,19 +430,44 @@ class chatConversation:
             }
 
             response = apiConnection.post_record('conversation', body)
+
             try:
+                print('New conversation created, ID: ', response['id'])
+                logging.info('New conversation created, ID: ', response['id'])
                 return response['id']
             except:
-                logging.error('Unable to recognize response: ', response)
-                print('Unable to recognize response: ', response)
-                return None
+                logging.error('chat_history.post_conv > Unable to return response to new conversation post: ',
+                              response)
+                return False
 
         else:
             # Update the record since we already have an ID
             response = apiConnection.update_conv_rcds(self)
             try:
-                return response['id']
+                return response['response']['conversation']['_id']
             except:
-                logging.error('Unable to recognize response: ', response)
-                print('Unable to recognize response: ', response)
-                return None
+                logging.error('Unable to send response from update conversation: ',
+                              response)
+                return False
+
+    def clean_conv(self, exch_list):
+        '''
+        Given the list of associated exchanges, this returns a summary, keywords, and sentiment of the conversation
+        :param exch_list:
+        :return:
+        '''
+        conv_info = openai_conv_info(exch_list)
+
+        self.summary = conv_info['summary']
+
+        print(conv_info['keywords'])
+        # Keywords are trick as they sometimes comethrough as a list and sometimes as a string
+        try:
+            self.keywords = [x.strip() for x in conv_info['keywords'].split(',')]
+        except:
+            self.keywords = conv_info['keywords']
+
+        self.sentiment = conv_info['sentiment']
+
+        self._ns = True
+        return True
