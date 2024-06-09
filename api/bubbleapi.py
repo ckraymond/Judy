@@ -10,7 +10,7 @@ class bubbleAPI:
 
     def get_records(self, type):
         '''
-        Requests to get record of a certain tupe from Bubble.
+        Requests to get record of a certain type from Bubble.
         :param type:
         :return:
         '''

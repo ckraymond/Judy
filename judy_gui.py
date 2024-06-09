@@ -18,6 +18,7 @@ class judyGUI:
         '''
         # TODO: Adjust dimensions to pull screen size and do a percentage
         self.chat_history = chatHistory()           # Creates the chat history and loads from the history file
+        self.user_data = userBG()
 
         self.layout = [[sg.Push(), sg.Image('./data/judy_circle.png', subsample=5), sg.Push()],
                        [sg.Push(), sg.Button('Ask Question', bind_return_key=True), sg.Button('Quit'), sg.Push()]]
