@@ -2,25 +2,25 @@ import datetime
 import logging
 
 from api.bubbleapi import bubbleAPI
-from patient_friends import patientFriends
-from patient_bg import patientBG
+from .patient_bg import patientBG
+from .patient_friends import patientFriends
 
-class patientInfo():
+class patientInfo:
 
     def __init__(self):
         self.fname = ''
         self.mname = ''
         self.lname = ''
         self.nname = ''
-        self.location = ''
+        self.location = {}
         self.gender = ''
-        self.bday = None
+        self.bday = ''
         self.friends = []
         self.bg = None
 
     def __str__(self):
         return_string = 'Patient Bio\n------------------------------------------------------'
-        return_string += f'\n{self.fname} {self.mname} {self.lname}, NN: {self.nname}, BD: {self.birthday}, Loc: {self.location['address']}, Gen: {self.gender}'
+        return_string += f'\n{self.fname} {self.mname} {self.lname}, NN: {self.nname}, BD: {self.bday}, Loc: {self.location}, Gen: {self.gender}'
         return_string += str(self.bg)
         return_string += str(self.friends)
         return return_string
@@ -48,7 +48,6 @@ class patientInfo():
         self.bg = patientBG(response)                       # In Bubble the background info is not split into its own section
 
         self.import_friends(bubble_api)
-        # TODO: Still need to assign friends information
 
     def import_friends(self, bubble_api):
         '''
@@ -60,7 +59,3 @@ class patientInfo():
         friends_list = bubble_api.get_records('friends')['response']['results']
 
         self.friends = patientFriends(friends_list)
-
-test = patientInfo()
-test.import_data()
-print(test)

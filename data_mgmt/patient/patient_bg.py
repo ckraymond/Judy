@@ -1,6 +1,6 @@
 import logging
 
-class patientBG():
+class patientBG:
     def __init__(self, response):
         self.mapping = {
             'schools': 'BG_Schools',

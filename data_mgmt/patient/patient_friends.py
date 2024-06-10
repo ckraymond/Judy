@@ -33,11 +33,3 @@ class patientFriends:
                 friend_str += f'{item}: {friend[item]} '
             return_str += friend_str
         return return_str
-
-
-
-
-        self.fname = ''
-        self.lname = ''
-        self.bday = ''
-        self.deceased = ''

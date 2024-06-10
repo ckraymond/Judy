@@ -4,9 +4,10 @@ from gtts import gTTS
 import logging
 
 from data_mgmt.chat_history import chatHistory, chatExchange       # Class that stores the chat exchance
-from api.openaiapi import openai_api_call     # Class that handles querying the OpenAI API
+from api.openaiapi import openAIGPT     # Class that handles querying the OpenAI API
 from soundprocessing import soundProcessing
 from init.judyparams import GUI_PARAMS
+from data_mgmt.patient.patient_info import patientInfo
 
 
 class judyGUI:
@@ -18,7 +19,11 @@ class judyGUI:
         '''
         # TODO: Adjust dimensions to pull screen size and do a percentage
         self.chat_history = chatHistory()           # Creates the chat history and loads from the history file
-        self.user_data = userBG()
+
+        self.patient_info = patientInfo()           # Gets the patient's information
+        self.patient_info.import_data()
+
+        print(self.patient_info)
 
         self.layout = [[sg.Push(), sg.Image('./data/judy_circle.png', subsample=5), sg.Push()],
                        [sg.Push(), sg.Button('Ask Question', bind_return_key=True), sg.Button('Quit'), sg.Push()]]
@@ -49,9 +54,14 @@ class judyGUI:
         # Create new exchange object and populate with the ask_question function
         new_exchange = chatExchange()
         new_exchange.query = self.ask_question()
+        # new_exchange.query = 'This is a test, can you hear me?'
 
         # Get response via OpenAI
-        new_exchange.response = openai_api_call(new_exchange.query, self.chat_history.exchanges)
+        gpt_api = openAIGPT()
+        gpt_api.user_query(new_exchange.query, self.patient_info, self.chat_history.exchanges)
+        new_exchange.response = gpt_api.run_query()
+
+        #TODO: Double check exactly what is sent to ChatGPT
 
         # Add the exchange onto the list of exchanges
         self.chat_history.exchanges.append(new_exchange)

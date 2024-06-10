@@ -1,150 +1,160 @@
 import logging
 import datetime
+import json
 
 from data.user_test_data import test_user_info
 
 class promptCreate:
 
-    def __init__(self):
+    def __init__(self, raw_query, user, history):
         logging.info('Generating the GPT prompt.')
-        self.user_info = test_user_info         # Gets the user info from the test data
-        self.user_prompt = ''                   # This is the overall prompt with the user's info
+        self.user = user                            # Gets the user info from the test data
+        self.raw_query = raw_query                  # This is the overall prompt with the user's info
+        self.messages = []
+        self.last_five = history[-5:]
+
+        self.gen_user_query_sys_prompt()            # Trigger creation of the system prompt when called
 
         # TODO: Integrate with cloud to pull the information from there
 
         # self.chat history # Get last five chat history
         # self.long_term_history # Get the long term chat history
 
-    def gen_prompt(self):
+    def gen_user_query_sys_prompt(self):
         '''
         The main function that creates the overall background prompt to ChatGPT. The prompt includes all applicable
         backgorund information on the user.
         :return:
         '''
-        self.prompts = {
-            'biography': self.gen_bio(),
-            'people': self.gen_people(),
-            'places': self.gen_places(),
-            'events': self.gen_events(),
-            'interests': self.gen_interests(),
-            'faqs': self.gen_faqs()
+        logging.error('THIS IS WHERE YOU NEED TO WORK. YOU NEED TO CREATE A FUNCTION TO CRAFT THE QUERY GIVEN THE QUERY, USER INFO, AND HISTORY.')
+
+        self.system_prompt = {
+            'instructions': 'You are a personal assistant named Judy for someone with dementia. You should follow the following rules ' +
+                      'when providing any responses:\n' +
+                      '- All responses should be no more than two sentences in length.\n' +
+                      '- You should not provide any answer oyu are not sure of.\n' +
+                      '- When possible remind the user ' +
+                      'of things they might have already asked or information that they might have forgotten that' +
+                      'could be relevant.\n' +
+                      '- You should refer to the user by their first name occasionally.\n',
+            'info': 'The following JSON formatted field contains information about the user you are talking to:',
+            'family': 'The following JSON formatted fields contain information about the users friends and family:',
+            'background': ''
+            # TODO: Need to include another field that contains FAQs and add into Bubble as well.
         }
 
-        for prompts in self.prompts.values():
-            self.user_prompt += prompts
+        self.update_info()
+        self.update_family()
+        self.update_background()
+        self.consolidate_prompt()
 
-    def gen_bio(self):
+        self.build_message()
+
+    def update_info(self):
         '''
-        Takes the biographical information and consolidates it into a single string which will be added to the query.
+        This function updates the info section of the prompts.
         :return:
         '''
-        bio_prompt = {
-            'name': '',
-            'nname': '',
-            'bday': '',
-            'home': ''
-        }
-        return_prompt = ''
 
-        bio_prompt['name'] = f'My name is {self.user_info['biography']['names']['fname']} {self.user_info['biography']['names']['mname']} {self.user_info['biography']['names']['lname']}. '
-        if self.user_info['biography']['names']['nname'] is not None:
-            bio_prompt['nname'] = f'My nickname is {self.user_info['biography']['names']['nname']}. '
-        bio_prompt['bday'] = f'My birthday is {self.user_info['biography']['bday']}. '
-        bio_prompt['home'] = f'I live in {self.user_info['biography']['home']}. '
-
-        for prompts in bio_prompt.values():
-            return_prompt += prompts
-
-        return return_prompt
-
-    def gen_people(self):
-        '''
-        Takes the list of people and then generates a single string that concatenates all of them using the
-        create_person helper function.
-        :return:
-        '''
-        people_prompt = ''
-
-        for person in self.user_info['people']:
-            people_prompt += self.create_person(person)
-
-        return people_prompt
-
-
-    def create_person(self, person):
-        '''
-        Takes the person info and creates a single string with that persons information.
-        :param person:
-        :return:
-        '''
-        logging.info('Generating personal info.')
-
-        per_prompts = {
-            'name': '',
-            'location': '',
-            'bday': '',
-            'interests': '',
-            'deceased': ''
+        new_info = {
+            'User\'s First Name': self.user.fname,
+            'User\'s Middle Name': self.user.mname,
+            'User\'s Last Name': self.user.lname,
+            'User\'s Nickname': self.user.nname,
+            'User\'s Gender': self.user.gender
         }
 
-        per_prompts['name'] = f'I have a {person['relationship']} named {person['fname']} {person['lname']}; '
-        if person['location'] is not None:
-            per_prompts['location'] = f'They live in {person['location']}; '
-        if person['bday'] is not None:
-            per_prompts['bday'] = f'Their birthday is {person['bday']}; '
-        if len(person['interests']) > 0:
-            per_prompts['interests'] = f'Their interests are {person['interests']}; '
-        if person['deceased'] is True:
-            per_prompts['deceased'] = 'They are deceased. '
+        # Need to treat date slightly differently
+        if self.user.bday is datetime.datetime:
+            new_info['User\'s Birthday'] = datetime.datetime.strptime(self.user.bday, '%B %d, %Y')
 
-        person_prompt = ''
-        for prompt in per_prompts.values():
-            person_prompt += prompt
+        self.system_prompt['info'] += '\n' + json.dumps(new_info)
 
-        return person_prompt
+    def update_family(self):
+        '''This takes all of the friends and family and puts it into a single jason format.'''
 
-    def gen_places(self):
-        '''
-        Generates a single string which has all of the places that are important to the user and why.
-        :return:
-        '''
-        places_prompt = ''
-        for place in self.user_info['places']:
-            places_prompt = f'{place['name']} is important to me because {place['reason']}. '
+        for fam in self.user.friends.data:
+            fam_json = self.update_single_person(fam)
+            self.system_prompt['family'] += fam_json
 
-        return places_prompt
+    def update_single_person(self, fam):
+        '''Updates a single person and returns the value'''
 
-    def gen_events(self):
-        events_prompt = ''
+        # USe a mapping table to ensure that we have the info there
+        fam_mapping = {
+            'relationship': 'Relationship to User',
+            'fname': 'First Name',
+            'lname': 'Last Name',
+            'nname': 'Nickname',
+            'location': 'Home',
+            'interests': 'Interests and Hobbies',
+            'deceased': 'Are They Deceased'
+        }
+        fam_info = {}
 
-        if len(self.user_info['events']) > 0:
-            events_prompt = 'The following events are important to me: '
-            for event in self.user_info['events']:
-                events_prompt += (f'{event['name']} on {event['date']} is important because {event['description']},')
-            events_prompt = events_prompt[:-1] + '.'
+        for key in fam:
+            if key in fam_mapping.keys():
+                if key == 'bday':
+                    if type(key) is datetime.datetime:
+                        fam_info['Birthday'] = fam['bday'].strftime('%B %d, %Y')
+                    if type(key) is str:
+                        fam_info['Birthday'] = (datetime.datetime.strptime(fam['bday'], '%Y-%m-%dT%H:%M:%S.%fZ').
+                                                strftime('%B %d, %Y'))
+                elif key == 'deceased':
+                    if fam['deceased'] is True:
+                        fam_info['Are They Deceased'] = "Yes"
+                    else:
+                        fam_info['Are They Deceased'] = "No"
+                else:
+                    fam_info[fam_mapping[key]] = fam[key]
 
-        return events_prompt
+        return json.dumps(fam_info)
 
-    def gen_interests(self):
-        ints_prompt = ''
+    def update_background(self):
+        for interest in self.user.bg.data:
+            if interest == 'schools':
+                self.system_prompt['background'] += ('\nThe user is interested in the following schools and you ' +
+                                                     'should integrate them into your response as appropriate: ' +
+                                                     self.user.bg.data[interest])
+            elif interest == 'sports':
+                self.system_prompt['background'] += ('\nThe user is interested in the following sports and teams and ' +
+                                                     'you should integrate them into your response as appropriate: ' +
+                                                     self.user.bg.data[interest])
+            elif interest == 'foods':
+                self.system_prompt['background'] += ('\nThe user is interested in the following foods and you should' +
+                                                     'integrate them into your response as appropriate: ' +
+                                                     self.user.bg.data[interest])
+            elif interest == 'places':
+                self.system_prompt['background'] += ('\nThe user is interested in the following places and you should' +
+                                                     'integrate them into your response as appropriate: ' +
+                                                     self.user.bg.data[interest])
+            elif interest == 'hobbies':
+                self.system_prompt['background'] += ('\nThe user has the following hobbies and you should' +
+                                                     'integrate them into your response as appropriate: ' +
+                                                     self.user.bg.data[interest])
 
-        if len(self.user_info['interests']) > 0:
-            ints_prompt = f'I am really interested in the following things: {self.user_info['interests']}'
+    def build_message(self):
+        self.messages.append({"role": "system", "content": self.system_prompt_str})
+        for item in self.last_five:
+            self.messages.append({"role": "user", "content": item.query})
+            self.messages.append({"role": "assistant", "content": item.response})
+        self.messages.append({"role": "user", "content": self.raw_query})
 
-        return ints_prompt
+    def consolidate_prompt(self):
+        self.system_prompt_str = ''
 
-    def gen_faqs(self):
-        faqs_prompt = ''
-
-        if len(self.user_info['faqs']) > 0:
-            faqs_prompt = 'The following questions and answers are ones I often ask: '
-            for qna in self.user_info['faqs']:
-                faqs_prompt += f'\nQuestion: {qna['question']}. Answer: {qna['answer']}.'
-
-        print(faqs_prompt)
-        return faqs_prompt
+        for item in self.system_prompt:
+            self.system_prompt_str += item
 
 
-# test = promptCreate()
-# test.gen_prompt()
-# print(test.user_prompt)
+    # def gen_faqs(self):
+    #     faqs_prompt = ''
+    #
+    #     if len(self.user_info['faqs']) > 0:
+    #         faqs_prompt = 'The following questions and answers are ones I often ask: '
+    #         for qna in self.user_info['faqs']:
+    #             faqs_prompt += f'\nQuestion: {qna['question']}. Answer: {qna['answer']}.'
+    #
+    #     print(faqs_prompt)
+    #     return faqs_prompt
+

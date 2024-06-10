@@ -5,20 +5,55 @@ import json
 from init.judyparams import OPENAI_QUERY
 from api.promptcreate import promptCreate
 
-class openAI_GPT:
+class openAIGPT:
     '''
     Wrapper class for all Open AI API calls to ChatGPT
     '''
 
-    def __init__(self, model, temp):
-        self.model = 'gpt-3.5-turbo'
-        self.temp = 0
-        self.message = []
+    def __init__(self, model = 'gpt-3.5-turbo', temp = 0):
+        self.model = model
+        self.temp = temp
 
     def __str__(self):
         return f'{self.model} | {self.temp} | {','.join(self.message)[:100]}'
 
-    #TODO: Give ability to short answer to specific number of words.
+    def user_query(self, raw_query, user, history):
+        '''
+        Given a user query and their information, this submits a specific query to ChatGPT and returns the results.
+        :param query:
+        :param user:
+        :return:
+        '''
+        #TODO: Give ability to short answer to specific number of words.
+        logging.info('openAIGPT.user_query > Initializing new query.')
+
+        self.prompt = promptCreate(raw_query, user, history)
+
+    def run_query(self):
+        '''
+        With information already loaded into the messages list we can now run the query to ChatGPT
+        :return:
+        '''
+
+        logging.info('Contacting OpenAI with query: ', self.prompt.raw_query)
+
+        client = openai.OpenAI()
+
+        completion = client.chat.completions.create(
+            model=self.model,
+            temperature=self.temp,
+            messages=self.prompt.messages
+        )
+
+        logging.info('openAIGPT.run_Query > ', completion)
+        print('openAIGPT.run_Query > ', completion)
+
+        return completion.choices[0].message.content
+
+class openAIWhisper:
+
+    def __init__(self):
+        logging.info('openAIWhisper.__ini__ > Initializing Whisper connection.')
 
 
 
