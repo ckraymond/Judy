@@ -22,8 +22,10 @@ class tkRoot:
         self.canvas.pack()
         self.canvas.configure(background='black')
 
-    def show_image(self, pilImage):
+    def show_image(self, pilImage, photo_item):
+        # Code to show the image on the screen
         imgWidth, imgHeight = pilImage.size
+
         # resize photo to full screen
         ratio = min(self.w / imgWidth, self.h / imgHeight)
         imgWidth = int(imgWidth * ratio)
@@ -31,5 +33,18 @@ class tkRoot:
         pilImage = pilImage.resize((imgWidth, imgHeight), Image.LANCZOS)
         image = ImageTk.PhotoImage(pilImage)
         imagesprite = self.canvas.create_image(self.w / 2, self.h / 2, image=image)
+
+        # Add in a box with the image info
+        # frame = tkinter.LabelFrame(self.root, text='Photo Info', bg='white')
+        # frame.place(x=self.w - 720, y=self.h - 190, width=600, height=70)
+        label = tkinter.Label(self.root,
+                              text=f'Location: {photo_item.location}\nDate Taken:{photo_item.date}\nPeople In Photo: {photo_item.people}',
+                              font=('Arial Rounded MT Bold', 16),
+                              bg='white',
+                              fg='#001455',
+                              justify=tkinter.CENTER)
+        label.place(x=self.w - 750, y=self.h - 180, width=600, height=70)
+
         self.root.update_idletasks()
         self.root.update()
+
