@@ -3,7 +3,7 @@ Helper script to automagically generate training data for the system in order to
 Can automatically reset the information essentially.
 '''
 
-from data_mgmt.chat_history import chatHistory, chatExchange
+from data_mgmt.chat.chat_history import chatHistory
 import logging
 from init.judyparams import LOG_NAME
 

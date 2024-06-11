@@ -6,14 +6,15 @@ associated with previous queries and responses on Judy.
 import datetime
 import logging
 
-from api.openaiapi import openai_api_summary, openai_conv_info
 from api.bubbleapi import bubbleAPI
+from .chat_conversation import chatConversation
+from .chat_exchange import chatExchange
 
 class chatHistory:
 
     def __init__(self):
         #TODO: Remove this and replace with a log
-        print('Loading the chat history')
+        logging.info('Loading the chat history')
 
         # Create empty lists for the exchanges and conversations
         self.exchanges = []
@@ -320,154 +321,3 @@ class chatHistory:
         for conv_id in convo_list:
             api_connection.remove_conv(conv_id)
             logging.info('chatHistory.remove_orph_convos > Removed conversation ID: ', conv_id)
-
-class chatExchange:
-    def __init__(self,
-                 date = None,
-                 query = None,
-                 response = None,
-                 summary = None,
-                 id = None,
-                 conv_id = None):
-        self.query = query
-        self.response = response
-        self.summary = summary
-        self.id = id
-        self.conv_id = conv_id
-        self._ns = False                            # Flag to determine if there are unsaved changes to an exchange
-        if date is not None:
-            if type(date) is datetime.datetime:
-                self.date = date
-            else:
-                self.date = datetime.datetime.strptime(date,
-                                                       '%Y-%m-%dT%H:%M:%S.%fZ')  # The date of the first exchange in the conversation
-        else:
-            self.date = datetime.datetime.now()
-    def __str__(self):
-        return f'{self.id} | {self.date} | {str(self.summary)[:20]} | {str(self.query)[0:20]} | {str(self.response)[0:20]} | {self.conv_id}'
-
-    def check_summary(self):
-        if self.summary == '' or self.summary is None:
-            response = openai_api_summary(self.query, self.response)
-            self.summary = response['summary']
-
-            logging.info('chatHistory.check_summary > Adding summary to exchange: ', self.id)
-
-            # Set tag for the exchange to be saved again in the future
-            self._ns = True
-
-    def post_exch(self):
-        # Generates a new exchange in Bubble
-
-        if self.id is None or self.id == '':
-            # Create new record if there is not already one.
-            apiConnection = bubbleAPI()
-            body = {
-                'query': self.query,
-                'response': self.response,
-                'summary': self.summary,
-                'conversation': self.conv_id,
-                'date': str(self.date)
-            }
-            response = apiConnection.post_record('chatexchange', body)
-
-            try:
-                logging.info('chatExchange.post_exch > New exchange posted to Bubble, ID: ', response['id'])
-                return response['id']
-            except:
-                logging.error('chatExchange.post_exch > Unable to post new exchange: ', response)
-        else:
-            # Update existing one if there is already an ID there.
-            apiConnection = bubbleAPI()
-            response = apiConnection.update_exch_rcds(self)
-            return response['response']['exchange']['_id']
-
-class chatConversation:
-    '''
-    This class is designed for conversations, which are a collection of exchanges. The definition of a conversation
-    is any series of exchanges that occur without a two minute pause between them.
-    '''
-    def __init__(self,
-                 id = None,
-                 sentiment = None,
-                 summary = None,
-                 keywords = [],
-                 date = None):
-
-        self.id = id                                                     # The unique conversation id
-        self.sentiment = sentiment                                       # The sentiment of the conversation
-        self.summary = summary                                           # A simple summary of the conversation
-        self.keywords = keywords                                         # The keywords associated with this conversation
-        self._ns = False                                                 # Does the conversation need to be save to Bubble
-        if date is not None:
-            if type(date) is datetime.datetime:
-                self.date = date
-            else:
-                self.date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')     # The date of the first exchange in the conversation
-        else:
-            self.date = None
-        #TODO: Generate functions to pull keywords from user's profile and generate for exchange and for conversation.
-
-    def __str__(self):
-        return f'{self.id} | {self.date} | {self.summary} | Sent: {self.sentiment} | Kwds: {len(self.keywords)}'
-
-    def post_conv(self):
-        '''
-        Updates a converation in Bubble. If there is an ID it will update the conversation but if none then it posts
-        a new one.
-        :return:
-        '''
-
-        apiConnection = bubbleAPI()
-
-        if self.id is None or self.id == '':
-            # Create a new record and populate with the conversation information
-            body = {
-                'sentiment': self.sentiment,
-                'summary': str(self.summary),
-                'keywords': ",".join(self.keywords),
-                'date': str(self.date)
-            }
-
-            response = apiConnection.post_record('conversation', body)
-
-            try:
-                print('New conversation created, ID: ', response['id'])
-                logging.info('New conversation created, ID: ', response['id'])
-                return response['id']
-            except:
-                logging.error('chat_history.post_conv > Unable to return response to new conversation post: ',
-                              response)
-                return False
-
-        else:
-            # Update the record since we already have an ID
-            response = apiConnection.update_conv_rcds(self)
-            try:
-                return response['response']['conversation']['_id']
-            except:
-                logging.error('Unable to send response from update conversation: ',
-                              response)
-                return False
-
-    def clean_conv(self, exch_list):
-        '''
-        Given the list of associated exchanges, this returns a summary, keywords, and sentiment of the conversation
-        :param exch_list:
-        :return:
-        '''
-        conv_info = openai_conv_info(exch_list)
-
-        self.summary = conv_info['summary']
-
-        print(conv_info['keywords'])
-        # Keywords are trick as they sometimes comethrough as a list and sometimes as a string
-        try:
-            self.keywords = [x.strip() for x in conv_info['keywords'].split(',')]
-        except:
-            self.keywords = conv_info['keywords']
-
-        self.sentiment = conv_info['sentiment']
-
-        self._ns = True
-        return True

@@ -103,3 +103,8 @@ class bubbleAPI:
             logging.error(response.json())
             return False
 
+    def imageLoad(self):
+        '''
+        Method to pull images from Bubble.
+        :return:
+        '''

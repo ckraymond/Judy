@@ -3,7 +3,7 @@ import pygame
 from gtts import gTTS
 import logging
 
-from data_mgmt.chat_history import chatHistory, chatExchange       # Class that stores the chat exchance
+from data_mgmt.chat.chat_history import chatHistory, chatExchange       # Class that stores the chat exchance
 from api.openaiapi import openAIGPT     # Class that handles querying the OpenAI API
 from soundprocessing import soundProcessing
 from init.judyparams import GUI_PARAMS
@@ -22,8 +22,6 @@ class judyGUI:
 
         self.patient_info = patientInfo()           # Gets the patient's information
         self.patient_info.import_data()
-
-        print(self.patient_info)
 
         self.layout = [[sg.Push(), sg.Image('./data/judy_circle.png', subsample=5), sg.Push()],
                        [sg.Push(), sg.Button('Ask Question', bind_return_key=True), sg.Button('Quit'), sg.Push()]]

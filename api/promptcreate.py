@@ -15,30 +15,27 @@ class promptCreate:
 
         self.gen_user_query_sys_prompt()            # Trigger creation of the system prompt when called
 
-        # TODO: Integrate with cloud to pull the information from there
-
-        # self.chat history # Get last five chat history
-        # self.long_term_history # Get the long term chat history
 
     def gen_user_query_sys_prompt(self):
         '''
         The main function that creates the overall background prompt to ChatGPT. The prompt includes all applicable
-        backgorund information on the user.
+        background information on the user.
         :return:
         '''
-        logging.error('THIS IS WHERE YOU NEED TO WORK. YOU NEED TO CREATE A FUNCTION TO CRAFT THE QUERY GIVEN THE QUERY, USER INFO, AND HISTORY.')
+        logging.info('promptCreate.gen_user_query_sys_prompt > Starting to generate the complete prompt to ChatGPT.')
 
+        self.system_instructions = ('You are a personal assistant named Judy for someone with dementia. ' +
+                                    'You should follow the following rules when providing any responses:\n' +
+                                    '- All responses should be no more than two sentences in length.\n' +
+                                    '- When possible remind the user ' +
+                                    'of things they might have already asked or information that they might have forgotten that' +
+                                    'could be relevant.\n' +
+                                    '- Understand that the user is speaking to you and then a device is transcribing it into text. ' +
+                                    'What you type back is being read to the user.\n' +
+                                    '- You should refer to the user by their first name occasionally.\n')
         self.system_prompt = {
-            'instructions': 'You are a personal assistant named Judy for someone with dementia. You should follow the following rules ' +
-                      'when providing any responses:\n' +
-                      '- All responses should be no more than two sentences in length.\n' +
-                      '- You should not provide any answer oyu are not sure of.\n' +
-                      '- When possible remind the user ' +
-                      'of things they might have already asked or information that they might have forgotten that' +
-                      'could be relevant.\n' +
-                      '- You should refer to the user by their first name occasionally.\n',
-            'info': 'The following JSON formatted field contains information about the user you are talking to:',
-            'family': 'The following JSON formatted fields contain information about the users friends and family:',
+            'info': 'This is some information you should know about me, the user:',
+            'family': 'This is information about my friends and family:',
             'background': ''
             # TODO: Need to include another field that contains FAQs and add into Bubble as well.
         }
@@ -57,25 +54,29 @@ class promptCreate:
         '''
 
         new_info = {
-            'User\'s First Name': self.user.fname,
-            'User\'s Middle Name': self.user.mname,
-            'User\'s Last Name': self.user.lname,
-            'User\'s Nickname': self.user.nname,
-            'User\'s Gender': self.user.gender
+            '\nMy First Name': self.user.fname,
+            '\nMy Middle Name': self.user.mname,
+            '\nMy Last Name': self.user.lname,
+            '\nMy Nickname': self.user.nname,
+            '\nMy Gender': self.user.gender
         }
+        self.system_prompt['info'] = ''
+        self.system_prompt['info'] += f'My name is {self.user.fname} {self.user.mname} {self.user.lname}'
+        if self.user.nname not in [None, '']:
+            self.system_prompt['info'] += f', but people call me {self.user.nname}'
+        self.system_prompt['info'] += '.'
 
         # Need to treat date slightly differently
         if self.user.bday is datetime.datetime:
-            new_info['User\'s Birthday'] = datetime.datetime.strptime(self.user.bday, '%B %d, %Y')
-
-        self.system_prompt['info'] += '\n' + json.dumps(new_info)
+            bday = datetime.datetime.strptime(self.user.bday, '%B %d, %Y')
+            self.system_prompt['info'] += f'My birthday is {bday}'
 
     def update_family(self):
         '''This takes all of the friends and family and puts it into a single jason format.'''
 
         for fam in self.user.friends.data:
-            fam_json = self.update_single_person(fam)
-            self.system_prompt['family'] += fam_json
+            fam_str = self.update_single_person(fam)
+            self.system_prompt['family'] += fam_str
 
     def update_single_person(self, fam):
         '''Updates a single person and returns the value'''
@@ -90,51 +91,56 @@ class promptCreate:
             'interests': 'Interests and Hobbies',
             'deceased': 'Are They Deceased'
         }
-        fam_info = {}
+        fam_str = ''
+
+        fam_str += f'\n{fam['fname']} {fam['lname']} is my {fam['relationship']}. '
 
         for key in fam:
-            if key in fam_mapping.keys():
-                if key == 'bday':
-                    if type(key) is datetime.datetime:
-                        fam_info['Birthday'] = fam['bday'].strftime('%B %d, %Y')
-                    if type(key) is str:
-                        fam_info['Birthday'] = (datetime.datetime.strptime(fam['bday'], '%Y-%m-%dT%H:%M:%S.%fZ').
-                                                strftime('%B %d, %Y'))
-                elif key == 'deceased':
-                    if fam['deceased'] is True:
-                        fam_info['Are They Deceased'] = "Yes"
-                    else:
-                        fam_info['Are They Deceased'] = "No"
-                else:
-                    fam_info[fam_mapping[key]] = fam[key]
+            if key == 'nname':
+                fam_str += f'{fam['fname']} {fam['lname']} has the nickname {fam['nname']}. '
+            if key == 'location':
+                fam_str += f'{fam['fname']} {fam['lname']} lives in {fam['location']}. '
+            if key == 'interests':
+                fam_str += f'{fam['fname']} {fam['lname']} interests and hobbies include {fam['interests']}. '
+            if key == 'deceased' and fam[key] is True:
+                fam_str += f'Unfortunately, {fam['fname']} {fam['lname']} is deceased. '
+            if key == 'bday':
+                if type(fam['bday']) is datetime.datetime:
+                    birthday = fam['bday'].strftime('%B %d, %Y')
+                if type(fam['bday']) is str:
+                    birthday = (datetime.datetime.strptime(fam['bday'], '%Y-%m-%dT%H:%M:%S.%fZ').
+                                            strftime('%B %d, %Y'))
+                fam_str += f'{fam['fname']} {fam['lname']} was born on {birthday}. '
 
-        return json.dumps(fam_info)
+        return fam_str
 
     def update_background(self):
         for interest in self.user.bg.data:
             if interest == 'schools':
-                self.system_prompt['background'] += ('\nThe user is interested in the following schools and you ' +
+                self.system_prompt['background'] += ('\nI am interested in the following schools and you ' +
                                                      'should integrate them into your response as appropriate: ' +
                                                      self.user.bg.data[interest])
             elif interest == 'sports':
-                self.system_prompt['background'] += ('\nThe user is interested in the following sports and teams and ' +
+                self.system_prompt['background'] += ('\nI am interested in the following sports and teams and ' +
                                                      'you should integrate them into your response as appropriate: ' +
                                                      self.user.bg.data[interest])
             elif interest == 'foods':
-                self.system_prompt['background'] += ('\nThe user is interested in the following foods and you should' +
+                self.system_prompt['background'] += ('\nI am interested in the following foods and you should' +
                                                      'integrate them into your response as appropriate: ' +
                                                      self.user.bg.data[interest])
             elif interest == 'places':
-                self.system_prompt['background'] += ('\nThe user is interested in the following places and you should' +
+                self.system_prompt['background'] += ('\nI am interested in the following places and you should' +
                                                      'integrate them into your response as appropriate: ' +
                                                      self.user.bg.data[interest])
             elif interest == 'hobbies':
-                self.system_prompt['background'] += ('\nThe user has the following hobbies and you should' +
+                self.system_prompt['background'] += ('\nI have the following hobbies and you should' +
                                                      'integrate them into your response as appropriate: ' +
                                                      self.user.bg.data[interest])
 
     def build_message(self):
-        self.messages.append({"role": "system", "content": self.system_prompt_str})
+        print(self.system_prompt_str)
+        self.messages.append({"role": "system", "content": self.system_instructions})
+        self.messages.append({"role": "user", "content": self.system_prompt_str})
         for item in self.last_five:
             self.messages.append({"role": "user", "content": item.query})
             self.messages.append({"role": "assistant", "content": item.response})
@@ -144,7 +150,7 @@ class promptCreate:
         self.system_prompt_str = ''
 
         for item in self.system_prompt:
-            self.system_prompt_str += item
+            self.system_prompt_str += self.system_prompt[item]
 
 
     # def gen_faqs(self):

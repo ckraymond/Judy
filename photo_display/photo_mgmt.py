@@ -1,0 +1,35 @@
+'''
+Judy Photo Viewer > Photo Management
+
+Module that controls the maintenance and display of photos on Judy.
+'''
+
+from api.bubbleapi import bubbleAPI
+from photo_display.photo_item import photoItem
+
+class photoMgmt:
+
+    def __init__(self):
+        self.photo_list = []
+        self.load_photo_urls()
+
+    def load_photo_urls(self):
+        api_connect = bubbleAPI()
+        self.data = api_connect.get_records('photos')
+
+        for photo in self.data['response']['results']:
+            new_photo = photoItem()
+
+            if 'image' in photo.keys():
+                new_photo.image = 'https:' + photo['image']
+            if 'people' in photo.keys():
+                new_photo.people = photo['people']
+            if 'location' in photo.keys():
+                new_photo.location = photo['location']
+            if 'date' in photo.keys():
+                new_photo.date = photo['date']
+
+            self.photo_list.append(new_photo)
+
+
+
