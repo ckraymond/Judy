@@ -1,7 +1,7 @@
 '''
 Judy Photo Viewer > Photo Management
 
-Module that controls the maintenance and display of photos on Judy.
+Module that controls the maintenance and display of photos on Judy. This is what pulls photos from Bubble.
 '''
 
 from api.bubbleapi import bubbleAPI
@@ -28,6 +28,7 @@ class photoMgmt:
                 new_photo.location = photo['location']
             if 'date' in photo.keys():
                 new_photo.date = photo['date']
+                new_photo.convert_date()
 
             self.photo_list.append(new_photo)
 

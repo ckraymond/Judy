@@ -2,6 +2,14 @@
 Main function for calling the Judy program.
 '''
 
+from judy_mvp import judyMVP
+from judylog.judylog import judyLog
+
+# Initialize the overall program logging
+judylog = judyLog()
+
+main = judyMVP(judyLog)
+
 # THE LEGACY STUFF I WAS WORKING ON
 # from judy_gui import judyGUI            # The main GUI for the program
 # judy_beta = judyGUI()
@@ -12,8 +20,9 @@ Main function for calling the Judy program.
 # GUI = judyMVP()
 
 # THIS IS FOR THE VOICE ACTIVATION PORTTION
-from judy_voice import judyVoice
-voice = judyVoice()
+# from judy_voice import judyVoice
+# voice = judyVoice()
+# voice.listen()
 
 # version = input('Which version do you want to run?\n(1) GUI Version - Desktop\n(2) Rasberry Pi Version')
 #

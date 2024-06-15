@@ -9,6 +9,9 @@ from io import BytesIO
 from .photo_mgmt import photoMgmt
 import time
 
+# TODO: Integrate into a settings function with the app.
+PHOTO_WAIT = 5
+
 class photoDisplay:
 
     def __init__(self, tk_screen):
@@ -19,8 +22,9 @@ class photoDisplay:
                 response = requests.get(photo_item.image)
                 image = Image.open(BytesIO(response.content))
 
-                tk_screen.show_image(image, photo_item)
+                tk_screen.show_image(image, photo_item, PHOTO_WAIT)
 
-                time.sleep(3)
+    # def talk_icon(self):
+
 
 

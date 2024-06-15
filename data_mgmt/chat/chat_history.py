@@ -9,16 +9,18 @@ import logging
 from api.bubbleapi import bubbleAPI
 from .chat_conversation import chatConversation
 from .chat_exchange import chatExchange
+from judylog import judylog
 
 class chatHistory:
 
     def __init__(self):
-        #TODO: Remove this and replace with a log
         logging.info('Loading the chat history')
 
         # Create empty lists for the exchanges and conversations
         self.exchanges = []
         self.conversations = []
+
+    def import_data(self):
 
         # Load all of the conversations first since we will need to check the exchanges against them
         self.load_all_conversations()

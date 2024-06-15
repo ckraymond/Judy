@@ -1,7 +1,7 @@
 import PySimpleGUI as sg                    # Base function for the simple GUI
 import pygame
 from gtts import gTTS
-import logging
+import judylog
 
 from data_mgmt.chat.chat_history import chatHistory, chatExchange       # Class that stores the chat exchance
 from api.openaiapi import openAIGPT     # Class that handles querying the OpenAI API
@@ -31,7 +31,7 @@ class judyGUI:
                                 size=(GUI_PARAMS['x_size'], GUI_PARAMS['y_size']),
                                 resizable=True)
 
-        logging.info('Judy GUI Initialized.')
+        judylog.info('Judy GUI Initialized.')
 
     def window_read(self):
         '''
