@@ -1,14 +1,13 @@
 import tkinter                                              # Used for all grpahics on the device
 from PIL import Image, ImageTk
 from photo_display.photo_display import photoDisplay        # Used to actually display the photos
+import time
 
 class judyMVP:
 
     def __init__(self):
         tk_screen = tkRoot()
         photo_display = photoDisplay(tk_screen)
-
-
 
 class tkRoot:
 

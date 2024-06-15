@@ -8,16 +8,19 @@ import requests
 from io import BytesIO
 from .photo_mgmt import photoMgmt
 import time
+
 class photoDisplay:
 
     def __init__(self, tk_screen):
         self.photo_data = photoMgmt()
 
-        for photo_item in self.photo_data.photo_list:
-            response = requests.get(photo_item.image)
-            image = Image.open(BytesIO(response.content))
+        while True:
+            for photo_item in self.photo_data.photo_list:
+                response = requests.get(photo_item.image)
+                image = Image.open(BytesIO(response.content))
 
-            tk_screen.show_image(image, photo_item)
+                tk_screen.show_image(image, photo_item)
 
-            time.sleep(5)
+                time.sleep(3)
+
 
