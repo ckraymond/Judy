@@ -3,6 +3,7 @@ Judy Photo Viewer
 
 This module is part of the Judy program. It is intended to be run as a seperate thread for the product and will display photos that are uploaded through Bubble onto the device.
 '''
+from .slideshow import slideShow
 from PIL import Image
 import requests
 from io import BytesIO
@@ -14,17 +15,16 @@ PHOTO_WAIT = 5
 
 class photoDisplay:
 
-    def __init__(self, tk_screen):
+    def __init__(self):
         self.photo_data = photoMgmt()
+        self.slideshow = slideShow()
 
         while True:
             for photo_item in self.photo_data.photo_list:
-                response = requests.get(photo_item.image)
-                image = Image.open(BytesIO(response.content))
+                # Download the image from the web
+                img_path = requests.get(photo_item.image)
+                image = Image.open(BytesIO(img_path.content))
 
-                tk_screen.show_image(image, photo_item, PHOTO_WAIT)
+                self.slideshow.set_background(image, photo_item, PHOTO_WAIT)
 
-    # def talk_icon(self):
-
-
-
+        self.slideshow.root.mainloop()
