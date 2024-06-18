@@ -1,4 +1,4 @@
-from photo_display.photo_display import photoDisplay        # Used to actually display the photos
+from photo_display.slideshow import slideShow        # Used to actually display the photos
 from data_mgmt.chat.chat_history import chatHistory
 from data_mgmt.patient.patient_info import patientInfo
 
@@ -20,4 +20,4 @@ class judyMVP:
         self.patient_info = patientInfo()  # Gets the patient's information
         self.patient_info.import_data()
 
-        photo_display = photoDisplay()
+        photo_slideshow = slideShow()

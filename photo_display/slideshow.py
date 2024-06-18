@@ -3,27 +3,68 @@ import tkinter.font as tkfont
 from PIL import Image, ImageTk
 import time
 import logging
+import threading
+import requests
+from io import BytesIO
+import screeninfo
 
 # Import other classes from Judy photo slideshow
 from .photocanvas import photoCanvas
 from .imagebackground import imageBackground
+from .photo_mgmt import photoMgmt
+from .imagelabel import imageLabel
 
 class slideShow:
 
     def __init__(self):
+        # Gets the lists of photo data from Bubble
+        self.photo_data = photoMgmt()
+        self.get_monitor_info()
+        self.delay = 2                              #The delay in seconds between each picture
+
         self.root = tk.Tk()
-        self.root.overrideredirect(1)
         self.root.title('Judy v0.1')
-        self.root.geometry("%dx%d+0+0" % (self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
+        self.root.geometry("%dx%d+0+0" % (self.screen_dims['x'], self.screen_dims['y']))
         self.root.attributes('-fullscreen', True)
         self.root.config(cursor="none")
 
-        # Create blank canvas
-        self.photo_canvas = photoCanvas(self.root)
+        self.slideshow_start()
+        # t_mic_controls = threading.Thread(target=self.mic_controls())
 
-        # Bind the keys for now
+        # t_slideshow.start()
+        # t_mic_controls.start()
+
+        # t_slideshow.join()
+        # t_mic_controls.join()
+
+        # # Bind the keys for now
+        # self.root.bind('<KeyPress>', lambda event: self.show_mic_label(event))
+        # self.root.bind('<KeyRelease>', lambda event: self.hide_mic_label(event))
+        #
+        self.root.mainloop()
+
+    def get_monitor_info(self):
+        self.screen_dims = {}
+        monitors = screeninfo.get_monitors()
+        for mon in monitors:
+            if mon.is_primary is True:
+                self.screen_dims['x'] = mon.width
+                self.screen_dims['y'] = mon.height
+
+    def mic_controls(self):
         self.root.bind('<KeyPress>', lambda event: self.show_mic_label(event))
         self.root.bind('<KeyRelease>', lambda event: self.hide_mic_label(event))
+
+    def slideshow_start(self):
+        self.photo_canvas = photoCanvas(self.root, self.screen_dims)
+
+        # TODO: Reinput the infinite loop when ready
+        for photo_item in self.photo_data.photo_list:
+            # Download the image from the web
+            img_path = requests.get(photo_item.image)
+            image = Image.open(BytesIO(img_path.content))
+
+            self.set_background(image, photo_item, self.delay)
 
     def show_mic_label(self, event):
         '''
@@ -63,9 +104,8 @@ class slideShow:
         :return:
         '''
 
-        print('Updating image')
-        self.image_background = imageBackground(image, self.photo_canvas.canvas, self.root)
-        # self.image_label = imageLabel(self.photo_canvas.canvas, self.root)
+        self.image_background = imageBackground(image, self.photo_canvas.canvas, self.root, self.screen_dims)
+        self.image_label = imageLabel(self.photo_canvas.canvas, self.root, self.screen_dims)
 
         self.root.update()
         time.sleep(delay)
