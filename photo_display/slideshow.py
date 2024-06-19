@@ -105,12 +105,15 @@ class slideShow:
         '''
 
         self.image_background = imageBackground(image, self.photo_canvas.canvas, self.root, self.screen_dims)
+
+        # If the label exists we delete it and then recreate it.
         try:
             self.image_label
         except:
             logging.warn('Label does not exist.')
         else:
             self.image_label.destroy_self(self.photo_canvas.canvas)
+
         self.image_label = imageLabel(self.photo_canvas.canvas, self.root, self.screen_dims, photo_item)
 
         self.root.update()

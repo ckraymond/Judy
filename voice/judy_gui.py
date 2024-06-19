@@ -2,6 +2,7 @@ import PySimpleGUI as sg                    # Base function for the simple GUI
 import pygame
 from gtts import gTTS
 import judylog
+import mutagen
 
 from data_mgmt.chat.chat_history import chatHistory, chatExchange       # Class that stores the chat exchance
 from api.openaiapi import openAIGPT     # Class that handles querying the OpenAI API
@@ -95,7 +96,7 @@ class judyGUI:
         myobj.save('./temp/response.mp3')
 
         pygame.mixer.init()                                         # Initialize the mixer module
-        pygame.mixer.music.load('./temp/response.mp3')              # Load the mp3 file
+        pygame.mixer.music.load('../temp/response.mp3')              # Load the mp3 file
         pygame.mixer.music.play()                                   # Play the loaded mp3 file
 
     def close_out(self):
