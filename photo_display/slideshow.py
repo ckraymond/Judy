@@ -58,12 +58,13 @@ class slideShow:
         self.photo_canvas = photoCanvas(self.root, self.screen_dims)
 
         # TODO: Reinput the infinite loop when ready
-        for photo_item in self.photo_data.photo_list:
-            # Download the image from the web
-            img_path = requests.get(photo_item.image)
-            image = Image.open(BytesIO(img_path.content))
+        while True:
+            for photo_item in self.photo_data.photo_list:
+                # Download the image from the web
+                img_path = requests.get(photo_item.image)
+                image = Image.open(BytesIO(img_path.content))
 
-            self.set_background(image, photo_item, self.delay)
+                self.set_background(image, photo_item, self.delay)
 
     def show_mic_label(self, event):
         '''
@@ -104,12 +105,18 @@ class slideShow:
         '''
 
         self.image_background = imageBackground(image, self.photo_canvas.canvas, self.root, self.screen_dims)
+        try:
+            self.image_label
+        except:
+            logging.warn('Label does not exist.')
+        else:
+            self.image_label.destroy_self(self.photo_canvas.canvas)
         self.image_label = imageLabel(self.photo_canvas.canvas, self.root, self.screen_dims, photo_item)
 
         self.root.update()
         time.sleep(delay)
 
-        self.image_label.destroy_self(self.photo_canvas.canvas)
+
 
 
 

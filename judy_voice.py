@@ -3,7 +3,7 @@ Main class that runs the voice prompts on Judy.
 '''
 
 import speech_recognition as sr
-import judylog
+import logging
 
 class judyVoice:
 
@@ -22,7 +22,7 @@ class judyVoice:
         Simple listener that just waits to hear if the keyword is spoken
         :return:
         '''
-        judylog.info('Starting to listen through microphone.')
+        logging.info('Starting to listen through microphone.')
 
         while True:
             with self.m as source:
@@ -31,19 +31,7 @@ class judyVoice:
                 print(text)
 
             if self.KEYWORD in text:
-                break
+                self.request_response()
 
-        # with sr.Microphone() as source:
-        #     print("Say something!")
-        #     audio = r.listen(source)
-        #
-        # # Using Google edge voice processing
-        # try:
-        #     # for testing purposes, we're just using the default API key
-        #     # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-        #     # instead of `r.recognize_google(audio)`
-        #     print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
-        # except sr.UnknownValueError:
-        #     print("Google Speech Recognition could not understand audio")
-        # except sr.RequestError as e:
-        #     print("Could not request results from Google Speech Recognition service; {0}".format(e))
+    def request_response(self):
+
