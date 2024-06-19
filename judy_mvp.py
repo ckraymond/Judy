@@ -23,10 +23,7 @@ class judyMVP:
         self.patient_info = patientInfo()  # Gets the patient's information
         self.patient_info.import_data()
 
-        self.start_audio()
-
-        '''
-        THIS IS THE MULTITHREADING WE WILL RUN LATER
+        # THIS IS THE MULTITHREADING WE WILL RUN LATER
         self.t_slideshow = threading.Thread(target = self.start_slideshow)
         self.t_audio = threading.Thread(target = self.start_audio)
 
@@ -34,7 +31,7 @@ class judyMVP:
         self.t_audio.start()
 
         self.t_slideshow.join()
-        self.t_audio.join()'''
+        self.t_audio.join()
 
     def start_slideshow(self):
         photo_slideshow = slideShow()
