@@ -10,6 +10,7 @@ from mutagen.mp3 import MP3
 import time
 from data_mgmt.chat.chat_exchange import chatExchange
 from api.openaiapi import openAIGPT
+from judylog.developermode import DEV_MODE
 
 class judyVoice:
 
@@ -34,39 +35,48 @@ class judyVoice:
         self.listening = True
 
         while self.listening is True:
-            with self.m as source:
-                audio_data = self.r.listen(source)
-                try:
-                    text = self.r.recognize_google(audio_data = audio_data, language = 'en-US')
-                except:
-                    print('listen > Unable to distinguish audio.')
-                else:
-                    print('listen > ', text)
+            # DEV MODE OVERRIDE
+            if DEV_MODE is True:
+                self.req_resp(None, chat_history, patient_info)
+            else:
+                with self.m as source:
+                    audio_data = self.r.listen(source)
+                    try:
+                        text = self.r.recognize_google(audio_data = audio_data, language = 'en-US')
+                    except:
+                        print('listen > Unable to distinguish audio.')
+                    else:
+                        print('listen > ', text)
 
-                    if self.KEYWORD in text.lower():
-                        print('Keyword found in: ', text)
-                        self.req_resp(source, chat_history, patient_info)
+                        if self.KEYWORD in text.lower():
+                            print('Keyword found in: ', text)
+                            self.req_resp(source, chat_history, patient_info)
 
-                    if 'quit program' in text.lower():
-                        print('Quitting program')
-                        self.quit_program()
+                        if 'quit program' in text.lower():
+                            print('Quitting program')
+                            self.quit_program()
 
     def req_resp(self, source, chat_history, patient_info):
-        self.read_text('What question did you have?')
-        self.req_undst = False
-        while self.req_undst is False:
+        if DEV_MODE is True:
+            text_req = input('What is your question for Judy?')
+            self.submit_question(text_req, chat_history, patient_info)
 
-            audio_req = self.r.listen(source)
+        else:
+            self.read_text('What question did you have?')
+            self.req_undst = False
+            while self.req_undst is False:
 
-            try:
-                text_req = self.r.recognize_google(audio_data=audio_req, language='en-US')
-            except:
-                self.read_text('Sorry, I didn\'t quite catch that. Can you please say it again?')
-                logging.warn('Unable to recognize user request.')
-            else:
-                print('req_resp > ', text_req)
-                self.req_undst = True
-                self.submit_question(text_req, chat_history, patient_info)
+                audio_req = self.r.listen(source)
+
+                try:
+                    text_req = self.r.recognize_google(audio_data=audio_req, language='en-US')
+                except:
+                    self.read_text('Sorry, I didn\'t quite catch that. Can you please say it again?')
+                    logging.warn('Unable to recognize user request.')
+                else:
+                    print('req_resp > ', text_req)
+                    self.req_undst = True
+                    self.submit_question(text_req, chat_history, patient_info)
 
         return True
 

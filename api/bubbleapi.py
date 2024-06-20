@@ -1,6 +1,7 @@
 import requests         # For the call
 import os               # Needed for the BUBBLE_API_TOKEN
-import logging
+
+from judylog.judylog import judylog
 
 class bubbleAPI:
     def __init__(self):
@@ -14,12 +15,27 @@ class bubbleAPI:
         :param type:
         :return:
         '''
-        logging.info(f'Getting, {type}, records from Bubble.')
-        call_url = self.base_url + '/' + type
-        head = {'Authorization': 'token {}'.format(self.api_token)}
+        recds_remaining = 1                   # Set this to 1 to start
+        cursor = 0
+        limit = 25                              # This will remain the same through all the calls
+        cons_response = []
+        judylog.info(f'bubbleAPI.get_records > Getting, {type}, records from Bubble.')
 
-        response = requests.get(call_url, headers=head)
-        return response.json()
+        while recds_remaining > 0:
+            call_url = f'{self.base_url}/{type}?cursor={cursor}&limit={limit}'
+            head = {'Authorization': 'token {}'.format(self.api_token)}
+
+            response = requests.get(call_url, headers=head)
+
+            recds_remaining = response.json()['response']['remaining']
+            cons_response.extend(response.json()['response']['results'])
+
+            if response.json()['response']['remaining'] > 0:
+                cursor += limit
+
+        judylog.info(f'bubbleAPI.get_records > {cons_response[0:5]}')
+        judylog.info(f'bubbleAPI.get_records > Total {type} records pulled: {len(cons_response)}')
+        return cons_response
 
     def post_record(self, type, body):
         '''
@@ -28,7 +44,7 @@ class bubbleAPI:
         :param body:
         :return:
         '''
-        logging.info('Posting ', type, 'record to Bubble.')
+        judylog.info(f'Posting {type} record to Bubble.')
         post_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.api_token)}
 
@@ -36,7 +52,7 @@ class bubbleAPI:
         return response.json()
 
     def update_exch_rcds(self, exchange):
-        logging.info('Updating exchange (ID: ', exchange.id, ') to Bubble.')
+        judylog.info(f'Updating exchange (ID: {exchange.id}) to Bubble.')
         call_url = self.wf_url + '/' + 'put_exchange'
         head = {'Authorization': 'token {}'.format(self.api_token)}
         body = {
@@ -53,13 +69,13 @@ class bubbleAPI:
         if response.json()['status'] == 'success':
             return response.json()
         else:
-            logging.error('Unable to update exchange id in Bubble: ' + body['id'])
-            logging.error(response.json())
+            judylog.error(f'Unable to update exchange id in Bubble: {body['id']}')
+            judylog.error(response.json())
             return False
     #TODO: Need to add in error handling for when something doesn't work
 
     def update_conv_rcds(self, conv):
-        logging.info('Updating conversation (ID: ', conv.id, ') to Bubble.')
+        judylog.info(f'Updating conversation (ID: {conv.id}) to Bubble.')
         call_url = self.wf_url + '/' + 'put_conversation'
         head = {'Authorization': 'token {}'.format(self.api_token)}
         body = {
@@ -75,8 +91,8 @@ class bubbleAPI:
         if response.json()['status'] == 'success':
             return response.json()
         else:
-            logging.error('Unable to update id in Bubble: ' + body['id'])
-            logging.error(response.json())
+            judylog.error(f'Unable to update id in Bubble: {body['id']}')
+            judylog.error(response.json())
             return False
 
     def remove_conv(self, id):
@@ -85,7 +101,7 @@ class bubbleAPI:
         :return:
         '''
 
-        logging.info('Removing conversation (ID: ', id, ') from Bubble.')
+        judylog.info(f'Removing conversation (ID: {id}) from Bubble.')
         call_url = self.wf_url + '/' + 'del_conversation'
         head = {'Authorization': 'token {}'.format(self.api_token)}
         body = {
@@ -94,13 +110,11 @@ class bubbleAPI:
 
         response = requests.post(call_url, headers=head, json=body)
 
-        print(response)
-
         if response.json()['status'] == 'success':
             return response.json()
         else:
-            logging.error('Unable to update id in Bubble: ' + body['id'])
-            logging.error(response.json())
+            judylog.error(f'Unable to update id in Bubble: {body['id']}')
+            judylog.error(response.json())
             return False
 
     def imageLoad(self):

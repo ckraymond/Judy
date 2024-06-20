@@ -33,7 +33,7 @@ class chatExchange:
     def check_summary(self):
         api_connection = openAIGPT()
 
-        judylog.debug(f'chatHistory.check_summary > Checking summary on {self.id} - {self.summary[0:50]}')
+        judylog.debug(f'chatHistory.check_summary > Checking summary on {self.id}')
 
         if self.summary == '' or self.summary is None:
             response = api_connection.gen_summary(self.query, self.response)
@@ -60,10 +60,10 @@ class chatExchange:
             response = apiConnection.post_record('chatexchange', body)
 
             try:
-                judylog.info('chatExchange.post_exch > New exchange posted to Bubble, ID: ', response['id'])
+                judylog.info(f'chatExchange.post_exch > New exchange posted to Bubble, ID: {response['id']}')
                 return response['id']
             except:
-                judylog.error('chatExchange.post_exch > Unable to post new exchange: ', response)
+                judylog.error(f'chatExchange.post_exch > Unable to post new exchange: {response}')
         else:
             # Update existing one if there is already an ID there.
             apiConnection = bubbleAPI()

@@ -138,7 +138,6 @@ class promptCreate:
                                                      self.user.bg.data[interest])
 
     def build_message(self):
-        print(self.system_prompt_str)
         self.messages.append({"role": "system", "content": self.system_instructions})
         self.messages.append({"role": "user", "content": self.system_prompt_str})
         for item in self.last_five:

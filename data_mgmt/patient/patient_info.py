@@ -32,7 +32,7 @@ class patientInfo:
         '''
 
         bubble_api = bubbleAPI()
-        response = bubble_api.get_records('patient')['response']['results'][0]
+        response = bubble_api.get_records('patient')[0]
 
         #TODO: Ensure the we are handling when information is not available
         self.id = response['_id']                           # The patient ID in Bubble which can be useful later
@@ -56,6 +56,6 @@ class patientInfo:
         '''
 
         # Get the list of friends from the Bubble API
-        friends_list = bubble_api.get_records('friends')['response']['results']
+        friends_list = bubble_api.get_records('friends')
 
         self.friends = patientFriends(friends_list)

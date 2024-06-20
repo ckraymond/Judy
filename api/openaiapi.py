@@ -1,9 +1,9 @@
 import openai           # Needed to support the call for OpenAI API
-import logging           # always good to log info
 import json
 
 from init.judyparams import OPENAI_QUERY
 from api.promptcreate import promptCreate
+from judylog.judylog import judylog
 
 class openAIGPT:
     '''
@@ -25,7 +25,7 @@ class openAIGPT:
         :return:
         '''
         #TODO: Give ability to short answer to specific number of words.
-        logging.info('openAIGPT.user_query > Initializing new query.')
+        judylog.info('openAIGPT.user_query > Initializing new query.')
 
         self.prompt = promptCreate(raw_query, user, history)
 
@@ -35,7 +35,7 @@ class openAIGPT:
         :return:
         '''
 
-        logging.info('Contacting OpenAI with query: ', self.prompt.raw_query)
+        judylog.info(f'openAIGPT.run_Query > Contacting OpenAI with query: {self.prompt.raw_query}')
 
         client = openai.OpenAI()
 
@@ -45,7 +45,7 @@ class openAIGPT:
             messages=self.prompt.messages
         )
 
-        logging.info('openAIGPT.run_Query > ', completion)
+        judylog.info(f'openAIGPT.run_Query > {completion}')
 
         return completion.choices[0].message.content
 
@@ -113,4 +113,4 @@ class openAIGPT:
 class openAIWhisper:
 
     def __init__(self):
-        logging.info('openAIWhisper.__ini__ > Initializing Whisper connection.')
+        judylog.info('openAIWhisper.__ini__ > Initializing Whisper connection.')

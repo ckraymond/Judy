@@ -3,12 +3,13 @@ from data_mgmt.chat.chat_history import chatHistory
 from data_mgmt.patient.patient_info import patientInfo
 from voice.judy_voice import judyVoice
 from judylog.judylog import judylog
+from judylog.developermode import DEV_MODE
 
 import threading
 
 class judyMVP:
 
-    def __init__(self, dev_mode, is_mac, mac_choice):
+    def __init__(self, is_mac, mac_choice):
         '''
         Initialization function for Judy. Actions taken:
         1.) Download files from Bubble.
@@ -26,28 +27,39 @@ class judyMVP:
         self.patient_info = patientInfo()  # Gets the patient's information
         self.patient_info.import_data()
 
-        if is_mac is not True:
+        if is_mac is not True and DEV_MODE == False:
             # THIS IS THE MULTITHREADING WE WILL RUN LATER
             self.t_slideshow = threading.Thread(target = self.start_slideshow)
             self.t_audio = threading.Thread(target = self.start_audio)
+            self.t_maint = threading.Thread(target = self.start_maint)
 
             self.t_slideshow.start()
             self.t_audio.start()
+            self.t_maint.start()
 
             self.t_slideshow.join()
             self.t_audio.join()
+            self.t_maint.join()
 
         else:
             if mac_choice == '1':
                 self.start_slideshow()
             elif mac_choice == '2':
                 self.start_audio()
+            elif mac_choice == '3':
+                self.start_maint()
             else:
                 print('Choice not recognized.')
 
     def start_slideshow(self):
+        judylog.info('judyMVP.__init__ > Starting slideshow thread.')
         photo_slideshow = slideShow()
 
     def start_audio(self):
+        judylog.info('judyMVP.__init__ > Starting audio thread.')
         voice = judyVoice()
         voice.listen(self.chat_history, self.patient_info)
+
+    def start_maint(self):
+        judylog.info('judyMVP.__init__ > Starting maintenance thread.')
+        # maint_routine = judyMaint()

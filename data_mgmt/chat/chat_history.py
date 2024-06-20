@@ -66,7 +66,7 @@ class chatHistory:
         judylog.info(f'chatHistory.load_all_conversations > {str(api_response)[0:50]}')
 
         # Go through the JSON to ensure there is a value for each item. Will use append_line as empty entry.
-        for conversation in api_response['response']['results']:
+        for conversation in api_response:
             append_line = {
                 'summary': None,
                 'sentiment': None,
@@ -99,10 +99,10 @@ class chatHistory:
         loadAPI = bubbleAPI()
         api_response = loadAPI.get_records('chatexchange')          # Returns dict
 
-        judylog.info(f'chatHistory.load_all_exchanges > Loaded {len(api_response['response']['results'])} exchanges from Bubble.')
+        judylog.info(f'chatHistory.load_all_exchanges > Loaded {len(api_response)} exchanges from Bubble.')
 
         # Go through the JSON to ensure there is a value for each item. Will use append_line as empty entry.
-        for exchange in api_response['response']['results']:
+        for exchange in api_response:
             append_line = {
                 'query': None,
                 'response': None,
@@ -187,7 +187,7 @@ class chatHistory:
 
         for conv in self.conversations:
             if conv.summary in ['', None] or conv.keywords in ['', None, []] or conv.sentiment in ['', None]:
-                judylog.info('Conversation to be updated for (summary, keywords, sentiment): ', conv.id)
+                judylog.info(f'Conversation to be updated for (summary, keywords, sentiment): {conv.id}')
                 exch_list = self.get_exchanges(conv.id)
 
                 conv.clean_conv(exch_list)
@@ -236,7 +236,7 @@ class chatHistory:
         new_conversation.id = new_conversation.post_conv()
         new_conversation._ns = True
 
-        judylog.info('Creating initial conversation and mapping conv: ', exchange.conv_id, 'to: ', exchange.id)
+        judylog.info(f'Creating initial conversation and mapping conv: {exchange.conv_id} to: {exchange.id}')
 
         exchange.conv_id = new_conversation.id
         self.conversations.append(new_conversation)

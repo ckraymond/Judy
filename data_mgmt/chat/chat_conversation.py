@@ -1,8 +1,8 @@
 import datetime
-import logging
 
 from api.bubbleapi import bubbleAPI
 from api.openaiapi import openAIGPT
+from judylog.judylog import judylog
 
 class chatConversation:
     '''
@@ -28,7 +28,6 @@ class chatConversation:
                 self.date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%fZ')     # The date of the first exchange in the conversation
         else:
             self.date = None
-        #TODO: Generate functions to pull keywords from user's profile and generate for exchange and for conversation.
 
     def __str__(self):
         return f'{self.id} | {self.date} | {self.summary} | Sent: {self.sentiment} | Kwds: {len(self.keywords)}'
@@ -54,11 +53,10 @@ class chatConversation:
             response = apiConnection.post_record('conversation', body)
 
             try:
-                logging.info('New conversation created, ID: ', response['id'])
+                judylog.info(f'New conversation created, ID: {response['id']}')
                 return response['id']
             except:
-                logging.error('chat_history.post_conv > Unable to return response to new conversation post: ',
-                              response)
+                judylog.error(f'chat_history.post_conv > Unable to return response to new conversation post: {response}')
                 return False
 
         else:
@@ -67,8 +65,7 @@ class chatConversation:
             try:
                 return response['response']['conversation']['_id']
             except:
-                logging.error('Unable to send response from update conversation: ',
-                              response)
+                judylog.error(f'Unable to send response from update conversation: {response}')
                 return False
 
     def clean_conv(self, exch_list):
