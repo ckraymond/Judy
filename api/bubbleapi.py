@@ -14,7 +14,7 @@ class bubbleAPI:
         :param type:
         :return:
         '''
-        logging.info('Getting ', type, 'records from Bubble.')
+        logging.info(f'Getting, {type}, records from Bubble.')
         call_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.api_token)}
 

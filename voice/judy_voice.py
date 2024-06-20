@@ -18,6 +18,7 @@ class judyVoice:
         self.r = sr.Recognizer()
         self.m = sr.Microphone()
         self.KEYWORD = 'judy'
+        self.listening = True               # Keyword to determine if we should exit
 
         # Adjust for the ambient noise
         with self.m as source:
@@ -30,7 +31,9 @@ class judyVoice:
         '''
         logging.info('Starting to listen through microphone.')
 
-        while True:
+        self.listening = True
+
+        while self.listening is True:
             with self.m as source:
                 audio_data = self.r.listen(source)
                 try:
@@ -43,6 +46,10 @@ class judyVoice:
                     if self.KEYWORD in text.lower():
                         print('Keyword found in: ', text)
                         self.req_resp(source, chat_history, patient_info)
+
+                    if 'quit program' in text.lower():
+                        print('Quitting program')
+                        self.quit_program()
 
     def req_resp(self, source, chat_history, patient_info):
         self.read_text('What question did you have?')
@@ -103,3 +110,8 @@ class judyVoice:
 
         # Finally read the response to the user
         self.read_text(new_exchange.response)
+
+    def quit_program(self):
+        #TODO: Need to add support for multithreading in here using an event
+        self.listening = False
+        return True

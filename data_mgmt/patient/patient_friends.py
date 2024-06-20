@@ -1,5 +1,4 @@
-import logging
-
+from judylog.judylog import judylog
 class patientFriends:
 
     def __init__(self, friends_list):
@@ -22,7 +21,7 @@ class patientFriends:
                 try:
                     new_friend[item] = friend[self.mapping[item]]
                 except:
-                    logging.info('patientFriends.__init__ > Friend info ', self.mapping[item], ' does not exist.')
+                    judylog.info(f'patientFriends.__init__ > Friend info {self.mapping[item]} does not exist.')
             self.data.append(new_friend)
 
     def __str__(self):

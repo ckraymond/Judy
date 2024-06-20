@@ -3,31 +3,26 @@ Main function for calling the Judy program.
 '''
 
 from judy_mvp import judyMVP
-from judylog.judylog import judyLog
+from judylog.judylog import judylog
+import platform                                 # Used to get the OS information
 
-# Initialize the overall program logging
-judylog = judyLog()
+judylog.info('__main__ > Initializing the program.')
 
-main = judyMVP(judyLog)
+# Check what the operating system is
+print('You are running Judy version 0.1. Your operating system is: ', platform.system())
+is_mac = True if platform.system().lower() == 'darwin' else False
 
-# THE LEGACY STUFF I WAS WORKING ON
-# from judy_gui import judyGUI            # The main GUI for the program
-# judy_beta = judyGUI()
-# judy_beta.window_read()
+# Determine if we want dev mode
+dev_input = input('Would you like to run in dev mode? Y/N')
+dev_mode = True if dev_input.lower() == 'y' else False
+if dev_mode is True:
+    print('In Dev Mode')
 
-# THIS IS FOR THE NEW MVP OF THE DEVICE
-# from judy_mvp import judyMVP
-# GUI = judyMVP()
+# If OS is mac then choose what we want to run
+mac_choice = None                   # Set this to none so it exists
+if is_mac is True:
+    print('You are running on Mac. This does not support multithreading.')
+    print('1. Photo Gallery\n2. Voice Input\n3. Maintenance Routine')
+    mac_choice = input('Which would you like to do?')
 
-# THIS IS FOR THE VOICE ACTIVATION PORTTION
-# from judy_voice import judyVoice
-# voice = judyVoice()
-# voice.listen()
-
-# version = input('Which version do you want to run?\n(1) GUI Version - Desktop\n(2) Rasberry Pi Version')
-#
-# if version == '1':
-#     main_window = judyGUI()                 # Instantiates the main window of the program
-#     main_window.window_read()                # Now we wait for user input®
-# else:
-#     program = judyMVP()
+main = judyMVP(dev_mode, is_mac, mac_choice)

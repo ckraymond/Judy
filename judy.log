@@ -1,1 +1,237 @@
-8824-WARNING-Label does not exist.
+2024-06-20 00:01:46,720-INFO-__main__ > Initializing the program.
+2024-06-20 00:01:48,828-INFO-judyMVP.__init__ > Initializing the program.
+2024-06-20 00:01:48,828-INFO-chatHistory.__init__ > Loading the chat history
+2024-06-20 00:01:48,828-INFO-chatHistory.load_all_conversations > Starting to load all of the conversations.
+2024-06-20 00:01:48,828-INFO-Getting, conversation, records from Bubble.
+2024-06-20 00:01:48,842-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-20 00:01:49,288-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/conversation HTTP/1.1" 200 None
+2024-06-20 00:01:49,291-INFO-chatHistory.load_all_conversations > {'response': {'cursor': 0, 'results': [{'Created D
+2024-06-20 00:01:49,296-INFO-chatHistory.load_all_conversations > Total conversations loaded: 40
+2024-06-20 00:01:49,296-INFO-chatHistory.load_all_exchangess > Pulling list of exchanges from Bubble API.
+2024-06-20 00:01:49,296-INFO-Getting, chatexchange, records from Bubble.
+2024-06-20 00:01:49,300-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-20 00:01:49,735-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/chatexchange HTTP/1.1" 200 None
+2024-06-20 00:01:49,738-INFO-chatHistory.load_all_exchanges > Loaded 100 exchanges from Bubble.
+2024-06-20 00:01:49,738-INFO-chatHistory.load_all_exchanges > Added ID 1717719197257x947447465161206700 to exchanges: {'query': 'I am so confused and sad. I dont know w
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719197463x235684028947343650 to exchanges: {'query': 'Do you know when my brother Brian will 
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719197658x777042973711513600 to exchanges: {'query': 'Where am I?', 'response': 'Lets try to 
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719197875x880464091283932300 to exchanges: {'query': 'What is the best way to pet cats?', 're
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719198247x504783252941406000 to exchanges: {'query': 'Do you know how I can get to the grocer
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719198446x376895862768353200 to exchanges: {'query': 'What is the name of the person who was 
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719198821x205679847363008830 to exchanges: {'query': 'Are you a person or are you something e
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719199235x835345623864886900 to exchanges: {'query': 'What am I going to do?', 'response': 'I
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719199473x199527033120726400 to exchanges: {'query': 'Do you know when Colin was last here? I
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719199795x975248355459916300 to exchanges: {'query': 'Do you think you can tell me when I am 
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719200070x875651334075609100 to exchanges: {'query': 'What is your favorite thing to do?', 'r
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719200302x129957415538296540 to exchanges: {'query': 'What is the meaning of life?', 'respons
+2024-06-20 00:01:49,739-INFO-chatHistory.load_all_exchanges > Added ID 1717719200505x556770173961123500 to exchanges: {'query': 'Where am I right now?', 'response': 'Le
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719200709x418848370171408500 to exchanges: {'query': 'What day is it today?', 'response': 'To
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719201076x268832195127858720 to exchanges: {'query': 'Who are you? Do I know you?', 'response
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719201318x561778638342541630 to exchanges: {'query': 'Why do I feel so confused?', 'response'
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719201529x522773612928473000 to exchanges: {'query': 'How did I get here?', 'response': 'Its 
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719201910x521308310435310900 to exchanges: {'query': 'Can you help me remember what I was doi
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719202126x751248276242434800 to exchanges: {'query': 'Whats wrong with my memory?', 'response
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717719202321x157471040436807380 to exchanges: {'query': 'What steps can I take to address my dem
+2024-06-20 00:01:49,740-INFO-chatHistory.load_all_exchanges > Added ID 1717726581205x183403754728260540 to exchanges: {'query': 'How are you doing today Judy?', 'respon
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717726594020x856299821047788300 to exchanges: {'query': "I'm getting a bit confused. Do you know
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717726607688x376288526183835600 to exchanges: {'query': 'Where is my brother Brian? Is he still 
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717726621822x214109508013445400 to exchanges: {'query': 'Can you tell me anything about him?', '
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717726637939x499735841913917500 to exchanges: {'query': 'would like you to help me try and find 
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717791459670x326453938057365000 to exchanges: {'query': 'How many siblings do I have?', 'respons
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717791493205x939461387662581200 to exchanges: {'query': 'where all my siblings live.', 'response
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717791527327x315911707476634430 to exchanges: {'query': 'Thank you. Bye.', 'response': "You're w
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717791535380x553955184881596000 to exchanges: {'query': 'assistance in the future.', 'response':
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717791546657x586436574290700900 to exchanges: {'query': 'Do you have any siblings?', 'response':
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717794723520x301699925332360260 to exchanges: {'query': "I'm tired. How about you?", 'response':
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717794747216x876979022160773900 to exchanges: {'query': 'feeling so depressed and suicidal. Is t
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717794818332x862248462820872800 to exchanges: {'query': "I just can't be happy at all and I'm su
+2024-06-20 00:01:49,741-INFO-chatHistory.load_all_exchanges > Added ID 1717794866932x422671328633382100 to exchanges: {'query': "I'm tired. How about you?", 'response':
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717794867130x312164695139440100 to exchanges: {'query': 'feeling so depressed and suicidal. Is t
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717794867337x881184748562161300 to exchanges: {'query': "I just can't be happy at all and I'm su
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717796667292x410717843570633800 to exchanges: {'query': "I'm not sure what to do. Do you know wh
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717796758433x657923249473803000 to exchanges: {'query': "I'm not sure what to do. Do you know wh
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717796967557x269819785946813440 to exchanges: {'query': 'going on today with you.', 'response': 
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717796996556x582289665743389600 to exchanges: {'query': "so good today. I just don't want the da
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717797033726x868783469055136800 to exchanges: {'query': "I really, really am super, super happy 
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717797108739x811223043156634800 to exchanges: {'query': 'going on today with you.', 'response': 
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717797108942x322866472747934200 to exchanges: {'query': "so good today. I just don't want the da
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717797109151x500295670950783300 to exchanges: {'query': "I really, really am super, super happy 
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717805084269x487649906492176640 to exchanges: {'query': "I'm trying to figure out what time it i
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717805100215x787448450022696000 to exchanges: {'query': 'Yes, that would be great.', 'response':
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717805115657x539263540378815100 to exchanges: {'query': 'Okay, so what is the time?', 'response'
+2024-06-20 00:01:49,742-INFO-chatHistory.load_all_exchanges > Added ID 1717805126561x491164378211086140 to exchanges: {'query': 'Where are you right now?', 'response': 
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717805147429x641365733828110700 to exchanges: {'query': 'Bye. ', 'response': 'Goodbye! If you ev
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806031682x421580883128331650 to exchanges: {'query': 'This is the thing.', 'response': "It's 
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806041034x639482715503755500 to exchanges: {'query': 'What is your question?', 'response': "Y
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806059281x267579697796873860 to exchanges: {'query': 'What is your name?', 'response': 'I am 
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806070365x177285130430348450 to exchanges: {'query': 'is my brother Bruce.', 'response': 'You
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806083360x609156426129646100 to exchanges: {'query': 'What is the all-time winningest NFL tea
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806097686x900007944379962900 to exchanges: {'query': 'Would you not agree that the Pittsburgh
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806120405x619010546595360600 to exchanges: {'query': 'This is the thing.', 'response': "It's 
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806120662x981782367508368500 to exchanges: {'query': 'What is your question?', 'response': "Y
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806120969x848270370427212900 to exchanges: {'query': 'What is your name?', 'response': 'I am 
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806121170x363891804055868740 to exchanges: {'query': 'is my brother Bruce.', 'response': 'You
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806121564x542166054042530200 to exchanges: {'query': 'What is the all-time winningest NFL tea
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717806121881x642205406264230800 to exchanges: {'query': 'Would you not agree that the Pittsburgh
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717952818287x324865492533165300 to exchanges: {'query': '. .', 'response': "It looks like you di
+2024-06-20 00:01:49,743-INFO-chatHistory.load_all_exchanges > Added ID 1717952833443x545150988139504700 to exchanges: {'query': "Yes, I just wanted to see how you're do
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1717952846762x713279130734805200 to exchanges: {'query': '. .', 'response': "It looks like you di
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1717952846961x891879527753893800 to exchanges: {'query': "Yes, I just wanted to see how you're do
+2024-06-20 00:01:49,744-WARNING-chatHistory.load_all_exchanges > Did not add conversation: 1717986339913x353838236736220300
+2024-06-20 00:01:49,744-WARNING-chatHistory.load_all_exchanges > Did not add conversation: 1717986398743x948825997618041300
+2024-06-20 00:01:49,744-WARNING-chatHistory.load_all_exchanges > Did not add conversation: 1717992092679x523616497160833500
+2024-06-20 00:01:49,744-WARNING-chatHistory.load_all_exchanges > Did not add conversation: 1717993186247x927293614363459000
+2024-06-20 00:01:49,744-WARNING-chatHistory.load_all_exchanges > Did not add conversation: 1717993598778x113294291897004350
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1717995297031x750933982384707700 to exchanges: {'query': 'to two of my friends and family.', 'res
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1717995321071x812255433402624900 to exchanges: {'query': 'Hey, do you know who my friends and fam
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1717995354036x755909425686807300 to exchanges: {'query': 'Hey, do you know who Brian is?', 'respo
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1717995374410x305235088514078660 to exchanges: {'query': 'Hey, do you know who Brian is?', 'respo
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1718043451617x586545917895446000 to exchanges: {'query': 'Do you know what my name is?', 'respons
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1718043461305x314048936118284350 to exchanges: {'query': 'Do you know what my name is?', 'respons
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1718043617727x391165547530717440 to exchanges: {'query': 'this is a test. Can you hear me?', 'res
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1718043631239x410497626275202700 to exchanges: {'query': 'this is a test. Can you hear me?', 'res
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1718045496123x781832843820785200 to exchanges: {'query': 'Bye. ', 'response': 'Goodbye! If you ha
+2024-06-20 00:01:49,744-INFO-chatHistory.load_all_exchanges > Added ID 1718045512527x799945436174076300 to exchanges: {'query': 'Do you know what the name of my brother
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718045613207x920483578078925600 to exchanges: {'query': '시청해주셔서 감사합니다!', 'response': '감사합니다! 궁금한
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718045632774x140116938459558860 to exchanges: {'query': "Do you know what my brother's name is?"
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718046181472x367675248520051800 to exchanges: {'query': 'brother is?', 'response': "You mentione
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718046235695x980325136416655000 to exchanges: {'query': 'Anything about my brother?', 'response'
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718046481153x482946297170624200 to exchanges: {'query': 'anything about my brothers?', 'response
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718046495214x927261562312598700 to exchanges: {'query': 'anything about my brothers?', 'response
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718046962986x507607222279772900 to exchanges: {'query': 'Thank you.', 'response': "You're welcom
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047023396x935798968592591400 to exchanges: {'query': 'Can you tell me anything about my broth
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047051602x900551908273274900 to exchanges: {'query': 'What should I do today?', 'response': "
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047085121x630348949243697500 to exchanges: {'query': 'Can you tell me anything about my broth
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047085360x739107324766252800 to exchanges: {'query': 'What should I do today?', 'response': "
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047499275x465512060227124560 to exchanges: {'query': 'where my family', 'response': 'Your fam
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047532109x933510840726429700 to exchanges: {'query': 'ご視聴ありがとうございました', 'response': "I'm here 
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047554609x676242708302110500 to exchanges: {'query': 'Do you know how many children I have?',
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047573484x716407636902908200 to exchanges: {'query': 'to think of something to do with my fam
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047602427x609709167867664700 to exchanges: {'query': 'where my family', 'response': 'Your fam
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047602656x950763191470072400 to exchanges: {'query': 'ご視聴ありがとうございました', 'response': "I'm here 
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047602925x859630014762740900 to exchanges: {'query': 'Do you know how many children I have?',
+2024-06-20 00:01:49,745-INFO-chatHistory.load_all_exchanges > Added ID 1718047603234x450278394522767740 to exchanges: {'query': 'to think of something to do with my fam
+2024-06-20 00:01:49,746-INFO-chatHistory.load_all_exchanges > Added ID 1718050579025x181183281306045220 to exchanges: {'query': 'コメント欄にリンクを貼ってください。', 'response': '申し訳あり
+2024-06-20 00:01:49,746-INFO-chatHistory.load_all_exchanges > Total exchanges loaded: 95
+2024-06-20 00:01:49,746-INFO-chatHistory.clean_exchanges > Cleaning the exchange data.
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719197257x947447465161206700 - The patient is feeling confused and sad, unsure of
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719197463x235684028947343650 - The patient is inquiring about the arrival of thei
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719197658x777042973711513600 - The patient is unsure of their current location an
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719197875x880464091283932300 - The patient asked the assistant about the best way
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719198247x504783252941406000 - The patient asked the assistant for directions to 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719198446x376895862768353200 - The patient inquired about the name of the person 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719198821x205679847363008830 - The patient inquired about the assistant's identit
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719199235x835345623864886900 - The patient is feeling unsure about what to do and
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719199473x199527033120726400 - The patient is curious about when Colin was last h
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719199795x975248355459916300 - The patient inquires about their departure time fr
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719200070x875651334075609100 - The patient inquired about my favorite thing to do
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719200302x129957415538296540 - The patient inquired about the meaning of life, a 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719200505x556770173961123500 - The patient is seeking assistance in determining t
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719200709x418848370171408500 - The patient asked the assistant what day it is tod
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719201076x268832195127858720 - The patient seems curious and unsure about the ass
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719201318x561778638342541630 - The patient is feeling confused and seeking assist
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719201529x522773612928473000 - The patient is confused about how they arrived at 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719201910x521308310435310900 - The patient asked the assistant to help remember w
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719202126x751248276242434800 - The patient expressed concern about memory loss an
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717719202321x157471040436807380 - The patient is seeking advice on addressing their 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717726581205x183403754728260540 - The patient inquired about Judy's well-being and t
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717726594020x856299821047788300 - The patient is feeling confused and is inquiring a
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717726607688x376288526183835600 - The patient is concerned about the whereabouts and
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717726621822x214109508013445400 - The patient inquired about their brother Brian and
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717726637939x499735841913917500 - The patient is seeking information about their bro
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717791459670x326453938057365000 - The patient inquired about the number of siblings 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717791493205x939461387662581200 - The patient inquired about the locations of their 
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717791527327x315911707476634430 - The patient seems satisfied and ready to end the c
+2024-06-20 00:01:49,746-DEBUG-chatHistory.check_summary > Checking summary on 1717791535380x553955184881596000 - The patient expressed gratitude for assistance and
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717791546657x586436574290700900 - The patient inquired about the assistant's sibling
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717794723520x301699925332360260 - The patient is feeling tired and in need of rest, 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717794747216x876979022160773900 - The patient is feeling depressed and suicidal, and
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717794818332x862248462820872800 - The patient is feeling super miserable and unable 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717794866932x422671328633382100 - The patient is feeling tired and in need of rest, 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717794867130x312164695139440100 - The patient is feeling depressed and suicidal, and
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717794867337x881184748562161300 - The patient is feeling super miserable and unable 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717796667292x410717843570633800 - The patient is feeling uncertain and seeking assis
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717796758433x657923249473803000 - The patient is feeling uncertain and seeking assis
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717796967557x269819785946813440 - The patient is seeking support and assistance from
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717796996556x582289665743389600 - The patient is feeling good today and does not wan
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717797033726x868783469055136800 - The patient is feeling super happy today and is gr
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717797108739x811223043156634800 - The patient is seeking support and assistance from
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717797108942x322866472747934200 - The patient is feeling good today and does not wan
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717797109151x500295670950783300 - The patient is feeling super happy today and is gr
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717805084269x487649906492176640 - The patient is seeking assistance in determining t
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717805100215x787448450022696000 - The patient is feeling positive and appreciative, 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717805115657x539263540378815100 - The patient asked the assistant for the current ti
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717805126561x491164378211086140 - The patient is seeking assistance and support from
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717805147429x641365733828110700 - The patient is ending the conversation on a positi
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806031682x421580883128331650 - The patient is seeking assistance and guidance fro
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806041034x639482715503755500 - The patient seems curious and engaged in conversat
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806059281x267579697796873860 - The patient seems curious and engaged, asking abou
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806070365x177285130430348450 - The patient inquires about their brother Bruce who
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806083360x609156426129646100 - The patient inquired about the all-time winningest
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806097686x900007944379962900 - The patient expresses a strong preference for the 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806120405x619010546595360600 - The patient is seeking assistance and guidance fro
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806120662x981782367508368500 - The patient seems curious and engaged in conversat
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806120969x848270370427212900 - The patient is seeking assistance from the assista
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806121170x363891804055868740 - The patient inquires about their brother Bruce who
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806121564x542166054042530200 - The patient inquired about the all-time winningest
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717806121881x642205406264230800 - The patient expresses a strong preference for the 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717952818287x324865492533165300 - The patient seems curious and engaged, asking abou
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717952833443x545150988139504700 - The patient inquired about my well-being and I am 
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717952846762x713279130734805200 - The patient seems curious and engaged in the conve
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717952846961x891879527753893800 - The patient seems to be in a positive mood and inq
+2024-06-20 00:01:49,747-DEBUG-chatHistory.check_summary > Checking summary on 1717995297031x750933982384707700 - The patient's message got cut off while trying to 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1717995321071x812255433402624900 - The patient inquired about their friends and famil
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1717995354036x755909425686807300 - The patient inquires about Brian and asks the assi
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1717995374410x305235088514078660 - The patient inquires about Brian and seems curious
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718043451617x586545917895446000 - The patient inquires about their name, while the a
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718043461305x314048936118284350 - The patient asked the assistant if it knows their 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718043617727x391165547530717440 - The patient inquired about the assistant's ability
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718043631239x410497626275202700 - The patient inquired if the assistant could hear t
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718045496123x781832843820785200 - The patient seems to be in a positive mood and ask
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718045512527x799945436174076300 - The patient inquired about their brother's name, a
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718045613207x920483578078925600 - The patient expressed gratitude for watching and t
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718045632774x140116938459558860 - The patient inquires about their brother's name, a
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718046181472x367675248520051800 - The patient mentioned their brother but did not pr
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718046235695x980325136416655000 - The patient inquired about their brother but did n
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718046481153x482946297170624200 - The patient has mentioned their brother but has no
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718046495214x927261562312598700 - The patient has mentioned their brother but has no
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718046962986x507607222279772900 - The patient seems appreciative and in need of assi
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047023396x935798968592591400 - The patient inquired about their brother Douglas R
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047051602x900551908273274900 - The patient seems interested in connecting with fa
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047085121x630348949243697500 - The patient inquired about their brother Douglas R
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047085360x739107324766252800 - The patient is seeking advice on what to do today 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047499275x465512060227124560 - The patient inquired about the whereabouts of thei
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047532109x933510840726429700 - The patient, Colin Kile Raymond, also known as Da 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047554609x676242708302110500 - The patient inquired about the number of children 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047573484x716407636902908200 - The patient is seeking ideas for a family activity
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047602427x609709167867664700 - The patient inquired about the whereabouts of thei
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047602656x950763191470072400 - The patient, Colin Kile Raymond, also known as Da 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047602925x859630014762740900 - The patient inquired about the number of children 
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718047603234x450278394522767740 - The patient is seeking ideas for a family activity
+2024-06-20 00:01:49,748-DEBUG-chatHistory.check_summary > Checking summary on 1718050579025x181183281306045220 - The patient seems interested in sharing a link in 
+2024-06-20 00:01:49,748-INFO-chatHistory.clean_exchanges > Total exchanges after cleaning: 95
+2024-06-20 00:01:49,748-INFO-chatHistory.check_mappings > In the check_mappings function
+2024-06-20 00:01:49,748-INFO-Sorting through these exchanges: 95
+2024-06-20 00:01:49,749-INFO-Checked conversations and identified those to be updated.
+2024-06-20 00:01:49,749-INFO-chatHistory.remove_orph_convos > Checking for orphaned conversaitons.
+2024-06-20 00:01:49,749-INFO-Getting, patient, records from Bubble.
+2024-06-20 00:01:49,752-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-20 00:01:50,124-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/patient HTTP/1.1" 200 None
+2024-06-20 00:01:50,126-INFO-Getting, friends, records from Bubble.
+2024-06-20 00:01:50,130-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-20 00:01:50,321-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/friends HTTP/1.1" 200 None
+2024-06-20 00:01:50,322-INFO-patientFriends.__init__ > Friend info Interests does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Interests does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Nickname does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Birthday does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Interests does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Nickname does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Location does not exist.
+2024-06-20 00:01:50,323-INFO-patientFriends.__init__ > Friend info Nickname does not exist.
+2024-06-20 00:01:51,646-INFO-Starting to listen through microphone.
