@@ -20,6 +20,7 @@ class judyVoice:
         self.m = sr.Microphone()
         self.KEYWORD = 'judy'
         self.listening = True               # Keyword to determine if we should exit
+        DEV_MODE = False
 
         # Adjust for the ambient noise
         with self.m as source:
@@ -34,6 +35,7 @@ class judyVoice:
 
         self.listening = True
 
+        DEV_MODE = False
         while self.listening is True:
             # DEV MODE OVERRIDE
             if DEV_MODE is True:
@@ -57,6 +59,7 @@ class judyVoice:
                             self.quit_program()
 
     def req_resp(self, source, chat_history, patient_info):
+        DEV_MODE = False
         if DEV_MODE is True:
             text_req = input('What is your question for Judy?')
             self.submit_question(text_req, chat_history, patient_info)

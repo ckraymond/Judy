@@ -1,11 +1,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import time
-import logging
-import threading
 import requests
 from io import BytesIO
 import screeninfo
+import logging
 
 # Import other classes from Judy photo slideshow
 from .photocanvas import photoCanvas
@@ -28,18 +27,6 @@ class slideShow:
         self.root.config(cursor="none")
 
         self.slideshow_start()
-        # t_mic_controls = threading.Thread(target=self.mic_controls())
-
-        # t_slideshow.start()
-        # t_mic_controls.start()
-
-        # t_slideshow.join()
-        # t_mic_controls.join()
-
-        # # Bind the keys for now
-        # self.root.bind('<KeyPress>', lambda event: self.show_mic_label(event))
-        # self.root.bind('<KeyRelease>', lambda event: self.hide_mic_label(event))
-        #
         self.root.mainloop()
 
     def get_monitor_info(self):

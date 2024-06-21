@@ -27,7 +27,12 @@ class judyMVP:
         self.patient_info = patientInfo()  # Gets the patient's information
         self.patient_info.import_data()
 
-        if is_mac is not True and DEV_MODE == False:
+        DEV_MODE = False
+        is_mac = False
+        mac_choice = '1'
+        judylog.info(f'is_mac: {is_mac} | DEV_MODE: {DEV_MODE}')
+
+        if is_mac is not True and DEV_MODE is False:
             # THIS IS THE MULTITHREADING WE WILL RUN LATER
             self.t_slideshow = threading.Thread(target = self.start_slideshow)
             self.t_audio = threading.Thread(target = self.start_audio)

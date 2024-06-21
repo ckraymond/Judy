@@ -17,7 +17,7 @@ class photoMgmt:
         api_connect = bubbleAPI()
         self.data = api_connect.get_records('photos')
 
-        for photo in self.data['response']['results']:
+        for photo in self.data:
             new_photo = photoItem()
 
             if 'image' in photo.keys():
