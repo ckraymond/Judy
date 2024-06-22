@@ -5,7 +5,7 @@ class userSettings:
     Stores and adjusts all device and user settings.
     '''
     def __init__(self):
-        self.settings = {
+        self.values = {
             'photo_delay': '',
             'accent': '',
             'trigger': ''
@@ -20,10 +20,10 @@ class userSettings:
         api_connection = bubbleAPI()
         api_results = api_connection.get_records('settings')
 
-        self.settings['accent'] = api_results[0]['accent']
-        self.settings['photo_delay'] = int(api_results[0]['photo_delay'])
-        self.settings['trigger'] = api_results[0]['trigger']
+        self.values['accent'] = api_results[0]['accent']
+        self.values['photo_delay'] = int(api_results[0]['photo_delay'])
+        self.values['trigger'] = api_results[0]['trigger']
 
-        judylog.info(f'userSettings.pull_settings > Imported settings: {self.settings}')
+        judylog.info(f'userSettings.pull_settings > Imported settings: {self.values}')
 
         return True

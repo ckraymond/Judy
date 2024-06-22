@@ -14,11 +14,12 @@ from .imagelabel import imageLabel
 
 class slideShow:
 
-    def __init__(self):
+    def __init__(self, settings):
+        self.settings = settings
+
         # Gets the lists of photo data from Bubble
         self.photo_data = photoMgmt()
         self.get_monitor_info()
-        self.delay = 2                              #The delay in seconds between each picture
 
         self.root = tk.Tk()
         self.root.title('Judy v0.1')
@@ -51,7 +52,7 @@ class slideShow:
                 img_path = requests.get(photo_item.image)
                 image = Image.open(BytesIO(img_path.content))
 
-                self.set_background(image, photo_item, self.delay)
+                self.set_background(image, photo_item, self.settings['photo_delay'])
 
     def show_mic_label(self, event):
         '''

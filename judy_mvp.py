@@ -25,7 +25,7 @@ class judyMVP:
         self.maint = judyMaint()
 
         # First, we will pull down the file system from Bubble
-        self.chat_history = chatHistory()  # Creates the chat history and loads from the history file
+        self.chat_history = chatHistory(self.maint.settings.values)  # Creates the chat history and loads from the history file
         self.chat_history.import_data()
 
         self.patient_info = patientInfo()  # Gets the patient's information
@@ -45,6 +45,7 @@ class judyMVP:
             self.t_audio.join()
             self.t_maint.join()
 
+        # Support for mac developer mode
         else:
             if mac_choice == '1':
                 self.start_slideshow()
@@ -57,13 +58,13 @@ class judyMVP:
 
     def start_slideshow(self):
         judylog.info('judyMVP.__init__ > Starting slideshow thread.')
-        photo_slideshow = slideShow()
+        photo_slideshow = slideShow(self.maint.settings.values)
 
     def start_audio(self):
         judylog.info('judyMVP.__init__ > Starting audio thread.')
-        voice = judyVoice(self.dev_mode)
+        voice = judyVoice(self.maint.settings.values, self.dev_mode)
         voice.listen(self.chat_history, self.patient_info)
 
     def start_maint(self):
         judylog.info('judyMVP.__init__ > Starting maintenance thread.')
-        self.maint.run_background()
+        self.maint.run_background(self.chat_history)

@@ -12,12 +12,13 @@ from judylog.judylog import judylog
 
 class chatHistory:
 
-    def __init__(self):
+    def __init__(self, settings):
         judylog.info('chatHistory.__init__ > Loading the chat history')
 
         # Create empty lists for the exchanges and conversations
         self.exchanges = []
         self.conversations = []
+        self.settings = settings
 
     def import_data(self):
 

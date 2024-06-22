@@ -3,7 +3,7 @@ Main class that runs the voice prompts on Judy.
 '''
 
 import speech_recognition as sr
-import logging
+from judylog.judylog import judylog
 from gtts import gTTS
 import pygame
 from mutagen.mp3 import MP3
@@ -13,11 +13,11 @@ from api.openaiapi import openAIGPT
 
 class judyVoice:
 
-    def __init__(self, dev_mode = False):
+    def __init__(self, settings, dev_mode = False):
+        self.settings = settings
         # obtain audio from the microphone
         self.r = sr.Recognizer()
         self.m = sr.Microphone()
-        self.KEYWORD = 'judy'
         self.listening = True               # Keyword to determine if we should exit
         self.dev_mode = dev_mode
 
@@ -30,7 +30,7 @@ class judyVoice:
         Simple listener that just waits to hear if the keyword is spoken
         :return:
         '''
-        logging.info('Starting to listen through microphone.')
+        judylog.info('judyVoice.listen > Starting to listen through microphone.')
 
         self.listening = True
 
@@ -48,7 +48,7 @@ class judyVoice:
                     else:
                         print('listen > ', text)
 
-                        if self.KEYWORD in text.lower():
+                        if self.settings['trigger'].lower() in text.lower():
                             print('Keyword found in: ', text)
                             self.req_resp(source, chat_history, patient_info)
 
@@ -68,7 +68,7 @@ class judyVoice:
                 self.submit_question(text_req, chat_history, patient_info)
 
         else:
-            self.read_text('judyVoice.req_resp > What question did you have?')
+            self.read_text('What question did you have?')
             self.req_undst = False
             while self.req_undst is False:
 
@@ -78,7 +78,7 @@ class judyVoice:
                     text_req = self.r.recognize_google(audio_data=audio_req, language='en-US')
                 except:
                     self.read_text('Sorry, I didn\'t quite catch that. Can you please say it again?')
-                    logging.warn('judyVoice.req_resp > Unable to recognize user request.')
+                    judylog.warn('judyVoice.req_resp > Unable to recognize user request.')
                 else:
                     print('req_resp > ', text_req)
                     self.req_undst = True
@@ -93,7 +93,8 @@ class judyVoice:
         :param response:
         :return:
         '''
-        myobj = gTTS(text = text, lang = 'en', slow=False, tld = 'co.uk')
+        accent = self.get_accent(self.settings['accent'])
+        myobj = gTTS(text = text, lang = 'en', slow=False, tld = accent)
         myobj.save('./temp/response.mp3')
 
         pygame.mixer.init()                                         # Initialize the mixer module
@@ -101,6 +102,24 @@ class judyVoice:
         pygame.mixer.music.play()
 
         time.sleep(MP3("./temp/response.mp3").info.length)          # Pause the program while talking
+
+    def get_accent(self, accent):
+        accent_map = {
+            'australian': 'com.au',
+            'english': 'co.uk',
+            'american': 'us',
+            'canadian': 'ca',
+            'indian': 'co.in',
+            'irish': 'ie',
+            'south african': 'co.za',
+            'nigerian': 'com.ng'
+        }
+
+        try:
+            return accent_map[accent.lower()]
+        except:
+            judylog.error(f'judyVoice.get_accent > Unable to find accent ({accent}) in mapping.')
+            return 'us'
 
     def submit_question(self, query, chat_history, patient_info):
         # Create new exchange object and populate with the query

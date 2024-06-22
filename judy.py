@@ -16,12 +16,12 @@ is_mac = True if platform.system().lower() == 'darwin' else False
 dev_input = input('Would you like to run in dev mode? Y/N')
 dev_mode = True if dev_input.lower() == 'y' else False
 if dev_mode is True:
-    print('In Dev Mode')
+    print('\nIn Dev Mode')
 
 # If OS is mac then choose what we want to run
 mac_choice = None                   # Set this to none so it exists
-if is_mac is True:
-    print('You are running on Mac. This does not support multithreading.')
+if is_mac is True or dev_mode is True:
+    print('\n\nYou are running on Mac or in Dev mode. This does not support multithreading.')
     print('1. Photo Gallery\n2. Voice Input\n3. Maintenance Routine')
     mac_choice = input('Which would you like to do?')
 

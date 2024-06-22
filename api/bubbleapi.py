@@ -17,7 +17,7 @@ class bubbleAPI:
         '''
         recds_remaining = 1                   # Set this to 1 to start
         cursor = 0
-        limit = 25                              # This will remain the same through all the calls
+        limit = 100                              # This will remain the same through all the calls
         cons_response = []
         judylog.info(f'bubbleAPI.get_records > Getting, {type}, records from Bubble.')
 
@@ -26,6 +26,8 @@ class bubbleAPI:
             head = {'Authorization': 'token {}'.format(self.api_token)}
 
             response = requests.get(call_url, headers=head)
+
+            judylog.info(f'bubbleAPI.get_records > response: {str(response)[0:100]}')
 
             recds_remaining = response.json()['response']['remaining']
             cons_response.extend(response.json()['response']['results'])

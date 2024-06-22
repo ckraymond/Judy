@@ -1,7 +1,7 @@
-from api.bubbleapi import bubbleAPI
+from judylog.judylog import judylog
 from maint.user_settings import userSettings
 import time
-class judyMaint():
+class judyMaint:
     '''
     Intended to run in the background and continually checking to see if there are any updates to the program.
 
@@ -13,10 +13,11 @@ class judyMaint():
     '''
 
     def __init__(self):
+        # On initialization, get user settings
         self.settings = userSettings()
         self.settings.pull_settings()
 
-    def run_background(self):
+    def run_background(self, chat_history):
         '''
         Routine to run in the background and keep the device updated. Routine includes:
         - Checking settings
@@ -27,6 +28,16 @@ class judyMaint():
         :return:
         '''
 
-        self.settings.pull_settings()
+        while True:
+            time.sleep(60)                         #Only runs every 5 min to save processing
+            print('judyMaint.run_background > Running maintenance routine')
+            judylog.info(f'judyMaint.run_background > Running maintenance routine')
+            self.settings.pull_settings()
 
-        time.sleep(300)                         #Only runs every 5 min to save processing
+            # Go through and clean up conversations and exchanges
+            chat_history.clean_exchanges()
+            chat_history.check_mappings()
+            chat_history.clean_conversations()
+            chat_history.save_history()
+            chat_history.remove_orph_convos()
+
