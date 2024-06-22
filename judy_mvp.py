@@ -3,13 +3,13 @@ from data_mgmt.chat.chat_history import chatHistory
 from data_mgmt.patient.patient_info import patientInfo
 from voice.judy_voice import judyVoice
 from judylog.judylog import judylog
-from judylog.developermode import DEV_MODE
+from maint.judy_maint import judyMaint
 
 import threading
 
 class judyMVP:
 
-    def __init__(self, is_mac, mac_choice):
+    def __init__(self, is_mac, mac_choice, dev_mode):
         '''
         Initialization function for Judy. Actions taken:
         1.) Download files from Bubble.
@@ -19,6 +19,10 @@ class judyMVP:
         '''
 
         judylog.info('judyMVP.__init__ > Initializing the program.')
+        self.dev_mode = dev_mode
+
+        # Pull settings
+        self.maint = judyMaint()
 
         # First, we will pull down the file system from Bubble
         self.chat_history = chatHistory()  # Creates the chat history and loads from the history file
@@ -27,12 +31,7 @@ class judyMVP:
         self.patient_info = patientInfo()  # Gets the patient's information
         self.patient_info.import_data()
 
-        DEV_MODE = False
-        is_mac = False
-        mac_choice = '1'
-        judylog.info(f'is_mac: {is_mac} | DEV_MODE: {DEV_MODE}')
-
-        if is_mac is not True and DEV_MODE is False:
+        if is_mac is not True and self.dev_mode is False:
             # THIS IS THE MULTITHREADING WE WILL RUN LATER
             self.t_slideshow = threading.Thread(target = self.start_slideshow)
             self.t_audio = threading.Thread(target = self.start_audio)
@@ -62,9 +61,9 @@ class judyMVP:
 
     def start_audio(self):
         judylog.info('judyMVP.__init__ > Starting audio thread.')
-        voice = judyVoice()
+        voice = judyVoice(self.dev_mode)
         voice.listen(self.chat_history, self.patient_info)
 
     def start_maint(self):
         judylog.info('judyMVP.__init__ > Starting maintenance thread.')
-        # maint_routine = judyMaint()
+        self.maint.run_background()

@@ -1,0 +1,5 @@
+2024-06-22 00:11:49,439-INFO-bubbleAPI.get_records > Getting, settings, records from Bubble.
+2024-06-22 00:11:49,444-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-22 00:11:49,639-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/settings?cursor=0&limit=25 HTTP/1.1" 200 None
+2024-06-22 00:11:49,640-INFO-bubbleAPI.get_records > [{'Modified Date': '2024-06-21T20:14:42.568Z', 'Created Date': '2024-06-21T20:14:42.564Z', 'Created By': 'admin_user_colinkraymond_test', 'accent': 'American', 'patient': '1717521410502x636157005519156100', 'photo_delay': 3, 'trigger': 'judy', '_id': '1719000882564x969193787480992800'}]
+2024-06-22 00:11:49,640-INFO-bubbleAPI.get_records > Total settings records pulled: 1

@@ -10,17 +10,16 @@ from mutagen.mp3 import MP3
 import time
 from data_mgmt.chat.chat_exchange import chatExchange
 from api.openaiapi import openAIGPT
-from judylog.developermode import DEV_MODE
 
 class judyVoice:
 
-    def __init__(self):
+    def __init__(self, dev_mode = False):
         # obtain audio from the microphone
         self.r = sr.Recognizer()
         self.m = sr.Microphone()
         self.KEYWORD = 'judy'
         self.listening = True               # Keyword to determine if we should exit
-        DEV_MODE = False
+        self.dev_mode = dev_mode
 
         # Adjust for the ambient noise
         with self.m as source:
@@ -35,10 +34,9 @@ class judyVoice:
 
         self.listening = True
 
-        DEV_MODE = False
         while self.listening is True:
             # DEV MODE OVERRIDE
-            if DEV_MODE is True:
+            if self.dev_mode is True:
                 self.req_resp(None, chat_history, patient_info)
             else:
                 with self.m as source:
@@ -59,13 +57,18 @@ class judyVoice:
                             self.quit_program()
 
     def req_resp(self, source, chat_history, patient_info):
-        DEV_MODE = False
-        if DEV_MODE is True:
+        # Dev Mode override so I can type questions
+        if self.dev_mode is True:
             text_req = input('What is your question for Judy?')
-            self.submit_question(text_req, chat_history, patient_info)
+
+            if 'quit program' in text_req.lower():
+                print('Quitting program')
+                self.quit_program()
+            else:
+                self.submit_question(text_req, chat_history, patient_info)
 
         else:
-            self.read_text('What question did you have?')
+            self.read_text('judyVoice.req_resp > What question did you have?')
             self.req_undst = False
             while self.req_undst is False:
 
@@ -75,7 +78,7 @@ class judyVoice:
                     text_req = self.r.recognize_google(audio_data=audio_req, language='en-US')
                 except:
                     self.read_text('Sorry, I didn\'t quite catch that. Can you please say it again?')
-                    logging.warn('Unable to recognize user request.')
+                    logging.warn('judyVoice.req_resp > Unable to recognize user request.')
                 else:
                     print('req_resp > ', text_req)
                     self.req_undst = True
