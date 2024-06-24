@@ -6,6 +6,7 @@ from judylog.judylog import judylog
 
 class chatExchange:
     def __init__(self,
+                 patient_id,
                  date = None,
                  query = None,
                  response = None,
@@ -18,7 +19,7 @@ class chatExchange:
         self.id = id
         self.conv_id = conv_id
         self._ns = False                            # Flag to determine if there are unsaved changes to an exchange
-
+        self.patient_id = patient_id
         if date is not None:
             if type(date) is datetime.datetime:
                 self.date = date
@@ -49,7 +50,7 @@ class chatExchange:
 
         if self.id is None or self.id == '':
             # Create new record if there is not already one.
-            apiConnection = bubbleAPI()
+            apiConnection = bubbleAPI(self.patient_id)
             body = {
                 'query': self.query,
                 'response': self.response,
@@ -66,6 +67,6 @@ class chatExchange:
                 judylog.error(f'chatExchange.post_exch > Unable to post new exchange: {response}')
         else:
             # Update existing one if there is already an ID there.
-            apiConnection = bubbleAPI()
+            apiConnection = bubbleAPI(self.patient_id)
             response = apiConnection.update_exch_rcds(self)
             return response['response']['exchange']['_id']

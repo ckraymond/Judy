@@ -10,12 +10,14 @@ class chatConversation:
     is any series of exchanges that occur without a two minute pause between them.
     '''
     def __init__(self,
+                 patient_id,
                  id = None,
                  sentiment = None,
                  summary = None,
                  keywords = [],
                  date = None):
 
+        self.patient_id = patient_id
         self.id = id                                                     # The unique conversation id
         self.sentiment = sentiment                                       # The sentiment of the conversation
         self.summary = summary                                           # A simple summary of the conversation
@@ -39,7 +41,7 @@ class chatConversation:
         :return:
         '''
 
-        apiConnection = bubbleAPI()
+        apiConnection = bubbleAPI(self.patient_id)
 
         if self.id is None or self.id == '':
             # Create a new record and populate with the conversation information

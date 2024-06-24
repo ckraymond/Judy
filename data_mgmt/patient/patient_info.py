@@ -7,7 +7,8 @@ from .patient_friends import patientFriends
 
 class patientInfo:
 
-    def __init__(self):
+    def __init__(self, patient_id):
+        self.patient_id = patient_id
         self.fname = ''
         self.mname = ''
         self.lname = ''
@@ -31,7 +32,7 @@ class patientInfo:
         :return:
         '''
 
-        bubble_api = bubbleAPI()
+        bubble_api = bubbleAPI(self.patient_id)
         response = bubble_api.get_records('patient')[0]
 
         #TODO: Ensure the we are handling when information is not available

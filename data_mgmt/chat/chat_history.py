@@ -12,13 +12,14 @@ from judylog.judylog import judylog
 
 class chatHistory:
 
-    def __init__(self, settings):
+    def __init__(self, settings, patient_id):
         judylog.info('chatHistory.__init__ > Loading the chat history')
 
         # Create empty lists for the exchanges and conversations
         self.exchanges = []
         self.conversations = []
         self.settings = settings
+        self.patient_id = patient_id
 
     def import_data(self):
 
@@ -62,7 +63,7 @@ class chatHistory:
         self.conversations = []
 
         # Open the Bubble API and get all the exchanges stored
-        loadAPI = bubbleAPI()
+        loadAPI = bubbleAPI(self.patient_id)
         api_response = loadAPI.get_records('conversation')  # Returns dict
         judylog.info(f'chatHistory.load_all_conversations > {str(api_response)[0:50]}')
 
@@ -81,7 +82,7 @@ class chatHistory:
                 if item in conversation:
                     append_line[item] = conversation[item]
 
-            new_conversation = chatConversation(append_line['_id'], append_line['sentiment'],
+            new_conversation = chatConversation(self.patient_id, append_line['_id'], append_line['sentiment'],
                                                 append_line['summary'], append_line['keywords'], append_line['date'])
 
             self.conversations.append(new_conversation)
@@ -97,7 +98,7 @@ class chatHistory:
 
         # Open the Bubble API and get all the exchanges stored
         #TODO: Incorporate pagination to be able to pull more than 100 records.
-        loadAPI = bubbleAPI()
+        loadAPI = bubbleAPI(self.patient_id)
         api_response = loadAPI.get_records('chatexchange')          # Returns dict
 
         judylog.info(f'chatHistory.load_all_exchanges > Loaded {len(api_response)} exchanges from Bubble.')
@@ -119,7 +120,7 @@ class chatHistory:
 
             if append_line['query'] is not None and append_line['response'] is not None and append_line['date'] is not None:
                 if append_line['query'] != '' and append_line['response'] != '' and append_line['date'] != '':
-                    new_exchange = chatExchange(append_line['date'], append_line['query'], append_line['response'],
+                    new_exchange = chatExchange(self.patient_id, append_line['date'], append_line['query'], append_line['response'],
                                                 append_line['summary'], append_line['_id'], append_line['conversation'])
                     self.exchanges.append(new_exchange)
 
@@ -233,7 +234,7 @@ class chatHistory:
         :param exchange:
         :return:
         '''
-        new_conversation = chatConversation(date=exchange.date)
+        new_conversation = chatConversation(self.patient_id, date=exchange.date)
         new_conversation.id = new_conversation.post_conv()
         new_conversation._ns = True
 
@@ -328,7 +329,7 @@ class chatHistory:
             if exch.conv_id in convo_list:
                 convo_list.remove(exch.conv_id)
 
-        api_connection = bubbleAPI()
+        api_connection = bubbleAPI(self.patient_id)
         for conv_id in convo_list:
-            api_connection.remove_conv(conv_id)
+            api_connection.remove_recd('del_conversation', conv_id)
             judylog.info('chatHistory.remove_orph_convos > Removed conversation ID: ', conv_id)

@@ -1,8 +1,5 @@
 import logging
 import datetime
-import json
-
-from data.user_test_data import test_user_info
 
 class promptCreate:
 
@@ -80,20 +77,9 @@ class promptCreate:
 
     def update_single_person(self, fam):
         '''Updates a single person and returns the value'''
-
-        # USe a mapping table to ensure that we have the info there
-        fam_mapping = {
-            'relationship': 'Relationship to User',
-            'fname': 'First Name',
-            'lname': 'Last Name',
-            'nname': 'Nickname',
-            'location': 'Home',
-            'interests': 'Interests and Hobbies',
-            'deceased': 'Are They Deceased'
-        }
         fam_str = ''
 
-        fam_str += f'\n{fam['fname']} {fam['lname']} is my {fam['relationship']}. '
+        fam_str += f'\n{fam['fname']} {fam['lname']} is my {fam['relationship']}.'
 
         for key in fam:
             if key == 'nname':

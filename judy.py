@@ -2,6 +2,8 @@
 Main function for calling the Judy program.
 '''
 
+PATIENT_ID = '1717521410502x636157005519156100'         #Will use this to only pull information assiciated with a particular pateint
+
 from judy_mvp import judyMVP
 from judylog.judylog import judylog
 import platform                                 # Used to get the OS information
@@ -25,4 +27,4 @@ if is_mac is True or dev_mode is True:
     print('1. Photo Gallery\n2. Voice Input\n3. Maintenance Routine')
     mac_choice = input('Which would you like to do?')
 
-main = judyMVP(is_mac, mac_choice, dev_mode)
+main = judyMVP(is_mac, mac_choice, dev_mode, PATIENT_ID)

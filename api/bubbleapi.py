@@ -4,10 +4,11 @@ import os               # Needed for the BUBBLE_API_TOKEN
 from judylog.judylog import judylog
 
 class bubbleAPI:
-    def __init__(self):
+    def __init__(self, patient_id):
         self.api_token = os.environ['BUBBLE_API_TOKEN']
         self.base_url = 'https://colinkraymond.bubbleapps.io/version-test/api/1.1/obj'
         self.wf_url = 'https://colinkraymond.bubbleapps.io/version-test/api/1.1/wf'
+        self.patient_id = patient_id
 
     def get_records(self, type):
         '''
@@ -22,7 +23,7 @@ class bubbleAPI:
         judylog.info(f'bubbleAPI.get_records > Getting, {type}, records from Bubble.')
 
         while recds_remaining > 0:
-            call_url = f'{self.base_url}/{type}?cursor={cursor}&limit={limit}'
+            call_url = f'{self.base_url}/{type}?cursor={cursor}&limit={limit}&patient={self.patient_id}'
             head = {'Authorization': 'token {}'.format(self.api_token)}
 
             response = requests.get(call_url, headers=head)
@@ -50,6 +51,8 @@ class bubbleAPI:
         post_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.api_token)}
 
+        body['patient'] = self.patient_id
+
         response = requests.post(post_url, headers=head, json=body)
         return response.json()
 
@@ -63,7 +66,8 @@ class bubbleAPI:
             'response': exchange.response,
             'summary': exchange.summary,
             'id': exchange.id,
-            'conv_id': exchange.conv_id
+            'conv_id': exchange.conv_id,
+            'patient': self.patient_id
         }
 
         response = requests.post(call_url, headers=head, json=body)
@@ -85,7 +89,8 @@ class bubbleAPI:
             'summary': conv.summary,
             'sentiment': conv.sentiment,
             'keywords': ','.join(conv.keywords),
-            'id': conv.id
+            'id': conv.id,
+            'patient': self.patient_id
         }
 
         response = requests.post(call_url, headers=head, json=body)
@@ -97,14 +102,14 @@ class bubbleAPI:
             judylog.error(response.json())
             return False
 
-    def remove_conv(self, id):
+    def remove_recd(self, type, id):
         '''
         Takes a conversation ID, connects to the bubble API and then removes it from Bubble.
         :return:
         '''
 
-        judylog.info(f'Removing conversation (ID: {id}) from Bubble.')
-        call_url = self.wf_url + '/' + 'del_conversation'
+        judylog.info(f'bubbleAPI.remove_recd > Removing record (ID: {id}) from Bubble with workflow {type}.')
+        call_url = f'{self.wf_url}/{type}'
         head = {'Authorization': 'token {}'.format(self.api_token)}
         body = {
             'id': id
@@ -115,12 +120,6 @@ class bubbleAPI:
         if response.json()['status'] == 'success':
             return response.json()
         else:
-            judylog.error(f'Unable to update id in Bubble: {body['id']}')
+            judylog.error(f'bubbleAPI.remove_recd > Unable to update id in Bubble: {body['id']}')
             judylog.error(response.json())
             return False
-
-    def imageLoad(self):
-        '''
-        Method to pull images from Bubble.
-        :return:
-        '''

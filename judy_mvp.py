@@ -4,12 +4,13 @@ from data_mgmt.patient.patient_info import patientInfo
 from voice.judy_voice import judyVoice
 from judylog.judylog import judylog
 from maint.judy_maint import judyMaint
+from maint.messages import messageHandler
 
 import threading
 
 class judyMVP:
 
-    def __init__(self, is_mac, mac_choice, dev_mode):
+    def __init__(self, is_mac, mac_choice, dev_mode, PATIENT_ID):
         '''
         Initialization function for Judy. Actions taken:
         1.) Download files from Bubble.
@@ -20,16 +21,19 @@ class judyMVP:
 
         judylog.info('judyMVP.__init__ > Initializing the program.')
         self.dev_mode = dev_mode
+        self.patient_id = PATIENT_ID
 
         # Pull settings
-        self.maint = judyMaint()
+        self.maint = judyMaint(PATIENT_ID)
 
         # First, we will pull down the file system from Bubble
-        self.chat_history = chatHistory(self.maint.settings.values)  # Creates the chat history and loads from the history file
+        self.chat_history = chatHistory(self.maint.settings.values, self.patient_id)  # Creates the chat history and loads from the history file
         self.chat_history.import_data()
 
-        self.patient_info = patientInfo()  # Gets the patient's information
+        self.patient_info = patientInfo(self.patient_id)  # Gets the patient's information
         self.patient_info.import_data()
+
+        self.message_handler = messageHandler(self.patient_id)
 
         if is_mac is not True and self.dev_mode is False:
             # THIS IS THE MULTITHREADING WE WILL RUN LATER
@@ -62,9 +66,9 @@ class judyMVP:
 
     def start_audio(self):
         judylog.info('judyMVP.__init__ > Starting audio thread.')
-        voice = judyVoice(self.maint.settings.values, self.dev_mode)
+        voice = judyVoice(self.maint.settings.values, self.patient_id, self.dev_mode)
         voice.listen(self.chat_history, self.patient_info)
 
     def start_maint(self):
         judylog.info('judyMVP.__init__ > Starting maintenance thread.')
-        self.maint.run_background(self.chat_history)
+        self.maint.run_background(self.chat_history, self.message_handler)
