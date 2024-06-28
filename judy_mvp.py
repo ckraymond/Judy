@@ -5,6 +5,7 @@ from voice.judy_voice import judyVoice
 from judylog.judylog import judylog
 from maint.judy_maint import judyMaint
 from maint.messages import messageHandler
+from api.bubbleapi import bubbleAPI
 
 import threading
 
@@ -14,14 +15,18 @@ class judyMVP:
         '''
         Initialization function for Judy. Actions taken:
         1.) Download files from Bubble.
-        2a.) Initilize the photo carousel
+        2a.) Initialize the photo carousel
         2b.) Start listening on the microphone
         3.) Regular maintenance routine to pull down info from Bubble
         '''
 
+        # This is temporary. We would need a much more elegant solution to registering the device
+        login_api = bubbleAPI(None)
+        self.patient_id = login_api.login_user()
+
         judylog.info('judyMVP.__init__ > Initializing the program.')
         self.dev_mode = dev_mode
-        self.patient_id = PATIENT_ID
+        # self.patient_id = PATIENT_ID
 
         # Pull settings
         self.maint = judyMaint(PATIENT_ID)

@@ -56,7 +56,7 @@ class messageHandler:
                 judylog.info(f'messageHandler.clean_messages > Deleting message: {msg}')
                 del_msg = self.messages.pop(msg)
 
-                api_connection = bubbleAPI()
+                api_connection = bubbleAPI(self.patient_id)
                 print(api_connection.remove_recd('del_message', del_msg['_id']))
 
 

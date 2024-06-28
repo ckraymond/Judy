@@ -31,17 +31,17 @@ class judyMaint:
         print('judyMaint.run_background > Running maintenance routine')
 
         while True:
-            time.sleep(60)                         #Only runs every min to save processing
-            if datetime.datetime.now().minute % 5 == 0:             # Certain ones only run every 5 min
-                judylog.info(f'judyMaint.run_background > Running maintenance routine')
-                self.settings.pull_settings()
+            # time.sleep(60)                         #Only runs every min to save processing
+            # if datetime.datetime.now().minute % 5 == 0:             # Certain ones only run every 5 min
+            judylog.info(f'judyMaint.run_background > Running maintenance routine')
+            self.settings.pull_settings()
 
-                # Go through and clean up conversations and exchanges
-                chat_history.clean_exchanges()
-                chat_history.check_mappings()
-                chat_history.clean_conversations()
-                chat_history.save_history()
-                chat_history.remove_orph_convos()
+            # Go through and clean up conversations and exchanges
+            chat_history.clean_exchanges()
+            chat_history.check_mappings()
+            chat_history.clean_conversations()
+            chat_history.save_history()
+            chat_history.remove_orph_convos()
 
             # Check to see if there are any messages on Bubble
             message_handler.get_messages()

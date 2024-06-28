@@ -5,40 +5,92 @@ from judylog.judylog import judylog
 
 class bubbleAPI:
     def __init__(self, patient_id):
-        self.api_token = os.environ['BUBBLE_API_TOKEN']
+        try:
+            self.api_token = os.environ['TEMP_BUBBLE_API_TOKEN']
+        except:
+            self.api_token = None
         self.base_url = 'https://colinkraymond.bubbleapps.io/version-test/api/1.1/obj'
         self.wf_url = 'https://colinkraymond.bubbleapps.io/version-test/api/1.1/wf'
         self.patient_id = patient_id
 
-    def get_records(self, type):
+    def login_user(self):
+        email = input('Enter user email:')
+        pw = input('Enter password:')
+
+        call_url = f'https://colinkraymond.bubbleapps.io/version-test/api/1.1/wf/gen_api_token?email={email}&pw={pw}'
+
+        response = requests.get(call_url).json()
+        print(response)
+
+        os.environ['TEMP_BUBBLE_API_TOKEN'] = response['response']['token']
+        print(os.environ['TEMP_BUBBLE_API_TOKEN'])
+        return response['response']['user_id']
+
+    def get_exchanges(self):
         '''
-        Requests to get record of a certain type from Bubble.
-        :param type:
-        :return:
-        '''
-        recds_remaining = 1                   # Set this to 1 to start
+                Requests to get record of a certain type from Bubble.
+                :param type:
+                :return:
+                '''
+        recds_remaining = 1  # Set this to 1 to start
         cursor = 0
-        limit = 100                              # This will remain the same through all the calls
-        cons_response = []
+        limit = 100  # This will remain the same through all the calls
+        response_list = []
         judylog.info(f'bubbleAPI.get_records > Getting, {type}, records from Bubble.')
 
         while recds_remaining > 0:
-            call_url = f'{self.base_url}/{type}?cursor={cursor}&limit={limit}&patient={self.patient_id}'
+            call_url = f'self.wf_url/get_chats?id={self.patient_id}&cursor={cursor}&limit={limit}'
+
             head = {'Authorization': 'token {}'.format(self.api_token)}
 
             response = requests.get(call_url, headers=head)
 
             judylog.info(f'bubbleAPI.get_records > response: {str(response)[0:100]}')
 
-            recds_remaining = response.json()['response']['remaining']
-            cons_response.extend(response.json()['response']['results'])
+            total_records = response.json()['response']['records']
+            response_list.extend(response.json()['response']['exchanges'])
 
-            if response.json()['response']['remaining'] > 0:
+            if total_records > limit:
                 cursor += limit
 
         judylog.info(f'bubbleAPI.get_records > {cons_response[0:5]}')
         judylog.info(f'bubbleAPI.get_records > Total {type} records pulled: {len(cons_response)}')
         return cons_response
+
+    # def get_records(self, type):
+    #     '''
+    #     Requests to get record of a certain type from Bubble.
+    #     :param type:
+    #     :return:
+    #     '''
+    #     recds_remaining = 1                   # Set this to 1 to start
+    #     cursor = 0
+    #     limit = 100                              # This will remain the same through all the calls
+    #     cons_response = []
+    #     judylog.info(f'bubbleAPI.get_records > Getting, {type}, records from Bubble.')
+    #
+    #     while recds_remaining > 0:
+    #         if type == 'patient':
+    #             call_url = f'self.wf_url/get_patient?id={self.patient_id}'
+    #         if type == 'chatexchange':
+    #             call_url = f'self.wf_url/get_chats?id={self.patient_id}'
+    #         else:
+    #             call_url = f'{self.base_url}/{type}?cursor={cursor}&limit={limit}'
+    #         head = {'Authorization': 'token {}'.format(self.api_token)}
+    #
+    #         response = requests.get(call_url, headers=head)
+    #
+    #         judylog.info(f'bubbleAPI.get_records > response: {str(response)[0:100]}')
+    #
+    #         recds_remaining = response.json()['response']['remaining']
+    #         cons_response.extend(response.json()['response']['results'])
+    #
+    #         if response.json()['response']['remaining'] > 0:
+    #             cursor += limit
+    #
+    #     judylog.info(f'bubbleAPI.get_records > {cons_response[0:5]}')
+    #     judylog.info(f'bubbleAPI.get_records > Total {type} records pulled: {len(cons_response)}')
+    #     return cons_response
 
     def post_record(self, type, body):
         '''
@@ -89,11 +141,12 @@ class bubbleAPI:
             'summary': conv.summary,
             'sentiment': conv.sentiment,
             'keywords': ','.join(conv.keywords),
-            'id': conv.id,
-            'patient': self.patient_id
+            'id': conv.id
         }
 
         response = requests.post(call_url, headers=head, json=body)
+        print(response.json())
+        print(body)
 
         if response.json()['status'] == 'success':
             return response.json()

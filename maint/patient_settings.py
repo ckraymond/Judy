@@ -22,9 +22,23 @@ class patientSettings:
         api_connection = bubbleAPI(self.patient_id)
         api_results = api_connection.get_records('settings')
 
-        self.values['accent'] = api_results[0]['accent']
-        self.values['photo_delay'] = int(api_results[0]['photo_delay'])
-        self.values['trigger'] = api_results[0]['trigger']
+        try:
+            self.values['accent'] = api_results[0]['accent']
+        except:
+            judylog.error(f'patientSettings.pull_settings > Unable to load accent. Using default instead.')
+            self.values['accent'] = 'american'
+
+        try:
+            self.values['photo_delay'] = int(api_results[0]['photo_delay'])
+        except:
+            judylog.error(f'patientSettings.pull_settings > Unable to load photo_delay. Using default instead.')
+            self.values['photo_delay'] = 5
+
+        try:
+            self.values['trigger'] = api_results[0]['trigger']
+        except:
+            judylog.error(f'patientSettings.pull_settings > Unable to load trigger_phrase. Using default instead.')
+            self.values['trigger'] = 'judy'
 
         judylog.info(f'userSettings.pull_settings > Imported settings: {self.values}')
 

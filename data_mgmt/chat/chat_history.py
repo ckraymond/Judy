@@ -101,6 +101,7 @@ class chatHistory:
         loadAPI = bubbleAPI(self.patient_id)
         api_response = loadAPI.get_records('chatexchange')          # Returns dict
 
+        print(api_response)
         judylog.info(f'chatHistory.load_all_exchanges > Loaded {len(api_response)} exchanges from Bubble.')
 
         # Go through the JSON to ensure there is a value for each item. Will use append_line as empty entry.
@@ -143,6 +144,7 @@ class chatHistory:
         # Review the exchanges and add summaries
         for item in self.exchanges:
             item.check_summary()
+            print(item)
 
         judylog.info(f'chatHistory.clean_exchanges > Total exchanges after cleaning: {len(self.exchanges)}')
 
@@ -156,10 +158,6 @@ class chatHistory:
 
         # Sort the exchanges by date/time
         self.exchanges.sort(key = lambda x : x.date)
-
-        # print('Sorting through exchanges...')
-        # for exch in self.exchanges:
-        #     print(exch.date)
 
         judylog.info(f'Sorting through these exchanges: {len(self.exchanges)}')
 
@@ -177,8 +175,8 @@ class chatHistory:
                 else:       # Create a new conversation, populate with date and then assign the new ID to the exchange
                     self.create_initial_conv(self.exchanges[num])
 
-        print('Total exchanges after checking mapping: ', len(self.exchanges))
-        print('Total conversations after checking mapping: ', len(self.conversations))
+        judylog.info(f'Total exchanges after checking mapping: {len(self.exchanges)}')
+        judylog.info(f'Total conversations after checking mapping: {len(self.conversations)}')
 
     def clean_conversations(self):
         '''
@@ -188,7 +186,7 @@ class chatHistory:
         '''
 
         for conv in self.conversations:
-            if conv.summary in ['', None] or conv.keywords in ['', None, []] or conv.sentiment in ['', None]:
+            if conv.summary in ['', None] or conv.keywords in ['', None, []] or conv.sentiment in ['', None] or conv.date in ['', None]:
                 judylog.info(f'Conversation to be updated for (summary, keywords, sentiment): {conv.id}')
                 exch_list = self.get_exchanges(conv.id)
 
