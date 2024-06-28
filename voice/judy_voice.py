@@ -13,14 +13,14 @@ from api.openaiapi import openAIGPT
 
 class judyVoice:
 
-    def __init__(self, settings, patient_id, dev_mode = False):
+    def __init__(self, settings, bubble_creds, dev_mode = False):
         self.settings = settings
         # obtain audio from the microphone
         self.r = sr.Recognizer()
         self.m = sr.Microphone()
         self.listening = True               # Keyword to determine if we should exit
         self.dev_mode = dev_mode
-        self.patient_id = patient_id
+        self.bubble_creds = bubble_creds
 
         # Adjust for the ambient noise
         with self.m as source:
@@ -124,7 +124,7 @@ class judyVoice:
 
     def submit_question(self, query, chat_history, patient_info):
         # Create new exchange object and populate with the query
-        new_exchange = chatExchange(self.patient_id)
+        new_exchange = chatExchange(self.bubble_creds)
         new_exchange.query = query
 
         # Get response via OpenAI

@@ -3,15 +3,15 @@ class patientFriends:
 
     def __init__(self, friends_list):
         self.mapping = {
-            'bday': 'Birthday',
-            'deceased': 'Deceased',
-            'fname': 'First Name',
-            'interests': 'Interests',
-            'lname': 'Last Name',
-            'location': 'Location',
-            'nname': 'Nickname',
+            'bday': 'birthday',
+            'deceased': 'deceased',
+            'fname': 'first_name',
+            'interests': 'interests',
+            'lname': 'last_name',
+            'location': 'location',
+            'nname': 'nickname',
             'patient': 'Patient',
-            'relationship': 'Relationship'
+            'relationship': 'relationship'
         }
         self.data = []
 
@@ -23,6 +23,7 @@ class patientFriends:
                 except:
                     judylog.info(f'patientFriends.__init__ > Friend info {self.mapping[item]} does not exist.')
             self.data.append(new_friend)
+        judylog.debug(f'patientFriends.__init__ > {self.data}')
 
     def __str__(self):
         return_str = f'\n\nPatient Friends\n------------------------------------------------------'

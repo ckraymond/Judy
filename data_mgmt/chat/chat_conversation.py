@@ -10,14 +10,14 @@ class chatConversation:
     is any series of exchanges that occur without a two minute pause between them.
     '''
     def __init__(self,
-                 patient_id,
+                 bubble_creds,
                  id = None,
                  sentiment = None,
                  summary = None,
                  keywords = [],
                  date = None):
 
-        self.patient_id = patient_id
+        self.bubble_creds = bubble_creds
         self.id = id                                                     # The unique conversation id
         self.sentiment = sentiment                                       # The sentiment of the conversation
         self.summary = summary                                           # A simple summary of the conversation
@@ -41,7 +41,7 @@ class chatConversation:
         :return:
         '''
 
-        apiConnection = bubbleAPI(self.patient_id)
+        api_connection = bubbleAPI(self.bubble_creds)
 
         if self.id is None or self.id == '':
             # Create a new record and populate with the conversation information
@@ -52,7 +52,7 @@ class chatConversation:
                 'date': str(self.date)
             }
 
-            response = apiConnection.post_record('conversation', body)
+            response = api_connection.post_record('conversation', body)
 
             try:
                 judylog.info(f'New conversation created, ID: {response['id']}')
@@ -63,7 +63,7 @@ class chatConversation:
 
         else:
             # Update the record since we already have an ID
-            response = apiConnection.update_conv_rcds(self)
+            response = api_connection.update_conv_rcds(self)
             try:
                 return response['response']['conversation']['_id']
             except:

@@ -11,7 +11,7 @@ import threading
 
 class judyMVP:
 
-    def __init__(self, is_mac, mac_choice, dev_mode, PATIENT_ID):
+    def __init__(self, is_mac, mac_choice, dev_mode, email, password):
         '''
         Initialization function for Judy. Actions taken:
         1.) Download files from Bubble.
@@ -20,25 +20,28 @@ class judyMVP:
         3.) Regular maintenance routine to pull down info from Bubble
         '''
 
-        # This is temporary. We would need a much more elegant solution to registering the device
-        login_api = bubbleAPI(None)
-        self.patient_id = login_api.login_user()
+        # These credentials will be used throughout the model
+        self.bubble_creds = {
+            'email': email,
+            'password': password,
+            'patient_id': None,
+            'api_token': None,
+            'caretaker_id': None,
+            'watcher_ids': []
+        }
 
         judylog.info('judyMVP.__init__ > Initializing the program.')
-        self.dev_mode = dev_mode
-        # self.patient_id = PATIENT_ID
-
-        # Pull settings
-        self.maint = judyMaint(PATIENT_ID)
+        self.dev_mode = dev_mode                # Check on dev mode aspect
+        self.maint = judyMaint(self.bubble_creds)      # Pull the user settings
 
         # First, we will pull down the file system from Bubble
-        self.chat_history = chatHistory(self.maint.settings.values, self.patient_id)  # Creates the chat history and loads from the history file
+        self.chat_history = chatHistory(self.maint.settings.values, self.bubble_creds)  # Creates the chat history and loads from the history file
         self.chat_history.import_data()
 
-        self.patient_info = patientInfo(self.patient_id)  # Gets the patient's information
+        self.patient_info = patientInfo(self.bubble_creds)  # Gets the patient's information
         self.patient_info.import_data()
 
-        self.message_handler = messageHandler(self.patient_id)
+        self.message_handler = messageHandler(self.bubble_creds)
 
         if is_mac is not True and self.dev_mode is False:
             # THIS IS THE MULTITHREADING WE WILL RUN LATER
@@ -71,7 +74,7 @@ class judyMVP:
 
     def start_audio(self):
         judylog.info('judyMVP.__init__ > Starting audio thread.')
-        voice = judyVoice(self.maint.settings.values, self.patient_id, self.dev_mode)
+        voice = judyVoice(self.maint.settings.values, self.bubble_creds, self.dev_mode)
         voice.listen(self.chat_history, self.patient_info)
 
     def start_maint(self):

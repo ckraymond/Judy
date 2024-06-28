@@ -1,10 +1,10 @@
-import logging
+from judylog.judylog import judylog
 import datetime
 
 class promptCreate:
 
     def __init__(self, raw_query, user, history):
-        logging.info('Generating the GPT prompt.')
+        judylog.info('promptCreate.__init__ > Generating the GPT prompt.')
         self.user = user                            # Gets the user info from the test data
         self.raw_query = raw_query                  # This is the overall prompt with the user's info
         self.messages = []
@@ -19,7 +19,7 @@ class promptCreate:
         background information on the user.
         :return:
         '''
-        logging.info('promptCreate.gen_user_query_sys_prompt > Starting to generate the complete prompt to ChatGPT.')
+        judylog.info('promptCreate.gen_user_query_sys_prompt > Starting to generate the complete prompt to ChatGPT.')
 
         self.system_instructions = ('You are a personal assistant named Judy for someone with dementia. ' +
                                     'You should follow the following rules when providing any responses:\n' +
@@ -68,8 +68,10 @@ class promptCreate:
             bday = datetime.datetime.strptime(self.user.bday, '%B %d, %Y')
             self.system_prompt['info'] += f'My birthday is {bday}'
 
+        judylog.debug(f'promptCreate.update_info > {self.system_prompt}')
+
     def update_family(self):
-        '''This takes all of the friends and family and puts it into a single jason format.'''
+        '''This takes all of the friends and family and puts it into a single JSON format.'''
 
         for fam in self.user.friends.data:
             fam_str = self.update_single_person(fam)
@@ -77,6 +79,7 @@ class promptCreate:
 
     def update_single_person(self, fam):
         '''Updates a single person and returns the value'''
+        print(f'promptCreate.update_single_person > {fam}')
         fam_str = ''
 
         fam_str += f'\n{fam['fname']} {fam['lname']} is my {fam['relationship']}.'
@@ -130,6 +133,8 @@ class promptCreate:
             self.messages.append({"role": "user", "content": item.query})
             self.messages.append({"role": "assistant", "content": item.response})
         self.messages.append({"role": "user", "content": self.raw_query})
+
+        judylog.debug(f'promptCreate.build_message > {self.messages}')
 
     def consolidate_prompt(self):
         self.system_prompt_str = ''

@@ -12,8 +12,12 @@ PATIENT_ID = PATIENT_ID_MAP['Abraham']      #Will use this to only pull informat
 from judy_mvp import judyMVP
 from judylog.judylog import judylog
 import platform                                 # Used to get the OS information
+from user_credentials import get_user_credentials
 
 judylog.info('__main__ > Initializing the program.')
+
+# Testing component to add in user credentials
+email, password = get_user_credentials('Donald Trump')
 
 # Check what the operating system is
 print('You are running Judy version 0.1. Your operating system is: ', platform.system())
@@ -32,4 +36,4 @@ if is_mac is True or dev_mode is True:
     print('1. Photo Gallery\n2. Voice Input\n3. Maintenance Routine')
     mac_choice = input('Which would you like to do?')
 
-main = judyMVP(is_mac, mac_choice, dev_mode, PATIENT_ID)
+main = judyMVP(is_mac, mac_choice, dev_mode, email, password)

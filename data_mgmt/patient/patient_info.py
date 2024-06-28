@@ -1,5 +1,5 @@
 import datetime
-import logging
+from judylog.judylog import judylog
 
 from api.bubbleapi import bubbleAPI
 from .patient_bg import patientBG
@@ -7,8 +7,9 @@ from .patient_friends import patientFriends
 
 class patientInfo:
 
-    def __init__(self, patient_id):
-        self.patient_id = patient_id
+    def __init__(self, bubble_creds):
+        judylog.debug('patientInfo.__init__ > Getting patient information.')
+        self.bubble_creds = bubble_creds
         self.fname = ''
         self.mname = ''
         self.lname = ''
@@ -32,21 +33,24 @@ class patientInfo:
         :return:
         '''
 
-        bubble_api = bubbleAPI(self.patient_id)
-        response = bubble_api.get_records('patient')[0]
+        bubble_api = bubbleAPI(self.bubble_creds)
+        response = bubble_api.get_exch_conv('user')[0]
+        judylog.debug(f'patientInfo.import_data > {response}')
 
         #TODO: Ensure the we are handling when information is not available
         self.id = response['_id']                           # The patient ID in Bubble which can be useful later
-        self.fname = response['First Name']
-        self.mname = response['Middle Name']
-        self.lname = response['Last Name']
-        self.nname = response['Nick Name']
-        self.location = response['Location']
-        self.gender = response['Gender']
-        self.birthday = datetime.datetime.strptime(response['Birthday'],
+        self.fname = response['first_name']
+        self.mname = response['middle_name']
+        self.lname = response['last_name']
+        self.nname = response['nickname']
+        self.location = response['home']
+        self.gender = response['gender']
+        self.caretaker = response['caretaker']
+        self.watchers = response['watcher']
+        self.birthday = datetime.datetime.strptime(response['bday'],
                                                        '%Y-%m-%dT%H:%M:%S.%fZ')
 
-        self.bg = patientBG(response)                       # In Bubble the background info is not split into its own section
+        self.bg = patientBG(bubble_api.get_exch_conv('interest'))                       # In Bubble the background info is not split into its own section
 
         self.import_friends(bubble_api)
 
@@ -57,6 +61,6 @@ class patientInfo:
         '''
 
         # Get the list of friends from the Bubble API
-        friends_list = bubble_api.get_records('friends')
+        friends_list = bubble_api.get_exch_conv('friends')
 
         self.friends = patientFriends(friends_list)

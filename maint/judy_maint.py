@@ -13,9 +13,10 @@ class judyMaint:
     - Update the user preferences
     '''
 
-    def __init__(self, patient_id):
+    def __init__(self, bubble_creds):
         # On initialization, get user settings
-        self.settings = patientSettings(patient_id)
+        self.bubble_creds = bubble_creds
+        self.settings = patientSettings(self.bubble_creds)
         self.settings.pull_settings()
 
     def run_background(self, chat_history, message_handler):
