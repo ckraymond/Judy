@@ -41,6 +41,7 @@ class judyMaint:
             chat_history.clean_exchanges()
             chat_history.check_mappings()
             chat_history.clean_conversations()
+            chat_history.rev_conversations()
             chat_history.save_history()
             chat_history.remove_orph_convos()
 

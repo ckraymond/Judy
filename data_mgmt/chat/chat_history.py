@@ -4,7 +4,6 @@ associated with previous queries and responses on Judy.
 '''
 
 import datetime
-
 from api.bubbleapi import bubbleAPI
 from .chat_conversation import chatConversation
 from .chat_exchange import chatExchange
@@ -34,13 +33,16 @@ class chatHistory:
         # Next we check the mappings of conversations and exchanges
         self.check_mappings()
 
-        # Cleans the conversations by checking for missing items
+        # Cleans the conversations by checking to see if any are missing
         self.clean_conversations()
+
+        # Check to see if conversations need to be closed out
+        self.rev_conversations()
 
         # Finally, we resave all of the information that has been tagged to be adjusted
         self.save_history()
 
-        # Identify conversations that need to be deleted and delete them
+        # Finally we identify conversations that need to be deleted and delete them
         self.remove_orph_convos()
         # TODO: Create the conversation delete function
 
@@ -196,21 +198,18 @@ class chatHistory:
         Cannot create new ones.
         :return:
         '''
+        print('chatHistory.save_history > Saving chat history in Bubble')
         for exch in self.exchanges:
             if exch._ns is True:
+                judylog.debug(f'chatHistory.save_history > Saving exchange: {exch.query}')
                 exch.post_exch()
                 exch._ns = False
 
         for conv in self.conversations:
             if conv._ns is True:
+                judylog.debug(f'chatHistory.save_history > Saving conversation: {conv.id}')
                 conv.post_conv()
                 conv._ns = False
-
-        judylog.info(f'chatConversation.save_history > History saved onto Bubble.')
-
-# TODO: Need to create function to check conversations against exchanges and make sure there are not ones that
-    #  have no associated exchanges
-# TODO: Need to create function to remove empty exchanges from Bubble through API
 
     def get_exchanges(self, conv_id):
         exch_list = []
@@ -228,7 +227,7 @@ class chatHistory:
         :param exchange:
         :return:
         '''
-        new_conversation = chatConversation(self.bubble_creds, date=exchange.date)
+        new_conversation = chatConversation(self.bubble_creds, date=exchange.date, _ns = True)
         new_conversation.id = new_conversation.post_conv()
         new_conversation._ns = True
 
@@ -257,14 +256,17 @@ class chatHistory:
         :param exch:
         :return:
         '''
-        for exist_exch in self.exchanges:
-            difftime = abs(exch.date - exist_exch.date)
-            if difftime.total_seconds() < 120:
-                self.create_initial_conv(exch)
-                return
+        # find the latest exchange
+        self.exchanges = sorted(self.exchanges, key=lambda item: item.date)
+
+        # If there hasn't been a new exchange in the past 2 min then create a new one
+        difftime = abs(exch.date - self.exchanges[-1].date)
+        if difftime.total_seconds() < 120:
+            exch.conv_id = self.exchanges[-1].conv_id
+            return True
 
         self.create_initial_conv(exch)
-        return
+        return False
 
     def rev_conversations(self):
         '''
@@ -272,33 +274,27 @@ class chatHistory:
         :return:
         '''
 
-        max_conv = {'index': 0,'value': datetime.datetime.min}
-
         # Skip this if there are no conversations
         if len(self.conversations) == 0: return                             # Skip this if there are no conversations
 
-        # Now find the most recent conversation
-        for index in range(len(self.conversations)):
-            if self.conversations[index].date > max_conv['value']:
-                max_conv['index'] = index
-                max_conv['value'] = self.conversations[index].date
+        # Sort conversations by date so the most recent one is easy to find
+        self.conversations = sorted(self.conversations, key=lambda item: item.date)
 
-        max_exch = {'index': 0, 'value': datetime.datetime.min}                              # Track the most recent conversation
+        # Find the date of the last exchange in the conversation
+        last_exchange = datetime.datetime(year=1900, month=1, day=1)
         exch_list = []
+        for exch in self.exchanges:
+            if exch.conv_id == self.conversations[-1].id:
+                exch_list.append(exch)
+                judylog.debug(f'chatHistory.rev_conversations > Found matching conversation for exchange.')
+                last_exchange = max(last_exchange, exch.date)
+        judylog.debug(f'chatHistory.rev_conversations > Last exchange: {last_exchange}')
 
-        # Now find the most recent exchange in that conversation if it doesn't have a summary
-        if self.conversations[max_conv['index']].summary in [None, '']:
-            for index in range(len(self.exchanges)):
-                if self.exchanges[index].conv_id == self.conversations[max_conv['index']].id:
-                    exch_list.append(self.exchanges[index])
-                if self.exchanges[index].date > max_exch['value']:
-                    max_exch['index'] = index
-                    max_exch['value'] = self.exchanges[index].date
-
-        difftime = abs(datetime.datetime.now() - self.exchanges[max_exch['index']].date)
-        if difftime.total_seconds() > 120:
-            judylog.info(f'Cleaning conversation: {self.id}')
-            self.clean_conv(exch_list)
+        diff_time = abs(datetime.datetime.now() - last_exchange)
+        judylog.debug(f'chatHistory.rev_conversations > Difference in time: {diff_time.total_seconds()}')
+        if diff_time.total_seconds() > 120:
+            judylog.info(f'chatHistory.rev_conversations > Cleaning conversation: {self.conversations[-1].id}')
+            self.conversations[-1].clean_conv(exch_list)  #This is where we actually pull the conversation out.
 
     def get_conv_ids(self):
         '''
@@ -316,7 +312,7 @@ class chatHistory:
         Go through the conversations on Bubble and remove any that are not being called by excahnged.
         :return:
         '''
-        judylog.info('chatHistory.remove_orph_convos > Checking for orphaned conversaitons.')
+        judylog.info('chatHistory.remove_orph_convos > Checking for orphaned conversations.')
         convo_list = self.get_conv_ids()
 
         for exch in self.exchanges:

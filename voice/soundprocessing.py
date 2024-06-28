@@ -43,7 +43,7 @@ class soundProcessing:
     def transcribe_whisper(self):
         client = OpenAI()
 
-        audio_file = open("./temp/inputaudio.wav", "rb")
+        audio_file = open("../temp/inputaudio.wav", "rb")
         transcription = client.audio.transcriptions.create(
             model="whisper-1",
             file=audio_file
@@ -60,7 +60,7 @@ class soundProcessing:
             self.r.adjust_for_ambient_noise(source)
             audio = self.r.listen(source)
 
-        with open("./temp/inputaudio.wav", "wb") as f:
+        with open("../temp/inputaudio.wav", "wb") as f:
             f.write(audio.get_wav_data())
 
         transcription = self.transcribe_whisper()

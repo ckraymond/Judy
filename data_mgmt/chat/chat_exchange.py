@@ -12,13 +12,14 @@ class chatExchange:
                  response = None,
                  summary = None,
                  id = None,
-                 conv_id = None):
+                 conv_id = None,
+                 _ns = False):
         self.query = query
         self.response = response
         self.summary = summary
         self.id = id
         self.conv_id = conv_id
-        self._ns = False                            # Flag to determine if there are unsaved changes to an exchange
+        self._ns = _ns                            # Flag to determine if there are unsaved changes to an exchange
         self.bubble_creds = bubble_creds
         if date is not None:
             if type(date) is datetime.datetime:

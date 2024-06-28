@@ -15,14 +15,15 @@ class chatConversation:
                  sentiment = None,
                  summary = None,
                  keywords = [],
-                 date = None):
+                 date = None,
+                 _ns = False):
 
         self.bubble_creds = bubble_creds
         self.id = id                                                     # The unique conversation id
         self.sentiment = sentiment                                       # The sentiment of the conversation
         self.summary = summary                                           # A simple summary of the conversation
         self.keywords = keywords                                         # The keywords associated with this conversation
-        self._ns = False                                                 # Does the conversation need to be save to Bubble
+        self._ns = _ns                                                   # Does the conversation need to be save to Bubble
         if date is not None:
             if type(date) is datetime.datetime:
                 self.date = date

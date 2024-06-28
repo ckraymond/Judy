@@ -1,13 +1,21 @@
 # Development Notes
+## Roadmap
 
-## Resources
-- [Markdown Syntax](https://www.markdownguide.org/basic-syntax/)
-- [MongoDB in Pythong](https://www.mongodb.com/resources/languages/python)
-- [Retrieval Augmented Generation Article](https://scalexi.medium.com/implementing-a-retrieval-augmented-generation-rag-system-with-openais-api-using-langchain-ab39b60b4d9f)
-- [How to uoload to Google Cloud](https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3)
-- [Using embeddings to help search](https://cookbook.openai.com/examples/question_answering_using_embeddings)
-- [Ideas for the app builder](https://zapier.com/blog/best-no-code-app-builder/#bubble)
-- [Venture Beat AI Article](https://venturebeat.com/ai/from-gen-ai-1-5-to-2-0-moving-from-rag-to-agent-systems/)
+1. ~~**Data Structure** | Ensure that exchanges and conversations are being properly recorded and updated.~~
+   2. *I think this is complete for now.*
+3. **Support FAQ integration** | Support the integration of FAQs into questions.
+3. **Messaging** | Finalize caretaker -> patient messaging on the device.
+4. **Messaging** | Create patient -> caretaker messaging.
+5. **Talking Icon** | Create screen icon to alert when the device is listening or speaking.
+6. **Calendar** | Add in ability to have user specific calendar. Build out with potential integration to Google Calendar.
+5. **Hueristic Layer** | Add hueristic layer to support specific requests.
+   6. *Calendar reminders* | Create alerts if there is a calendar reminder coming up.
+   7. *Clear Handover* | Add message to user when handing over to Chat GPT
+   8. *More structure* | Adjust Chat GPT response so that it is very precise and limit hallucinations.
+
+## Backlog 
+- **Screen Integration** | Create more ability to use the devices screen.
+- **Update triggers** | Adjust triggers so that you can say Judy and the command in one sentence. Also want to see if there's a way to keep the conversation going back and forth.
 ---
 ## Thoughts / Ideas
 - **Device**
@@ -37,12 +45,11 @@
   - Should run two queries against GPT. The first should be to look through the query and see if there are specific actions to be taken. This can be done by adding a list of commands and asking if any of them fit that pattern.
   - Per article, does it make more sense to send things in YAML vs JASON or text?
 ---
-## TODOs
-- Incorporate MongoDB to store the chat history. 
-- Review concept of RAG with the system
-- Store chat history so it can be remembered in perpetuity
-- Think about way to compress chat history
-- Look more at the personal history file
-- Create AWS function and folder to emulate cloud storage
-- More modularization and configuration should all be in config files
-- Think about outlining system architecture
+## Resources
+- [Markdown Syntax](https://www.markdownguide.org/basic-syntax/)
+- [MongoDB in Pythong](https://www.mongodb.com/resources/languages/python)
+- [Retrieval Augmented Generation Article](https://scalexi.medium.com/implementing-a-retrieval-augmented-generation-rag-system-with-openais-api-using-langchain-ab39b60b4d9f)
+- [How to uoload to Google Cloud](https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-cloud-storage-on-python-3)
+- [Using embeddings to help search](https://cookbook.openai.com/examples/question_answering_using_embeddings)
+- [Ideas for the app builder](https://zapier.com/blog/best-no-code-app-builder/#bubble)
+- [Venture Beat AI Article](https://venturebeat.com/ai/from-gen-ai-1-5-to-2-0-moving-from-rag-to-agent-systems/)

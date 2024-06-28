@@ -138,7 +138,7 @@ class bubbleAPI:
         :param body:
         :return:
         '''
-        judylog.info(f'Posting {type} record to Bubble.')
+        print(f'bubbleAPI.post_record > Posting {type} record to Bubble.')
         post_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
 
@@ -154,10 +154,11 @@ class bubbleAPI:
             head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
             response = requests.post(post_url, headers=head, json=body).json()
 
+        print(f'bubbleAPI.post_record > Response: {response}')
         return response
 
     def update_exch_rcds(self, exchange):
-        judylog.info(f'Updating exchange (ID: {exchange.id}) to Bubble.')
+        judylog.info(f'bubbleAPI.update_exch_rcds > Updating exchange (ID: {exchange.id}) to Bubble.')
         call_url = self.wf_url + '/' + 'put_exchange'
         head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
         body = {
@@ -212,7 +213,7 @@ class bubbleAPI:
         if response['status'] == 'success':
             return response
         else:
-            judylog.error(f'bubbleAPI.remove_recd > Unable to update id in Bubble: {body['id']}')
+            judylog.error(f'bubbleAPI.remove_recd > Unable to remove id in Bubble: {body['id']}')
             judylog.error(response)
             return False
 

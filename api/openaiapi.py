@@ -1,7 +1,6 @@
 import openai           # Needed to support the call for OpenAI API
 import json
 
-from init.judyparams import OPENAI_QUERY
 from api.promptcreate import promptCreate
 from judylog.judylog import judylog
 
@@ -36,6 +35,8 @@ class openAIGPT:
         '''
 
         judylog.info(f'openAIGPT.run_Query > Contacting OpenAI with query: {self.prompt.raw_query}')
+        for msg in self.prompt.messages:
+            judylog.debug(f'openAIGPT.run_query > {json.dumps(msg)}')
 
         client = openai.OpenAI()
 
@@ -47,11 +48,12 @@ class openAIGPT:
 
         judylog.info(f'openAIGPT.run_Query > {completion}')
 
+        print(f'openAIGPT.run_query > {type(completion.choices[0].message.content)}')
         return completion.choices[0].message.content
 
     def gen_summary(self, query, response):
         '''
-            Ingests an exchange and produces a summary of the exchange.
+            Gives a summary of a chatExchange, which is one part of a conversation
             :param query:
             :return:
             '''
@@ -78,6 +80,11 @@ class openAIGPT:
         return json.loads(completion.choices[0].message.content)
 
     def get_conv_summary(self, exch_list):
+        '''
+        Gives a summary of a conversation.
+        :param exch_list:
+        :return:
+        '''
         messages = []
 
         messages.append({"role": "system",
@@ -108,9 +115,3 @@ class openAIGPT:
         )
 
         return json.loads(completion.choices[0].message.content)
-
-
-class openAIWhisper:
-
-    def __init__(self):
-        judylog.info('openAIWhisper.__ini__ > Initializing Whisper connection.')

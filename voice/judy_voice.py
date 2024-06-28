@@ -45,9 +45,9 @@ class judyVoice:
                     try:
                         text = self.r.recognize_google(audio_data = audio_data, language = 'en-US')
                     except:
-                        print('listen > Unable to distinguish audio.')
+                        print('judyVoice.listen > Unable to distinguish audio.')
                     else:
-                        print('listen > ', text)
+                        print('judyVoice.listen > User dialog: ', text)
 
                         if self.settings['trigger'].lower() in text.lower():
                             print('Keyword found in: ', text)
@@ -124,7 +124,7 @@ class judyVoice:
 
     def submit_question(self, query, chat_history, patient_info):
         # Create new exchange object and populate with the query
-        new_exchange = chatExchange(self.bubble_creds)
+        new_exchange = chatExchange(self.bubble_creds, _ns = True)
         new_exchange.query = query
 
         # Get response via OpenAI

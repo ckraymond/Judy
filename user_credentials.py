@@ -13,6 +13,9 @@ def get_user_credentials(name):
         'Ronald Regan': 'L]/4Cdo6'
     }
 
+    if name not in email_map.keys():
+        raise ValueError(f'{name} is not found in the list of user names.')
+
     return email_map[name], pass_map[name]
 
 # Test to make sure it works

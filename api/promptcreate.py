@@ -79,7 +79,7 @@ class promptCreate:
 
     def update_single_person(self, fam):
         '''Updates a single person and returns the value'''
-        print(f'promptCreate.update_single_person > {fam}')
+        judylog.debug(f'promptCreate.update_single_person > {fam}')
         fam_str = ''
 
         fam_str += f'\n{fam['fname']} {fam['lname']} is my {fam['relationship']}.'
