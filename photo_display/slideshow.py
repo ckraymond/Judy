@@ -14,11 +14,12 @@ from .imagelabel import imageLabel
 
 class slideShow:
 
-    def __init__(self, settings):
+    def __init__(self, settings, credentials):
         self.settings = settings
+        self.bubble_creds = credentials
 
         # Gets the lists of photo data from Bubble
-        self.photo_data = photoMgmt()
+        self.photo_data = photoMgmt(self.bubble_creds)
         self.get_monitor_info()
 
         self.root = tk.Tk()

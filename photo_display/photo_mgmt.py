@@ -9,13 +9,14 @@ from photo_display.photo_item import photoItem
 
 class photoMgmt:
 
-    def __init__(self):
+    def __init__(self, credentials):
         self.photo_list = []
+        self.bubble_creds = credentials
         self.load_photo_urls()
 
     def load_photo_urls(self):
-        api_connect = bubbleAPI()
-        self.data = api_connect.get_records('photos')
+        api_connect = bubbleAPI(self.bubble_creds)
+        self.data = api_connect.get_exch_conv('photo')
 
         for photo in self.data:
             new_photo = photoItem()

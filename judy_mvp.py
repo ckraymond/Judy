@@ -70,7 +70,7 @@ class judyMVP:
 
     def start_slideshow(self):
         judylog.info('judyMVP.__init__ > Starting slideshow thread.')
-        photo_slideshow = slideShow(self.maint.settings.values)
+        photo_slideshow = slideShow(self.maint.settings.values, self.bubble_creds)
 
     def start_audio(self):
         judylog.info('judyMVP.__init__ > Starting audio thread.')

@@ -17,7 +17,7 @@ from user_credentials import get_user_credentials
 judylog.info('__main__ > Initializing the program.')
 
 # Testing component to add in user credentials
-email, password = get_user_credentials('Donald Trump')
+email, password = get_user_credentials('Abraham Lincoln')
 
 # Check what the operating system is
 print('You are running Judy version 0.1. Your operating system is: ', platform.system())

@@ -38,21 +38,33 @@ class patientInfo:
         judylog.debug(f'patientInfo.import_data > {response}')
 
         #TODO: Ensure the we are handling when information is not available
-        self.id = response['_id']                           # The patient ID in Bubble which can be useful later
-        self.fname = response['first_name']
-        self.mname = response['middle_name']
-        self.lname = response['last_name']
-        self.nname = response['nickname']
-        self.location = response['home']
-        self.gender = response['gender']
-        self.caretaker = response['caretaker']
-        self.watchers = response['watcher']
-        self.birthday = datetime.datetime.strptime(response['bday'],
+        self.id = self.check_available(response, '_id')                           # The patient ID in Bubble which can be useful later
+        self.fname = self.check_available(response, 'first_name')
+        self.mname = self.check_available(response, 'middle_name')
+        self.lname = self.check_available(response, 'last_name')
+        self.nname = self.check_available(response, 'nickname')
+        self.location = self.check_available(response, 'home')
+        self.gender = self.check_available(response, 'gender')
+        self.caretaker = self.check_available(response, 'caretaker')
+        self.watchers = self.check_available(response, 'watcher')
+
+        if type(response['bday']) is str:
+            self.birthday = datetime.datetime.strptime(response['bday'],
                                                        '%Y-%m-%dT%H:%M:%S.%fZ')
+        elif type(response['bday']) is datetime.datetime:
+            self.birthday = response['bday']
+        else:
+            self.birthday = None
 
         self.bg = patientBG(bubble_api.get_exch_conv('interest'))                       # In Bubble the background info is not split into its own section
 
         self.import_friends(bubble_api)
+
+    def check_available(self, dict, key):
+        if key in dict.keys():
+            return dict[key]
+        else:
+            return None
 
     def import_friends(self, bubble_api):
         '''
