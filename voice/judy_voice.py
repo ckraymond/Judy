@@ -10,6 +10,7 @@ from mutagen.mp3 import MP3
 import time
 from data_mgmt.chat.chat_exchange import chatExchange
 from api.openaiapi import openAIGPT
+import random
 
 class judyVoice:
 
@@ -69,7 +70,7 @@ class judyVoice:
                 self.submit_question(text_req, chat_history, patient_info)
 
         else:
-            self.read_text('What question did you have?')
+            self.read_text(self.rand_response())
             self.req_undst = False
             while self.req_undst is False:
 
@@ -151,3 +152,16 @@ class judyVoice:
         #TODO: Need to add support for multithreading in here using an event
         self.listening = False
         return True
+
+    def rand_response(self):
+        response_strings = [
+            'How can I help you?',
+            'What\'s going on?',
+            'What do you need?',
+            'Hope you are doing well. Anything I can do to assist?',
+            'You rang?'
+        ]
+
+        index = random.randint(0,len(response_strings)-1)
+        return response_strings[index]
+
