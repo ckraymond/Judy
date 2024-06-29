@@ -4,21 +4,23 @@ from judylog.judylog import judylog
 from api.bubbleapi import bubbleAPI
 from .patient_bg import patientBG
 from .patient_friends import patientFriends
+from .patient_faqs import patientFAQ
 
 class patientInfo:
 
     def __init__(self, bubble_creds):
         judylog.debug('patientInfo.__init__ > Getting patient information.')
         self.bubble_creds = bubble_creds
-        self.fname = ''
-        self.mname = ''
-        self.lname = ''
-        self.nname = ''
+        self.birthday = None
+        self.fname = None
+        self.mname = None
+        self.lname = None
+        self.nname = None
         self.location = {}
-        self.gender = ''
-        self.bday = ''
+        self.gender = None
         self.friends = []
         self.bg = None
+        self.faqs = []
 
     def __str__(self):
         return_string = 'Patient Bio\n------------------------------------------------------'
@@ -60,6 +62,8 @@ class patientInfo:
 
         self.import_friends(bubble_api)
 
+        self.import_faqs(bubble_api)
+
     def check_available(self, dict, key):
         if key in dict.keys():
             return dict[key]
@@ -76,3 +80,16 @@ class patientInfo:
         friends_list = bubble_api.get_exch_conv('friends')
 
         self.friends = patientFriends(friends_list)
+
+    def import_faqs(self, bubble_api):
+        '''
+        Pulls the faqs and then populated into the patient user profile.
+        :param bubble_api:
+        :return:
+        '''
+
+        faq_list = bubble_api.get_exch_conv('faq')
+
+        for faq in faq_list:
+            new_faq = patientFAQ(faq['question'], faq['answer'])        # decided not to include things like watcher
+            self.faqs.append(new_faq)

@@ -3,7 +3,7 @@
 
 1. ~~**Data Structure** | Ensure that exchanges and conversations are being properly recorded and updated.~~
    2. *I think this is complete for now.*
-3. **Support FAQ integration** | Support the integration of FAQs into questions.
+3. ~~**Support FAQ integration** | Support the integration of FAQs into questions.~~
 3. **Messaging** | Finalize caretaker -> patient messaging on the device.
 4. **Messaging** | Create patient -> caretaker messaging.
 5. **Talking Icon** | Create screen icon to alert when the device is listening or speaking.
@@ -12,6 +12,7 @@
    6. *Calendar reminders* | Create alerts if there is a calendar reminder coming up.
    7. *Clear Handover* | Add message to user when handing over to Chat GPT
    8. *More structure* | Adjust Chat GPT response so that it is very precise and limit hallucinations.
+   9. *Graphics* | Create grpahical analysis of sentiment and performance for the conversation usage tab
 
 ## Backlog 
 - **Screen Integration** | Create more ability to use the devices screen.

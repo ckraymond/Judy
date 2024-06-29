@@ -5,7 +5,7 @@ class promptCreate:
 
     def __init__(self, raw_query, user, history):
         judylog.info('promptCreate.__init__ > Generating the GPT prompt.')
-        self.user = user                            # Gets the user info from the test data
+        self.user = user                            # This is the patient information
         self.raw_query = raw_query                  # This is the overall prompt with the user's info
         self.messages = []
         self.last_five = history[-5:]
@@ -34,12 +34,19 @@ class promptCreate:
             'info': 'This is some information you should know about me, the user:',
             'family': 'This is information about my friends and family:',
             'background': ''
-            # TODO: Need to include another field that contains FAQs and add into Bubble as well.
         }
 
+        # Update the patients infor, family, and background
         self.update_info()
         self.update_family()
         self.update_background()
+
+        # Add the FAQ section if there are in fact FAQs
+        if len(self.user.faqs) > 0:
+            self.system_prompt['faqs'] = ('This is a list of questions along with their answers that I may ask. ' +
+                                          'If I ask one of these questions, or something similiar you should respond' +
+                                          ' with the answers as I\'ve given them here.')
+            self.update_faqs()
         self.consolidate_prompt()
 
         self.build_message()
@@ -49,14 +56,6 @@ class promptCreate:
         This function updates the info section of the prompts.
         :return:
         '''
-
-        new_info = {
-            '\nMy First Name': self.user.fname,
-            '\nMy Middle Name': self.user.mname,
-            '\nMy Last Name': self.user.lname,
-            '\nMy Nickname': self.user.nname,
-            '\nMy Gender': self.user.gender
-        }
         self.system_prompt['info'] = ''
         self.system_prompt['info'] += f'My name is {self.user.fname} {self.user.mname} {self.user.lname}'
         if self.user.nname not in [None, '']:
@@ -64,9 +63,9 @@ class promptCreate:
         self.system_prompt['info'] += '.'
 
         # Need to treat date slightly differently
-        if self.user.bday is datetime.datetime:
-            bday = datetime.datetime.strptime(self.user.bday, '%B %d, %Y')
-            self.system_prompt['info'] += f'My birthday is {bday}'
+        if self.user.birthday is datetime.datetime:
+            birthday = datetime.datetime.strptime(self.user.birthday, '%B %d, %Y')
+            self.system_prompt['info'] += f'My birthday is {birthday}'
 
         judylog.debug(f'promptCreate.update_info > {self.system_prompt}')
 
@@ -126,6 +125,16 @@ class promptCreate:
                                                      'integrate them into your response as appropriate: ' +
                                                      self.user.bg.data[interest])
 
+    def update_faqs(self):
+        '''
+        This function adds the actual questions and answers to the faq section.
+        :return:
+        '''
+
+        for faq in self.user.faqs:
+            new_faq = f'\nQuestion: {faq.question}.\nAnswer: {faq.answer}.'
+            self.system_prompt['faqs'] += new_faq
+
     def build_message(self):
         self.messages.append({"role": "system", "content": self.system_instructions})
         self.messages.append({"role": "user", "content": self.system_prompt_str})
@@ -139,18 +148,6 @@ class promptCreate:
     def consolidate_prompt(self):
         self.system_prompt_str = ''
 
-        for item in self.system_prompt:
+        for item in self.system_prompt.keys():
             self.system_prompt_str += self.system_prompt[item]
-
-
-    # def gen_faqs(self):
-    #     faqs_prompt = ''
-    #
-    #     if len(self.user_info['faqs']) > 0:
-    #         faqs_prompt = 'The following questions and answers are ones I often ask: '
-    #         for qna in self.user_info['faqs']:
-    #             faqs_prompt += f'\nQuestion: {qna['question']}. Answer: {qna['answer']}.'
-    #
-    #     print(faqs_prompt)
-    #     return faqs_prompt
 

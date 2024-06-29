@@ -51,7 +51,7 @@ class bubbleAPI:
         judylog.info(f'bubbleAPI.get_exch_conv > Getting, {type}, records from Bubble.')
 
         # Type should be in chatexchange or conversation
-        allowed_types = ['conversation', 'chatexchange', 'user', 'friends', 'interest', 'photo']
+        allowed_types = ['conversation', 'chatexchange', 'user', 'friends', 'interest', 'photo', 'faq']
         if type not in allowed_types:
             raise ValueError(f'bubbleAPI.get_exch_conv > Type should be one of: {', '.join(allowed_types)}.')
 
