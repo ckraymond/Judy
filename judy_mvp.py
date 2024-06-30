@@ -41,7 +41,8 @@ class judyMVP:
         self.patient_info = patientInfo(self.bubble_creds)  # Gets the patient's information
         self.patient_info.import_data()
 
-        self.message_handler = messageHandler(self.bubble_creds)
+        # We need to pull down any messages that are on the server
+        self.message_handler = messageHandler(self.bubble_creds, self.maint.settings.values)
 
         if is_mac is not True and self.dev_mode is False:
             # THIS IS THE MULTITHREADING WE WILL RUN LATER

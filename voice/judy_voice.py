@@ -11,6 +11,7 @@ import time
 from data_mgmt.chat.chat_exchange import chatExchange
 from api.openaiapi import openAIGPT
 import random
+from io import BytesIO
 
 class judyVoice:
 
@@ -95,15 +96,21 @@ class judyVoice:
         :param response:
         :return:
         '''
+        print(f'judyVoice.read_tet > Playing: {text}')
         accent = self.get_accent(self.settings['accent'])
+        mp3_fp = BytesIO()
         myobj = gTTS(text = text, lang = 'en', slow=False, tld = accent)
-        myobj.save('./temp/response.mp3')
+        myobj.write_to_fp(mp3_fp)
+        mp3_fp.seek(0)
 
         pygame.mixer.init()                                         # Initialize the mixer module
-        pygame.mixer.music.load('./temp/response.mp3')              # Load the mp3 file
+        pygame.mixer.music.load(mp3_fp)
         pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            pass
 
-        time.sleep(MP3("./temp/response.mp3").info.length)          # Pause the program while talking
+        print(f'judyVoice.read_tet > Sound length: {MP3(mp3_fp).info.length}')
+        # time.sleep(MP3(mp3_fp).info.length)          # Pause the program while talking
 
     def get_accent(self, accent):
         accent_map = {

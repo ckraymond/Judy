@@ -4,7 +4,8 @@
 1. ~~**Data Structure** | Ensure that exchanges and conversations are being properly recorded and updated.~~
    2. *I think this is complete for now.*
 3. ~~**Support FAQ integration** | Support the integration of FAQs into questions.~~
-3. **Messaging** | Finalize caretaker -> patient messaging on the device.
+3. ~~**Messaging** | Finalize caretaker -> patient messaging on the device.~~
+   4. ~~Add in header that says who the message is from.~~
 4. **Messaging** | Create patient -> caretaker messaging.
 5. **Talking Icon** | Create screen icon to alert when the device is listening or speaking.
 6. **Calendar** | Add in ability to have user specific calendar. Build out with potential integration to Google Calendar.

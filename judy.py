@@ -2,13 +2,6 @@
 Main function for calling the Judy program.
 '''
 
-PATIENT_ID_MAP = {
-    'Colin': '1717521410502x636157005519156100',
-    'Abraham': '1719179936708x386825897272624200',
-    'Donald': '1719179857582x686599819866020900'
-}
-PATIENT_ID = PATIENT_ID_MAP['Abraham']      #Will use this to only pull information assiciated with a particular pateint
-
 from judy_mvp import judyMVP
 from judylog.judylog import judylog
 import platform                                 # Used to get the OS information

@@ -1,9 +1,59 @@
-2024-06-23 16:12:07,271-INFO-messageHandler.clean_messages > Checking for messages on Bubble
-2024-06-23 16:12:07,271-INFO-bubbleAPI.get_records > Getting, messages, records from Bubble.
-2024-06-23 16:12:07,276-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
-2024-06-23 16:12:07,568-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/messages?cursor=0&limit=100 HTTP/1.1" 200 None
-2024-06-23 16:12:07,568-INFO-bubbleAPI.get_records > response: <Response [200]>
-2024-06-23 16:12:07,568-INFO-bubbleAPI.get_records > [{'Modified Date': '2024-06-23T19:23:10.480Z', 'Created Date': '2024-06-23T19:23:10.480Z', 'Created By': '1717500366922x261233665537424770', 'Message': 'This is a great test message', 'Recipient': '1717521410502x636157005519156100', 'Expiration': 6, 'Frequency': 2, '_id': '1719170589907x663756997391810600'}, {'Modified Date': '2024-06-23T19:23:26.224Z', 'Created Date': '2024-06-23T19:23:26.223Z', 'Created By': '1717500366922x261233665537424770', 'Message': "Here's another test message, yo!", 'Recipient': '1717521410502x636157005519156100', 'Expiration': 6, 'Frequency': 8, '_id': '1719170605870x775634062532149200'}]
-2024-06-23 16:12:07,568-INFO-bubbleAPI.get_records > Total messages records pulled: 2
-2024-06-23 16:12:07,571-INFO-messageHandler.clean_messages > Cleaning messages
-2024-06-23 16:12:07,572-INFO-messageHandler.clean_messages > Validating if any messages should be announced
+2024-06-29 11:24:01,434-INFO-messageHandler.clean_messages > Checking for messages on Bubble
+2024-06-29 11:24:01,434-INFO-bubbleAPI.get_exch_conv > Getting, message, records from Bubble.
+2024-06-29 11:24:01,439-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-29 11:24:02,938-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/message?cursor=0&limit=100 HTTP/1.1" 401 None
+2024-06-29 11:24:02,945-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-29 11:24:03,161-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/wf/gen_api_token?email=djt@judypatient.com&pw=b1%7BXF%7D7z HTTP/1.1" 200 None
+2024-06-29 11:24:03,163-INFO-bubbleAPI.get_token > Getting new API key using credentials for djt@judypatient.com
+2024-06-29 11:24:03,166-DEBUG-Starting new HTTPS connection (1): colinkraymond.bubbleapps.io:443
+2024-06-29 11:24:03,384-DEBUG-https://colinkraymond.bubbleapps.io:443 "GET /version-test/api/1.1/obj/message?cursor=0&limit=100 HTTP/1.1" 200 None
+2024-06-29 11:24:03,386-INFO-bubbleAPI.get_records > [{'Modified Date': '2024-06-29T14:08:13.418Z', 'Created Date': '2024-06-29T14:08:13.413Z', 'Created By': '1719433427015x760125662067258500', 'Message': 'Yo Donnie, great job on the debate!', 'Expiration': 12, 'Frequency': 120, 'patient': '1719434683461x477635049984356200', 'caretaker': '1719433427015x760125662067258500', 'watcher': ['1719524279490x374511007917295100', '1719455494380x913745027397094800'], '_id': '1719670093114x436245859018997800'}, {'Modified Date': '2024-06-29T14:08:31.485Z', 'Created Date': '2024-06-29T14:08:31.480Z', 'Created By': '1719433427015x760125662067258500', 'Message': 'Hey Honey, I need some more Gucci bags. Gimmie some mullah.', 'Expiration': 12, 'Frequency': 120, 'patient': '1719434683461x477635049984356200', 'caretaker': '1719433427015x760125662067258500', 'watcher': ['1719524279490x374511007917295100', '1719455494380x913745027397094800'], '_id': '1719670111279x897081415429521400'}]
+2024-06-29 11:24:03,386-INFO-bubbleAPI.get_records > Total message records pulled: 2
+2024-06-29 11:24:03,391-INFO-messageHandler.clean_messages > Cleaning messages
+2024-06-29 11:24:03,391-INFO-messageHandler.clean_messages > Validating if any messages should be announced
+2024-06-29 11:24:04,710-DEBUG-text: Yo Donnie, great job on the debate!
+2024-06-29 11:24:04,710-DEBUG-tld: us
+2024-06-29 11:24:04,710-DEBUG-lang: en
+2024-06-29 11:24:04,710-DEBUG-slow: False
+2024-06-29 11:24:04,710-DEBUG-lang_check: True
+2024-06-29 11:24:04,710-DEBUG-pre_processor_funcs: [<function tone_marks at 0x100f64c20>, <function end_of_line at 0x100f65620>, <function abbreviations at 0x100f65ee0>, <function word_sub at 0x100f65f80>]
+2024-06-29 11:24:04,711-DEBUG-tokenizer_func: <bound method Tokenizer.run of re.compile('(?<=\\?).|(?<=!).|(?<=？).|(?<=！).|(?<!\\.[a-z])\\. |(?<!\\.[a-z]), |(?<!\\d):|\\[|，|：|\\(|、|…|;|\\\n|\\)|¡|。|—|،|‥|¿|\\]', re.IGNORECASE) from: [<function tone_marks at 0x100f660c0>, <function period_comma at 0x100f66160>, <function colon at 0x100f66200>, <function other_punctuation at 0x100f662a0>]>
+2024-06-29 11:24:04,711-DEBUG-timeout: None
+2024-06-29 11:24:04,711-DEBUG-langs: {'af': 'Afrikaans', 'ar': 'Arabic', 'bg': 'Bulgarian', 'bn': 'Bengali', 'bs': 'Bosnian', 'ca': 'Catalan', 'cs': 'Czech', 'da': 'Danish', 'de': 'German', 'el': 'Greek', 'en': 'English', 'es': 'Spanish', 'et': 'Estonian', 'fi': 'Finnish', 'fr': 'French', 'gu': 'Gujarati', 'hi': 'Hindi', 'hr': 'Croatian', 'hu': 'Hungarian', 'id': 'Indonesian', 'is': 'Icelandic', 'it': 'Italian', 'iw': 'Hebrew', 'ja': 'Japanese', 'jw': 'Javanese', 'km': 'Khmer', 'kn': 'Kannada', 'ko': 'Korean', 'la': 'Latin', 'lv': 'Latvian', 'ml': 'Malayalam', 'mr': 'Marathi', 'ms': 'Malay', 'my': 'Myanmar (Burmese)', 'ne': 'Nepali', 'nl': 'Dutch', 'no': 'Norwegian', 'pl': 'Polish', 'pt': 'Portuguese', 'ro': 'Romanian', 'ru': 'Russian', 'si': 'Sinhala', 'sk': 'Slovak', 'sq': 'Albanian', 'sr': 'Serbian', 'su': 'Sundanese', 'sv': 'Swedish', 'sw': 'Swahili', 'ta': 'Tamil', 'te': 'Telugu', 'th': 'Thai', 'tl': 'Filipino', 'tr': 'Turkish', 'uk': 'Ukrainian', 'ur': 'Urdu', 'vi': 'Vietnamese', 'zh-CN': 'Chinese (Simplified)', 'zh-TW': 'Chinese (Mandarin/Taiwan)', 'zh': 'Chinese (Mandarin)'}
+2024-06-29 11:24:04,711-DEBUG-pre-processing: <function tone_marks at 0x100f64c20>
+2024-06-29 11:24:04,712-DEBUG-pre-processing: <function end_of_line at 0x100f65620>
+2024-06-29 11:24:04,712-DEBUG-pre-processing: <function abbreviations at 0x100f65ee0>
+2024-06-29 11:24:04,713-DEBUG-pre-processing: <function word_sub at 0x100f65f80>
+2024-06-29 11:24:04,713-DEBUG-text_parts: ['Yo Donnie, great job on the debate!']
+2024-06-29 11:24:04,713-DEBUG-text_parts: 1
+2024-06-29 11:24:04,714-DEBUG-data-0: f.req=%5B%5B%5B%22jQ1olc%22%2C%22%5B%5C%22Yo%20Donnie%2C%20great%20job%20on%20the%20debate%21%5C%22%2C%5C%22en%5C%22%2Cnull%2C%5C%22null%5C%22%5D%22%2Cnull%2C%22generic%22%5D%5D%5D&
+2024-06-29 11:24:04,715-DEBUG-Starting new HTTPS connection (1): translate.google.us:443
+2024-06-29 11:24:04,856-DEBUG-https://translate.google.us:443 "POST /_/TranslateWebserverUi/data/batchexecute HTTP/1.1" 200 None
+2024-06-29 11:24:04,869-DEBUG-headers-0: {'Referer': 'http://translate.google.com/', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36', 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8', 'Content-Length': '181'}
+2024-06-29 11:24:04,869-DEBUG-url-0: https://translate.google.us/_/TranslateWebserverUi/data/batchexecute
+2024-06-29 11:24:04,869-DEBUG-status-0: 200
+2024-06-29 11:24:04,872-DEBUG-part-0 written to <_io.BytesIO object at 0x12060db20>
+2024-06-29 11:24:04,872-DEBUG-part-0 created
+2024-06-29 11:24:09,061-DEBUG-text: Hey Honey, I need some more Gucci bags. Gimmie some mullah.
+2024-06-29 11:24:09,061-DEBUG-tld: us
+2024-06-29 11:24:09,062-DEBUG-lang: en
+2024-06-29 11:24:09,062-DEBUG-slow: False
+2024-06-29 11:24:09,062-DEBUG-lang_check: True
+2024-06-29 11:24:09,062-DEBUG-pre_processor_funcs: [<function tone_marks at 0x100f64c20>, <function end_of_line at 0x100f65620>, <function abbreviations at 0x100f65ee0>, <function word_sub at 0x100f65f80>]
+2024-06-29 11:24:09,062-DEBUG-tokenizer_func: <bound method Tokenizer.run of re.compile('(?<=\\?).|(?<=!).|(?<=？).|(?<=！).|(?<!\\.[a-z])\\. |(?<!\\.[a-z]), |(?<!\\d):|\\[|，|：|\\(|、|…|;|\\\n|\\)|¡|。|—|،|‥|¿|\\]', re.IGNORECASE) from: [<function tone_marks at 0x100f660c0>, <function period_comma at 0x100f66160>, <function colon at 0x100f66200>, <function other_punctuation at 0x100f662a0>]>
+2024-06-29 11:24:09,062-DEBUG-timeout: None
+2024-06-29 11:24:09,062-DEBUG-langs: {'af': 'Afrikaans', 'ar': 'Arabic', 'bg': 'Bulgarian', 'bn': 'Bengali', 'bs': 'Bosnian', 'ca': 'Catalan', 'cs': 'Czech', 'da': 'Danish', 'de': 'German', 'el': 'Greek', 'en': 'English', 'es': 'Spanish', 'et': 'Estonian', 'fi': 'Finnish', 'fr': 'French', 'gu': 'Gujarati', 'hi': 'Hindi', 'hr': 'Croatian', 'hu': 'Hungarian', 'id': 'Indonesian', 'is': 'Icelandic', 'it': 'Italian', 'iw': 'Hebrew', 'ja': 'Japanese', 'jw': 'Javanese', 'km': 'Khmer', 'kn': 'Kannada', 'ko': 'Korean', 'la': 'Latin', 'lv': 'Latvian', 'ml': 'Malayalam', 'mr': 'Marathi', 'ms': 'Malay', 'my': 'Myanmar (Burmese)', 'ne': 'Nepali', 'nl': 'Dutch', 'no': 'Norwegian', 'pl': 'Polish', 'pt': 'Portuguese', 'ro': 'Romanian', 'ru': 'Russian', 'si': 'Sinhala', 'sk': 'Slovak', 'sq': 'Albanian', 'sr': 'Serbian', 'su': 'Sundanese', 'sv': 'Swedish', 'sw': 'Swahili', 'ta': 'Tamil', 'te': 'Telugu', 'th': 'Thai', 'tl': 'Filipino', 'tr': 'Turkish', 'uk': 'Ukrainian', 'ur': 'Urdu', 'vi': 'Vietnamese', 'zh-CN': 'Chinese (Simplified)', 'zh-TW': 'Chinese (Mandarin/Taiwan)', 'zh': 'Chinese (Mandarin)'}
+2024-06-29 11:24:09,063-DEBUG-pre-processing: <function tone_marks at 0x100f64c20>
+2024-06-29 11:24:09,063-DEBUG-pre-processing: <function end_of_line at 0x100f65620>
+2024-06-29 11:24:09,063-DEBUG-pre-processing: <function abbreviations at 0x100f65ee0>
+2024-06-29 11:24:09,063-DEBUG-pre-processing: <function word_sub at 0x100f65f80>
+2024-06-29 11:24:09,063-DEBUG-text_parts: ['Hey Honey, I need some more Gucci bags. Gimmie some mullah.']
+2024-06-29 11:24:09,064-DEBUG-text_parts: 1
+2024-06-29 11:24:09,064-DEBUG-data-0: f.req=%5B%5B%5B%22jQ1olc%22%2C%22%5B%5C%22Hey%20Honey%2C%20I%20need%20some%20more%20Gucci%20bags.%20Gimmie%20some%20mullah.%5C%22%2C%5C%22en%5C%22%2Cnull%2C%5C%22null%5C%22%5D%22%2Cnull%2C%22generic%22%5D%5D%5D&
+2024-06-29 11:24:09,065-DEBUG-Starting new HTTPS connection (1): translate.google.us:443
+2024-06-29 11:24:09,258-DEBUG-https://translate.google.us:443 "POST /_/TranslateWebserverUi/data/batchexecute HTTP/1.1" 200 None
+2024-06-29 11:24:09,272-DEBUG-headers-0: {'Referer': 'http://translate.google.com/', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36', 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8', 'Content-Length': '211'}
+2024-06-29 11:24:09,273-DEBUG-url-0: https://translate.google.us/_/TranslateWebserverUi/data/batchexecute
+2024-06-29 11:24:09,273-DEBUG-status-0: 200
+2024-06-29 11:24:09,275-DEBUG-part-0 written to <_io.BytesIO object at 0x12084c630>
+2024-06-29 11:24:09,276-DEBUG-part-0 created
