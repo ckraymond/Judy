@@ -7,9 +7,10 @@ from judylog.judylog import judylog
 from gtts import gTTS
 import pygame
 from mutagen.mp3 import MP3
-import time
+from data_mgmt.query.patient_query import patientQuery
 from data_mgmt.chat.chat_exchange import chatExchange
 from api.openaiapi import openAIGPT
+from exec_center.exec_center import execCenter
 import random
 from io import BytesIO
 
@@ -17,9 +18,12 @@ class judyVoice:
 
     def __init__(self, settings, bubble_creds, dev_mode = False):
         self.settings = settings
+
         # obtain audio from the microphone
+        #TODO: Need to migrate audio actions to soundproecessing
         self.r = sr.Recognizer()
         self.m = sr.Microphone()
+
         self.listening = True               # Keyword to determine if we should exit
         self.dev_mode = dev_mode
         self.bubble_creds = bubble_creds
@@ -96,7 +100,7 @@ class judyVoice:
         :param response:
         :return:
         '''
-        print(f'judyVoice.read_tet > Playing: {text}')
+        judylog.info(f'judyVoice.read_tet > Playing: {text}')
         accent = self.get_accent(self.settings['accent'])
         mp3_fp = BytesIO()
         myobj = gTTS(text = text, lang = 'en', slow=False, tld = accent)
@@ -109,8 +113,7 @@ class judyVoice:
         while pygame.mixer.music.get_busy():
             pass
 
-        print(f'judyVoice.read_tet > Sound length: {MP3(mp3_fp).info.length}')
-        # time.sleep(MP3(mp3_fp).info.length)          # Pause the program while talking
+        judylog.info(f'judyVoice.read_tet > Sound length: {MP3(mp3_fp).info.length}')
 
     def get_accent(self, accent):
         accent_map = {
@@ -135,12 +138,19 @@ class judyVoice:
         new_exchange = chatExchange(self.bubble_creds, _ns = True)
         new_exchange.query = query
 
-        # Get response via OpenAI
-        gpt_api = openAIGPT()
-        gpt_api.user_query(new_exchange.query, patient_info, chat_history.exchanges)
-        new_exchange.response = gpt_api.run_query()
+        # Now we need to check if there is local action to take or we send to ChatGPT
+        query_action = patientQuery(new_exchange)
+        query_action.determine_action()
 
-        #TODO: Double check exactly what is sent to ChatGPT
+        if query_action.routing['local'] is False:
+            # Get response via OpenAI
+            gpt_api = openAIGPT()
+            gpt_api.user_query(new_exchange.query, patient_info, chat_history.exchanges)
+            new_exchange.response = gpt_api.run_query()
+
+        else:
+            local_action = execCenter()
+            new_exchange.response = local_action.execute(query_action.routing['action'])
 
         # Add the exchange onto the list of exchanges
         chat_history.exchanges.append(new_exchange)
@@ -154,6 +164,7 @@ class judyVoice:
 
         # Finally read the response to the user
         self.read_text(new_exchange.response)
+
 
     def quit_program(self):
         #TODO: Need to add support for multithreading in here using an event

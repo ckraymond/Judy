@@ -1,0 +1,25 @@
+[
+  {
+    "name": "Asking time",
+    "queries": [
+      "What time is it?",
+      "Could you tell me the time, please?",
+      "Do you have the time?",
+      "May I know the time?",
+      "What's the time?",
+      "What time you got?",
+      "Got the time?",
+      "Do you know the time?",
+      "Hey, what time is it?",
+      "What's the time now?",
+      "Do you have the time on you?",
+      "Any idea what time it is?",
+      "Excuse me, do you know what time it is right now?",
+      "What time is it on your watch?",
+      "Could you check the time for me?"
+    ],
+    "action": "tell_time",
+    "vars": {}
+  }
+]
+
