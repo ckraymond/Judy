@@ -104,7 +104,7 @@ class openAIGPT:
                         and 5 would be extremely happy.
 
                         In keywords, provide a comma-delimited list of any places, people, or events that are referenced
-                        in our conversation. There should be at least one keyword and no more than 10."""})
+                        in our conversation. There should be at least one keyword and no more than five."""})
 
         client = openai.OpenAI()
 
@@ -115,3 +115,54 @@ class openAIGPT:
         )
 
         return json.loads(completion.choices[0].message.content)
+
+    def get_summ_info(self, exch_list):
+        '''
+        Takes list of exchanges and then geneerates a summary, keywords with total number of counts,
+        and overall sentiment.
+        :param exch_list:
+        :return:
+        '''
+
+        resp_vars = {
+            'summary': '',
+            'keywords': [],
+            'sentiment': None
+        }
+
+        messages = []
+
+        # messages.append({"role": "system",
+        #                  "content": "Any responses should be in a JSON format with three fields: summary, " +
+        #                             "sentiment, and keywords. The keywords field should be a list of no more than" +
+        #                             " five keywords paired with the number of times they are mentioned. The" +
+        #                             " summary and sentiment fields should both be text."})
+        for exch in exch_list:
+            messages.append({"role": "user", "content": exch.query})
+            messages.append({"role": "system", "content": exch.response})
+        messages.append({"role": "user", "content": """Analyze the previous conversation and provide the fields below 
+                                in a JSON format based on what was said. The JSON output should have three fields:
+                                summary, sentiment, and keywords. The following instructions dictate how the fields
+                                should be formatted and the type of information they should have.
+
+                                Summary should be a one sentence summary of the conversation that highlights what was talked about 
+                                and talking about any emotions or concerns that I have should be identified. Also, you should refer to me 
+                                as the patient and yourself as the assistant.
+
+                                In sentiment, assign a number between 1 and 5 for how I seem to be feeling. 1 would be extremely depressed 
+                                and 5 would be extremely happy.
+
+                                In keywords, provide a list of tuples of any places, people, or events that are referenced
+                                in our conversation. Each tuple should have the keyword as a string and an integer which is the number
+                                of times the keyword is referenced. The list should be no more than five items long."""})
+
+        client = openai.OpenAI()
+
+        completion = client.chat.completions.create(
+            model=self.model,
+            temperature=self.temp,
+            messages=messages
+        )
+
+        response = json.loads(completion.choices[0].message.content)
+        return response

@@ -6,13 +6,14 @@
 3. ~~**Support FAQ integration** | Support the integration of FAQs into questions.~~
 3. ~~**Messaging** | Finalize caretaker -> patient messaging on the device.~~
    4. ~~Add in header that says who the message is from.~~
-5. **Hueristic Layer** | Add hueristic layer to support specific requests.
+5. ~~**Hueristic Layer** | Add hueristic layer to support specific requests.~~
    6. *Calendar reminders* | Create alerts if there is a calendar reminder coming up.
    7. *Clear Handover* | Add message to user when handing over to Chat GPT
-   8. *More structure* | Adjust Chat GPT response so that it is very precise and limit hallucinations.
+   8. *More structure* | Adjust ChatGPT response so that it is very precise and limit hallucinations.
    9. *Graphics* | Create grpahical analysis of sentiment and performance for the conversation usage tab
 4. **Summaries** | Build in weekly and daily summaries of the patient queries and attitutde.
-5. **In Line Questions** | Adjust questioning so that the user can say the trigger and question in one sentence.
+5. **Regular Reminders | Establish regular reminders for specific things.
+6. **In Line Questions** | Adjust questioning so that the user can say the trigger and question in one sentence.
 5. **Messaging** | Create patient -> caretaker messaging.
 5. **Talking Icon** | Create screen icon to alert when the device is listening or speaking.
 6. **Calendar** | Add in ability to have user specific calendar. Build out with potential integration to Google Calendar.
@@ -26,6 +27,9 @@
 - **Screen Integration** | Create more ability to use the devices screen.
 - **Update triggers** | Adjust triggers so that you can say Judy and the command in one sentence. Also want to see if there's a way to keep the conversation going back and forth.
 - **Routines** | Create concept of morning routines to alert patient of day activities. Provide context for where they are and what is going on.
+- **Photo Upload** | Allow the following things:
+  - Ability to add a general time.
+  - Ability to add color about what is happening in the photo.
 ---
 ## Thoughts / Ideas
 - **Device**

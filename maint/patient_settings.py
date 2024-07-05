@@ -46,6 +46,7 @@ class patientSettings:
             self.bubble_creds['watcher_ids'] = api_results['watcher']
         except:
             judylog.error(f'patientSettings.pull_settings > Unable to load any watchers.')
+            self.bubble_creds['watcher_ids'] = []
 
         judylog.info(f'userSettings.pull_settings > Imported settings: {self.values}')
 

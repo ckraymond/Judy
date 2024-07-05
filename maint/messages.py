@@ -1,6 +1,6 @@
 from api.bubbleapi import bubbleAPI
 from judylog.judylog import judylog
-from voice.judy_voice import judyVoice
+from voice.sound_handler import soundHandler
 import datetime
 
 class messageHandler:
@@ -72,7 +72,7 @@ class messageHandler:
                 if(msg['Alert Triggers'][0]) <= datetime.datetime.now():
                     message_header = (f'You have received a message from ' +
                                       f'{msg['sender_first_name']} {msg['sender_last_name']}: ')
-                    voice = judyVoice(self.settings, self.bubble_creds)
+                    voice = soundHandler(self.settings['accent'])
                     voice.read_text(message_header + msg['Message'])
                     msg['Alert Triggers'].pop(0)
 
