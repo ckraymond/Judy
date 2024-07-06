@@ -1,5 +1,5 @@
 import requests         # For the call
-import os               # Needed for the BUBBLE_API_TOKEN
+from datetime import timedelta, datetime
 
 from judylog.judylog import judylog
 
@@ -138,7 +138,7 @@ class bubbleAPI:
         :param body:
         :return:
         '''
-        print(f'bubbleAPI.post_record > Posting {type} record to Bubble.')
+        judylog.info(f'bubbleAPI.post_record > Posting {type} record to Bubble.')
         post_url = self.base_url + '/' + type
         head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
 
@@ -154,7 +154,7 @@ class bubbleAPI:
             head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
             response = requests.post(post_url, headers=head, json=body).json()
 
-        print(f'bubbleAPI.post_record > Response: {response}')
+        judylog.info(f'bubbleAPI.post_record > Response: {response}')
         return response
 
     def update_exch_rcds(self, exchange):
@@ -217,6 +217,121 @@ class bubbleAPI:
             judylog.error(response)
             return False
 
+    def save_daily_summary(self, summary_info):
+        '''
+        Takes the daily summary information and saves onto bubble.
+        :param summary_info:
+        :return:
+        '''
+
+        judylog.info(f'bubbleAPI.save_daily_summary > Updating daily summary (ID: {summary_info['id']}) to Bubble.')
+        call_url = self.wf_url + '/' + 'save_daily_summ'
+        head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+        body = {
+            '_id': summary_info['id'],
+            'date': self.conv_date(summary_info['date']),
+            'summary': summary_info['summary'],
+            'sentiment': summary_info['sentiment'],
+            'keywords': self.conv_keywords(summary_info['keywords']),
+            'exch_count': summary_info['exch_count'],
+            'conv_count': summary_info['conv_count'],
+            'patient': summary_info['patient_id'],
+            'caretaker': summary_info['caretaker_id'],
+            'watcher': summary_info['watcher_ids']
+        }
+
+        response = requests.post(call_url, headers=head, json=body).json()
+
+        if self.check_response(response) == 'invalid_token':
+            # Try and get the token and then make the call again
+            self.get_token()
+            head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+            response = requests.post(call_url, headers=head, json=body).json()
+
+        if response['status'] == 'success':
+            return response
+        else:
+            judylog.error(f'Unable to update exchange id in Bubble: {body['id']}')
+            judylog.error(response)
+            return False
+
+    def check_for_summ(self, date):
+        '''
+        Checks to see if there is already a summary present and if so, it returns the id
+        :param date:
+        :return:
+        '''
+
+        judylog.info(f'bubbleAPI.check_for_summ > Checking Bubble for summary on {date}.')
+        call_url = self.wf_url + '/' + 'check_for_summ'
+        head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+        body = {'date': self.conv_date(date)}
+
+        response = requests.post(call_url, headers=head, json=body).json()
+
+        if self.check_response(response) == 'invalid_token':
+            # Try and get the token and then make the call again
+            self.get_token()
+            head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+            response = requests.post(call_url, headers=head, json=body).json()
+
+        if response['status'] == 'success':
+            return response
+        else:
+            judylog.error(f'Unable to update exchange id in Bubble: {body['id']}')
+            judylog.error(response)
+            return False
+
+    def save_weekly_summ(self, weekly_summ):
+        judylog.info(f'bubbleAPI.save_daily_summary > Updating weekly summary (ID: {weekly_summ['id']}) to Bubble.')
+        call_url = self.wf_url + '/' + 'save_weekly_summ'
+        head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+        body = {
+            'start_date': self.conv_date(weekly_summ['start_date']),
+            'end_date': self.conv_date(weekly_summ['end_date']),
+            'summary': weekly_summ['summary'],
+            'sentiment': weekly_summ['sentiment'],
+            'keywords': self.conv_keywords(weekly_summ['keywords']),
+            'exch_count': weekly_summ['exch_count'],
+            'conv_count': weekly_summ['conv_count'],
+            'daily_summ_ids': weekly_summ['daily_summ_ids'],
+            'patient': self.credentials['patient_id'],
+            'caretaker': self.credentials['caretaker_id'],
+            'watcher': self.credentials['watcher_ids']
+        }
+
+        response = requests.post(call_url, headers=head, json=body).json()
+
+        if self.check_response(response) == 'invalid_token':
+            # Try and get the token and then make the call again
+            self.get_token()
+            head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+            response = requests.post(call_url, headers=head, json=body).json()
+
+        if response['status'] == 'success':
+            return response
+        else:
+            judylog.error(f'Unable to update exchange id in Bubble: {body['id']}')
+            judylog.error(response)
+            return False
+
+    @staticmethod
+    def conv_keywords(kywd_tuple):
+        ret_list = []
+        for tuple in kywd_tuple:
+            line_str = f'{list(tuple.keys())[0]} ({list(tuple.values())[0]})'
+            ret_list.append(line_str)
+        return ret_list
+
+    @staticmethod
+    def conv_date(old_date):
+        new_date = datetime.combine(date = old_date, time=datetime.min.time())
+        new_date += timedelta(hours = 4)
+
+        return str(new_date)
+
+
+
 
 if __name__ == '__main__':
     # Get the user credentials that we will use to log in to various things
@@ -229,9 +344,7 @@ if __name__ == '__main__':
         'api_token': None
     }
 
-    print(credentials)
     test = bubbleAPI(credentials)
     users = test.get_exch_conv('interest')
     for user in users:
         print(user)
-    print(credentials)

@@ -1,6 +1,7 @@
 from judylog.judylog import judylog
 from maint.patient_settings import patientSettings
-import datetime
+from datetime import datetime, timedelta, date
+from data_mgmt.summaries.weekly_summary import weeklySummary
 import time
 class judyMaint:
     '''
@@ -32,8 +33,10 @@ class judyMaint:
         print('judyMaint.run_background > Running maintenance routine')
 
         while True:
-            time.sleep(60)                         #Only runs every min to save processing
-            if datetime.datetime.now().minute % 5 == 0:             # Certain ones only run every 5 min
+            time.sleep(60)                                                  # Only runs every min to save processing
+            if datetime.now().hour % 12 == 0:                               # Runs once a day
+                weeklySummary(date.today() - timedelta(days=1), chat_history, self.bubble_creds)
+            if datetime.datetime.now().minute % 5 == 0:                     # Certain ones only run every 5 min
                 judylog.info(f'judyMaint.run_background > Running maintenance routine')
                 self.settings.pull_settings()
 

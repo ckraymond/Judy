@@ -20,6 +20,18 @@
     ],
     "action": "tell_time",
     "vars": {}
+  },
+  {
+    "name": "Asking date",
+    "queries": [
+      "What is today's date?",
+      "What's the date?",
+      "What is the date?",
+      "What day is it?"
+    ],
+    "action": "tell_date",
+    "vars": {}
   }
 ]
+
 

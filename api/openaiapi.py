@@ -132,11 +132,6 @@ class openAIGPT:
 
         messages = []
 
-        # messages.append({"role": "system",
-        #                  "content": "Any responses should be in a JSON format with three fields: summary, " +
-        #                             "sentiment, and keywords. The keywords field should be a list of no more than" +
-        #                             " five keywords paired with the number of times they are mentioned. The" +
-        #                             " summary and sentiment fields should both be text."})
         for exch in exch_list:
             messages.append({"role": "user", "content": exch.query})
             messages.append({"role": "system", "content": exch.response})
@@ -166,3 +161,50 @@ class openAIGPT:
 
         response = json.loads(completion.choices[0].message.content)
         return response
+
+    def gen_weekly_summary(self, date_info):
+        '''
+        Takes the list of date objects and then provides summary, keywords, and sentiment for the entire week.
+        :param date_info:
+        :return:
+        '''
+
+        messages = []
+
+        messages.append({"role": "user", "content": """The following lines contain information about the past seven 
+        days of conversations between me, called the patient, and you. One field is called summary and contains a 
+        summary of what was talked about that day. The second is keywords and contains a tuple that has each 
+        keywords and how often it came up. The final field is sentiment, which contains a numerical rating for how
+         I seem to be feeling. 1 would be extremely depressed and 5 would be extremely happy.  """})
+        for each_day in date_info:
+            messages.append({"role": "user", "content": f"{each_day.summary_info}"})
+        messages.append({"role": "user", "content": """Analyze the information provided the fields above and provide a 
+                                       JSON formatted response containing a summary. The JSON output should have three 
+                                       fields: summary, sentiment, and keywords. The following instructions dictate how 
+                                       the fields should be formatted and the type of information they should have.
+
+                                       Summary should be a one sentence summary of the conversation that highlights 
+                                       what was talked about and talking about any emotions or concerns that I have 
+                                       should be identified. Also, you should refer to me as the patient and yourself 
+                                       as the assistant. The summary should begin with the phrase 
+                                       'Over the past seven days'
+
+                                       In sentiment, assign a number between 1 and 5 for how I seem to be feeling. 1 
+                                       would be extremely depressed and 5 would be extremely happy.
+
+                                       In keywords, provide a list of tuples of any places, people, or events that are 
+                                       referenced in our conversation. Each tuple should have the keyword as a string 
+                                       and an integer which is the number of times the keyword is referenced. The list 
+                                       should be no more than five items long."""})
+
+        client = openai.OpenAI()
+
+        completion = client.chat.completions.create(
+            model=self.model,
+            temperature=self.temp,
+            messages=messages
+        )
+
+        response = json.loads(completion.choices[0].message.content)
+        return response
+

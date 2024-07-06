@@ -12,16 +12,13 @@
    8. *More structure* | Adjust ChatGPT response so that it is very precise and limit hallucinations.
    9. *Graphics* | Create grpahical analysis of sentiment and performance for the conversation usage tab
 4. **Summaries** | Build in weekly and daily summaries of the patient queries and attitutde.
-5. **Regular Reminders | Establish regular reminders for specific things.
+5. Check to make sure that when a message is deleted in the app it is also deleted from the device.
+6. **Regular Reminders** | Establish regular reminders for specific things.
 6. **In Line Questions** | Adjust questioning so that the user can say the trigger and question in one sentence.
 5. **Messaging** | Create patient -> caretaker messaging.
 5. **Talking Icon** | Create screen icon to alert when the device is listening or speaking.
 6. **Calendar** | Add in ability to have user specific calendar. Build out with potential integration to Google Calendar.
-5. **Hueristic Layer** | Add hueristic layer to support specific requests.
-   6. *Calendar reminders* | Create alerts if there is a calendar reminder coming up.
-   7. *Clear Handover* | Add message to user when handing over to Chat GPT
-   8. *More structure* | Adjust Chat GPT response so that it is very precise and limit hallucinations.
-   9. *Graphics* | Create grpahical analysis of sentiment and performance for the conversation usage tab
+5. **Birthday and Anniversary Reminders** | Create workflow for birthdays and anniversaries that prompts the user repeatedly and asks if they want to send a message through the app.
 
 ## Backlog 
 - **Screen Integration** | Create more ability to use the devices screen.
@@ -30,6 +27,7 @@
 - **Photo Upload** | Allow the following things:
   - Ability to add a general time.
   - Ability to add color about what is happening in the photo.
+- Provide the current date, time, location, and timezone in the query.
 ---
 ## Thoughts / Ideas
 - **Device**
