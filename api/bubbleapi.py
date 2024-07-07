@@ -315,6 +315,36 @@ class bubbleAPI:
             judylog.error(response)
             return False
 
+    def check_message(self, id):
+        '''
+        Quick pull to see if message is still on Bubble. If not returns False.
+        :param id:
+        :return:
+        '''
+
+        judylog.info(f'bubbleAPI.get_message > Checking for message(ID: {id}) on Bubble.')
+        call_url = self.wf_url + '/' + 'check_message'
+        head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+        body = {'id': id}
+
+        response = requests.post(call_url, headers=head, json=body).json()
+
+        if self.check_response(response) == 'invalid_token':
+            # Try and get the token and then make the call again
+            self.get_token()
+            head = {'Authorization': 'token {}'.format(self.credentials['api_token'])}
+            response = requests.post(call_url, headers=head, json=body).json()
+
+        if response['status'] == 'success':
+            if '_id' in response['response']['message'].keys():
+                return True
+            else:
+                return False
+        else:
+            judylog.error(f'Unable to get Message from Bubble: {id}')
+            judylog.error(response)
+            return None
+
     @staticmethod
     def conv_keywords(kywd_tuple):
         ret_list = []

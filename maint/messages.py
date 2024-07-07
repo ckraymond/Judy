@@ -51,13 +51,21 @@ class messageHandler:
         judylog.info(f'messageHandler.clean_messages > Cleaning messages')
 
         for msg in range(len(self.messages)-1, -1, -1):
-            if self.messages[msg]['Expiration Date'] < datetime.datetime.now():
-                judylog.info(f'messageHandler.clean_messages > Deleting message: {msg}')
-                del_msg = self.messages.pop(msg)
+            # Check the message on Bubble to see if still there
+            api_connection = bubbleAPI(self.bubble_creds)
+            if api_connection.check_message(self.messages[msg]['_id']) is False:
+                judylog.info(f'messageHandler.clean_messages > Message {self.messages[msg]['_id']} no longer on Bubble.')
+                del self.messages[msg]
 
-                api_connection = bubbleAPI(self.bubble_creds)
-                print(api_connection.remove_recd('del_message', del_msg['_id']))
-                judylog.info(f'messageHandler.clean_message > {api_connection.remove_recd('del_message', del_msg['_id'])}')
+            # Check for messages past their expiration date and remove from local and Bubble
+            else:
+                if self.messages[msg]['Expiration Date'] < datetime.datetime.now():
+                    judylog.info(f'messageHandler.clean_messages > Deleting message: {msg}')
+                    del_msg = self.messages.pop(msg)
+
+                    # Remove the message from Bubble
+                    api_connection.remove_recd('del_message', del_msg['_id'])
+                    judylog.info(f'messageHandler.clean_message > {api_connection.remove_recd('del_message', del_msg['_id'])}')
 
     def alert_messages(self):
         '''

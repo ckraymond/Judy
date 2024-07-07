@@ -11,8 +11,8 @@
    7. *Clear Handover* | Add message to user when handing over to Chat GPT
    8. *More structure* | Adjust ChatGPT response so that it is very precise and limit hallucinations.
    9. *Graphics* | Create grpahical analysis of sentiment and performance for the conversation usage tab
-4. **Summaries** | Build in weekly and daily summaries of the patient queries and attitutde.
-5. Check to make sure that when a message is deleted in the app it is also deleted from the device.
+4. ~~**Summaries** | Build in weekly and daily summaries of the patient queries and attitutde.~~
+5. ~~Check to make sure that when a message is deleted in the app it is also deleted from the device.~~
 6. **Regular Reminders** | Establish regular reminders for specific things.
 6. **In Line Questions** | Adjust questioning so that the user can say the trigger and question in one sentence.
 5. **Messaging** | Create patient -> caretaker messaging.
@@ -28,6 +28,7 @@
   - Ability to add a general time.
   - Ability to add color about what is happening in the photo.
 - Provide the current date, time, location, and timezone in the query.
+- **Memory Sharing** | Share things that the patient wasn't at to share your life with them. Could be good or bad.
 ---
 ## Thoughts / Ideas
 - **Device**
